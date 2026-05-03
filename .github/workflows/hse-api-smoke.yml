@@ -1,0 +1,26 @@
+# يدوي أو عند الدفع: يستدعي testConnection على hse-api (يتطلب أسرار المستودع).
+name: hse-api-smoke
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, master]
+    paths:
+      - "supabase/functions/hse-api/**"
+      - ".github/workflows/hse-api-smoke.yml"
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Smoke testConnection
+        env:
+          HSE_RPC_URL: ${{ secrets.HSE_RPC_URL }}
+          HSE_SUPABASE_ANON_KEY: ${{ secrets.HSE_SUPABASE_ANON_KEY }}
+          HSE_API_KEY: ${{ secrets.HSE_API_KEY }}
+        run: |
+          if [ -z "$HSE_RPC_URL" ]; then echo "HSE_RPC_URL unset — تخطي الدخان"; exit 0; fi
+          node tools/smoke-hse-api.mjs

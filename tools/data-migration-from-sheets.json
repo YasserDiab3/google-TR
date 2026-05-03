@@ -1,0 +1,16 @@
+{
+  "title": "هجرة بيانات من Google Sheets إلى Postgres (Supabase)",
+  "steps": [
+    "صدّر كل تبويب من الجدول كـ CSV أو استخدم أداة تصدير مجمّعة.",
+    "طبّق ترحيلات supabase/migrations على مشروع Supabase الإنتاجي.",
+    "اضبط أسماء الأعمدة لتطابق الرؤوس في الهجرة (مطابقة لـ Headers.gs).",
+    "حمّل CSV إلى الجداول المقابلة عبر psql \\copy أو واجهة Table Editor.",
+    "شغّل node tools/smoke-hse-api.mjs ثم جرّب readFromSheet و batchReadSheets من الواجهة.",
+    "بعد التحقق، عطّل نشر Web App لـ GAS أو أزل رابط GAS من secrets."
+  ],
+  "relatedFiles": [
+    "supabase/migrations/20260203140000_hse_sheet_tables.sql",
+    "supabase/migrations/20260204120000_company_settings_and_app_meta.sql",
+    "tools/generate-schema-sql.mjs"
+  ]
+}

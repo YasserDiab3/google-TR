@@ -2913,7 +2913,8 @@ const AppState = {
     googleConfig: {
         appsScript: {
             enabled: true,
-            scriptUrl: 'https://script.google.com/macros/s/AKfycbx2dCdy7o7cOUSJCiA05OEyOYB5e5e79DgV5WKVqv8fhmOnNKQjZrvI9j8jxFXtT16m/exec'
+            scriptUrl:
+                'https://apsawzzqurfnpsucyozb.supabase.co/functions/v1/hse-api'
         },
         sheets: {
             enabled: true,
@@ -2979,7 +2980,14 @@ const AppState = {
     try {
         if (typeof window !== 'undefined' && window.__HSE_USE_SUPABASE__ === true) {
             AppState.useSupabaseBackend = true;
+        } else if (typeof window !== 'undefined' && window.__HSE_SUPABASE_ONLY__ === true) {
+            AppState.useSupabaseBackend = true;
         } else if (typeof window !== 'undefined' && /safety-icapp\.com$/i.test(String(window.location.hostname || ''))) {
+            AppState.useSupabaseBackend = true;
+        } else if (
+            typeof window !== 'undefined' &&
+            /supabase\.co\/functions\//i.test(String(window.__HSE_RPC_URL__ || '').trim())
+        ) {
             AppState.useSupabaseBackend = true;
         }
         const rpc = typeof window !== 'undefined' && window.__HSE_RPC_URL__
@@ -3684,6 +3692,9 @@ const Utils = {
                 return { canonical, displaySrc: canonical, proxyFileId: '', needsProxy: false };
             }
             if (!/drive\.google\.com|googleusercontent\.com/i.test(canonical)) {
+                return { canonical, displaySrc: canonical, proxyFileId: '', needsProxy: false };
+            }
+            if (typeof Utils !== 'undefined' && typeof Utils.isSupabaseBackend === 'function' && Utils.isSupabaseBackend()) {
                 return { canonical, displaySrc: canonical, proxyFileId: '', needsProxy: false };
             }
             const fileId = this.extractDriveFileId(canonical);

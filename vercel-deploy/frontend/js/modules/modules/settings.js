@@ -551,6 +551,12 @@ const Settings = {
                             </div>
                             <div class="card-body space-y-4">
                                 <div>
+                                    ${AppState.useSupabaseBackend ? `
+                                    <p class="text-sm text-amber-900 mb-4 p-3 rounded bg-amber-50 border border-amber-200">
+                                        <i class="fas fa-database ml-2"></i>
+                                        الخلفية الحالية Postgres (Supabase). تهيئة الجداول تتم عبر ترحيلات SQL في المستودع وليس عبر زر إنشاء أوراق Google Sheets.
+                                    </p>
+                                    ` : `
                                     <p class="text-sm text-gray-600 mb-4">
                                         <i class="fas fa-info-circle ml-2"></i>
                                         سيتم إنشاء جميع الأوراق المطلوبة (Users, Incidents, NearMiss, PTW, Training, Clinic, Fire Equipment, PPE, ViolationTypes, Violations, Contractors) تلقائياً مع الرؤوس الافتراضية
@@ -559,6 +565,7 @@ const Settings = {
                                         <i class="fas fa-magic ml-2"></i>
                                         إنشاء جميع الأوراق تلقائياً
                                     </button>
+                                    `}
                                 </div>
                                 <div class="border-t pt-4">
                                     <button id="sync-data-btn" class="btn-primary w-full">

@@ -13,13 +13,28 @@
                 } catch (e) {}
             })();
         </script>
+        <!-- أسرار الواجهة: عبّئ Frontend/secrets.local.js (مستبعد عن Git — انظر secrets.local.example.js) -->
         <script src="secrets.local.js"></script>
+        <!-- رابط نقطة RPC الافتراضي إن لم يُضبط في secrets.local.js -->
         <script>
             (function () {
                 try {
                     if (!window.__HSE_RPC_URL__) {
                         window.__HSE_RPC_URL__ =
                             "https://apsawzzqurfnpsucyozb.supabase.co/functions/v1/hse-api";
+                    }
+                } catch (e) {}
+            })();
+        </script>
+        <!-- افتراضي: خلفية Supabase/Postgres (عطّل في secrets.local.js إن احتجت GAS) -->
+        <script>
+            (function () {
+                try {
+                    if (window.__HSE_USE_SUPABASE__ === undefined) {
+                        window.__HSE_USE_SUPABASE__ = true;
+                    }
+                    if (window.__HSE_SUPABASE_ONLY__ === undefined) {
+                        window.__HSE_SUPABASE_ONLY__ = true;
                     }
                 } catch (e) {}
             })();

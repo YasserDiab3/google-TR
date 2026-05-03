@@ -787,9 +787,20 @@ const GoogleIntegration = {
                     'Content-Type': 'text/plain;charset=utf-8'
                 };
                 if (supabaseAnon && /supabase\.co\/functions\/v1\//i.test(String(scriptUrl || ''))) {
-                    fetchHeaders['Authorization'] = 'Bearer ' + supabaseAnon;
                     fetchHeaders['apikey'] = supabaseAnon;
+                    // مفتاح anon القديم JWT؛ مفاتيح 2026 sb_publishable_ ليست JWT — لا تُرسل كـ Bearer
+                    if (supabaseAnon.startsWith('eyJ')) {
+                        fetchHeaders['Authorization'] = 'Bearer ' + supabaseAnon;
+                    }
                 }
+                try {
+                    const hseKey = (typeof window !== 'undefined' && window.__HSE_API_KEY__)
+                        ? String(window.__HSE_API_KEY__).trim()
+                        : '';
+                    if (hseKey && /supabase\.co\/functions\/v1\//i.test(String(scriptUrl || ''))) {
+                        fetchHeaders['x-hse-api-key'] = hseKey;
+                    }
+                } catch (e) { /* ignore */ }
                 response = await fetch(scriptUrl, {
                     method: 'POST',
                     mode: 'cors',

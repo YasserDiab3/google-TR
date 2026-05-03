@@ -1,0 +1,3510 @@
+{
+  "generatedAt": "2026-05-03T19:52:45.367Z",
+  "summary": {
+    "backendCaseCount": 452,
+    "frontendDistinctActionCount": 181,
+    "mvpActionCount": 17
+  },
+  "mvpLaunchActions": [
+    "testConnection",
+    "readFromSheet",
+    "batchReadSheets",
+    "saveToSheet",
+    "appendToSheet",
+    "deleteFromSheet",
+    "getCompanySettings",
+    "saveCompanySettings",
+    "getUsersMeta",
+    "getFormSettings",
+    "saveFormSettings",
+    "addUser",
+    "updateUser",
+    "deleteUser",
+    "resetUserPassword",
+    "fixUsersSheetHeaders",
+    "fixMissingSheetHeaders"
+  ],
+  "backendCases": [
+    "PTW_DEFAULT_COORDINATES",
+    "PTW_MAP_COORDINATES",
+    "addAIAssistantSettings",
+    "addActionComment",
+    "addActionTracking",
+    "addActionUpdate",
+    "addAnnualTrainingPlan",
+    "addApprovedContractor",
+    "addAuditLog",
+    "addBehavior",
+    "addBudget",
+    "addCarbonFootprint",
+    "addChangeRequest",
+    "addChemicalSafety",
+    "addClinicInventory",
+    "addClinicVisit",
+    "addClinicVisitDeletionRequest",
+    "addCommentToIssue",
+    "addContractor",
+    "addContractorApprovalRequest",
+    "addContractorDeletionRequest",
+    "addContractorEvaluation",
+    "addContractorIssuingAuthority",
+    "addContractorTraining",
+    "addCustomKPI",
+    "addDepartment",
+    "addDocumentCode",
+    "addDocumentVersion",
+    "addEmergencyAlert",
+    "addEmergencyPlan",
+    "addEmployee",
+    "addEmployeeTrainingMatrix",
+    "addEnergyEfficiency",
+    "addEnvironmentalAspect",
+    "addEnvironmentalMonitoring",
+    "addFireEquipment",
+    "addFireEquipmentApprovalRequest",
+    "addFireEquipmentAsset",
+    "addFireEquipmentInspection",
+    "addHSEAudit",
+    "addHSECorrectiveAction",
+    "addHSENonConformity",
+    "addHSEObjective",
+    "addHSERiskAssessment",
+    "addISODocument",
+    "addISOForm",
+    "addISOProcedure",
+    "addIncident",
+    "addIncidentNotification",
+    "addInjury",
+    "addIssue",
+    "addIssuingAuthority",
+    "addKPI",
+    "addLegalDocument",
+    "addMedication",
+    "addMedicationDeletionRequest",
+    "addNearMiss",
+    "addNotification",
+    "addObservation",
+    "addObservationComment",
+    "addObservationSite",
+    "addObservationUpdate",
+    "addOrUpdatePPEStockItem",
+    "addPPE",
+    "addPPEMatrix",
+    "addPPETransaction",
+    "addPTW",
+    "addPeriodicInspection",
+    "addPeriodicInspectionCategory",
+    "addPeriodicInspectionChecklist",
+    "addPeriodicInspectionRecord",
+    "addPeriodicInspectionSchedule",
+    "addPlace",
+    "addRecyclingProgram",
+    "addRiskAssessment",
+    "addSOPJHA",
+    "addSafetyAlert",
+    "addSafetyBudget",
+    "addSafetyBudgetTransaction",
+    "addSafetyBudgets",
+    "addSafetyMember",
+    "addSafetyPerformanceKPI",
+    "addSafetyTeamAttendance",
+    "addSafetyTeamKPI",
+    "addSafetyTeamLeave",
+    "addSafetyTeamMember",
+    "addSafetyTeamTask",
+    "addSickLeave",
+    "addSite",
+    "addSolutionToIssue",
+    "addSupplyRequest",
+    "addSustainability",
+    "addTraining",
+    "addUser",
+    "addUserAILog",
+    "addUserActivityLog",
+    "addUserInstruction",
+    "addUserTask",
+    "addViolation",
+    "addViolationType",
+    "addWasteManagement",
+    "addWaterManagement",
+    "analyzeHSEData",
+    "appendToSheet",
+    "approveClinicVisitDeletion",
+    "approveContractorApprovalRequest",
+    "approveContractorDeletionRequest",
+    "approveMedicationDeletion",
+    "approveSupplyRequest",
+    "batchReadSheets",
+    "calculateAllCustomKPIs",
+    "calculateSafetyTeamKPIs",
+    "createActionFromModule",
+    "createAutomaticBackup",
+    "createManualBackup",
+    "deactivateEmployee",
+    "deleteActionTracking",
+    "deleteAllEmployees",
+    "deleteAllObservations",
+    "deleteAppEmergencyNumber",
+    "deleteApprovedContractor",
+    "deleteBackup",
+    "deleteBehavior",
+    "deleteChemicalSafety",
+    "deleteClinicVisit",
+    "deleteContractor",
+    "deleteContractorIssuingAuthority",
+    "deleteCustomKPI",
+    "deleteDepartment",
+    "deleteDocumentCode",
+    "deleteEmergencyPlan",
+    "deleteEmergencyPlanUpdate",
+    "deleteEmployee",
+    "deleteFileFromDrive",
+    "deleteFireEquipment",
+    "deleteFireEquipmentApprovalRequest",
+    "deleteHSEMonitoringPlan",
+    "deleteIncident",
+    "deleteIssue",
+    "deleteIssuingAuthority",
+    "deleteKPI",
+    "deleteKPIAnnualPlan",
+    "deleteLegalDocument",
+    "deleteMedication",
+    "deleteModule",
+    "deleteNearMiss",
+    "deleteNotification",
+    "deleteObservation",
+    "deletePPE",
+    "deletePPEStockItem",
+    "deletePTW",
+    "deletePlace",
+    "deleteRiskAssessment",
+    "deleteSOPJHA",
+    "deleteSafetyAlert",
+    "deleteSafetyMember",
+    "deleteSafetyTeamAttendance",
+    "deleteSafetyTeamLeave",
+    "deleteSafetyTeamMember",
+    "deleteSafetyTeamTask",
+    "deleteSite",
+    "deleteTraining",
+    "deleteUser",
+    "deleteUserTask",
+    "deleteViolationFromSheet",
+    "deleteViolationType",
+    "detectPatterns",
+    "disableAutomaticBackup",
+    "downloadBackup",
+    "exportDailyObservationsPptReport",
+    "fixMissingSheetHeaders",
+    "fixUsersSheetHeaders",
+    "generateAttendanceReport",
+    "generateSafetyTeamPerformanceReport",
+    "getActionTracking",
+    "getActionTrackingKPIs",
+    "getActionTrackingSettings",
+    "getAllActionTracking",
+    "getAllAppEmergencyNumbers",
+    "getAllApprovedContractors",
+    "getAllAuditLogs",
+    "getAllBackups",
+    "getAllBehaviors",
+    "getAllBudgets",
+    "getAllChangeRequests",
+    "getAllChemicalSafety",
+    "getAllClinicInventory",
+    "getAllClinicVisitDeletionRequests",
+    "getAllClinicVisits",
+    "getAllContractorApprovalRequests",
+    "getAllContractorDeletionRequests",
+    "getAllContractorEvaluations",
+    "getAllContractorIssuingAuthorities",
+    "getAllContractorTrainings",
+    "getAllContractors",
+    "getAllDepartments",
+    "getAllEmergencyAlerts",
+    "getAllEmergencyPlanUpdates",
+    "getAllEmergencyPlans",
+    "getAllEmployees",
+    "getAllFireEquipment",
+    "getAllFireEquipmentAssets",
+    "getAllFireEquipmentInspections",
+    "getAllHSEAudits",
+    "getAllHSECorrectiveActions",
+    "getAllHSENonConformities",
+    "getAllHSEObjectives",
+    "getAllHSERiskAssessments",
+    "getAllISODocuments",
+    "getAllISOForms",
+    "getAllISOProcedures",
+    "getAllIncidentNotifications",
+    "getAllIncidents",
+    "getAllInjuries",
+    "getAllIssues",
+    "getAllIssuingAuthorities",
+    "getAllKPIs",
+    "getAllLegalDocuments",
+    "getAllMedicationDeletionRequests",
+    "getAllMedications",
+    "getAllModules",
+    "getAllNearMisses",
+    "getAllObservations",
+    "getAllPPE",
+    "getAllPPEMatrices",
+    "getAllPPEStockItems",
+    "getAllPPETransactions",
+    "getAllPTWs",
+    "getAllPeriodicInspectionCategories",
+    "getAllPeriodicInspectionRecords",
+    "getAllPeriodicInspectionSchedules",
+    "getAllPeriodicInspections",
+    "getAllPlaces",
+    "getAllRiskAssessments",
+    "getAllSOPJHAs",
+    "getAllSafetyAlerts",
+    "getAllSafetyBudgetTransactions",
+    "getAllSafetyBudgets",
+    "getAllSafetyMembers",
+    "getAllSickLeaves",
+    "getAllSites",
+    "getAllSupplyRequests",
+    "getAllTrainingAttendance",
+    "getAllTrainingCertificates",
+    "getAllTrainingSessions",
+    "getAllTrainings",
+    "getAllUserActivityLogs",
+    "getAllUserTasks",
+    "getAutomaticBackupStatus",
+    "getBackup",
+    "getBackupSettings",
+    "getBackupStatistics",
+    "getBehavior",
+    "getBudgetStatistics",
+    "getChangeRequest",
+    "getChangeRequestStatistics",
+    "getChecklistsByCategory",
+    "getChemicalSafety",
+    "getCompanySettings",
+    "getContractor",
+    "getContractorDetailedAnalytics",
+    "getContractorEvaluations",
+    "getContractorIssuingAuthoritiesForPermitType",
+    "getDailyObservationsPptTemplateId",
+    "getDailyUserSessionActivityReport",
+    "getDefaultCoordinates",
+    "getDocumentCodeAndVersion",
+    "getDocumentCodes",
+    "getDocumentVersions",
+    "getEmergencyPlan",
+    "getEmergencyPlanUpdate",
+    "getEmployee",
+    "getEmployeeByCode",
+    "getEmployeeStatistics",
+    "getEmployeeTrainingMatrix",
+    "getFireEquipmentApprovalRequests",
+    "getFireEquipmentInspectionAlerts",
+    "getFormSettings",
+    "getHSEMonitoringPlans",
+    "getIncident",
+    "getIncidentAnalysisSettings",
+    "getIncidentStatistics",
+    "getIssue",
+    "getIssueStatistics",
+    "getIssuingAuthoritiesForPermitType",
+    "getJobDescription",
+    "getKPI",
+    "getKPIAnnualPlans",
+    "getLegalDocument",
+    "getLegalDocumentAlerts",
+    "getLogStatistics",
+    "getLowStockItems",
+    "getMapCoordinates",
+    "getMedicationAlerts",
+    "getModuleInfo",
+    "getNearMiss",
+    "getNextChangeRequestNumber",
+    "getObservation",
+    "getObservationStatistics",
+    "getOrCreatePublicProfileToken",
+    "getOrganizationalStructure",
+    "getPPEItemsList",
+    "getPPEMatrix",
+    "getPTW",
+    "getPTWAlerts",
+    "getPeriodicInspectionAlerts",
+    "getPeriodicInspectionChecklist",
+    "getPublicIP",
+    "getRiskAssessment",
+    "getSOPJHA",
+    "getSafetyAlert",
+    "getSafetyHealthManagementSettings",
+    "getSafetyTeamAttendance",
+    "getSafetyTeamKPIs",
+    "getSafetyTeamLeaves",
+    "getSafetyTeamMember",
+    "getSafetyTeamMembers",
+    "getSafetyTeamTasks",
+    "getSmartRecommendations",
+    "getTraining",
+    "getTrainingModuleBundle",
+    "getTrainingStatistics",
+    "getUnreadNotificationsCount",
+    "getUserActivityLogs",
+    "getUserInstructionsByUserId",
+    "getUserNotifications",
+    "getUserTasksByUserId",
+    "getUsersMeta",
+    "getViolationTypes",
+    "importBackup",
+    "importBackupFromFile",
+    "initCompanySettingsTable",
+    "initFormSettingsTables",
+    "initIssuingAuthoritiesTable",
+    "initMapCoordinatesTable",
+    "initializeSheets",
+    "markNotificationAsRead",
+    "notifyObservationWorkflowEvent",
+    "processAIQuestion",
+    "processAttachmentsForSave",
+    "readFromSheet",
+    "rejectClinicVisitDeletion",
+    "rejectContractorApprovalRequest",
+    "rejectContractorDeletionRequest",
+    "rejectMedicationDeletion",
+    "rejectSupplyRequest",
+    "resetUserPassword",
+    "restoreFromBackup",
+    "saveActionTrackingSettings",
+    "saveBackupSettings",
+    "saveCompanySettings",
+    "saveDefaultCoordinates",
+    "saveFormSettings",
+    "saveHSEMonitoringPlan",
+    "saveIncidentAnalysisSettings",
+    "saveJobDescription",
+    "saveKPIAnnualPlan",
+    "saveMapCoordinates",
+    "saveOrUpdateFireEquipmentAsset",
+    "saveOrganizationalStructure",
+    "savePerformanceReport",
+    "saveSafetyHealthManagementSettings",
+    "saveToSheet",
+    "saveViolationTypes",
+    "setDailyObservationsPptTemplateId",
+    "setupAutomaticBackup",
+    "testBackupSystem",
+    "testConnection",
+    "transitionObservationWorkflow",
+    "updateActionTracking",
+    "updateApprovedContractor",
+    "updateAttendanceStatuses",
+    "updateBehavior",
+    "updateBudget",
+    "updateChangeRequest",
+    "updateChemicalSafety",
+    "updateClinicInventory",
+    "updateClinicVisit",
+    "updateClinicVisitDeletionRequest",
+    "updateContractor",
+    "updateContractorApprovalRequest",
+    "updateContractorDeletionRequest",
+    "updateContractorEvaluation",
+    "updateContractorIssuingAuthority",
+    "updateCustomKPI",
+    "updateDepartment",
+    "updateDocumentCode",
+    "updateDocumentVersion",
+    "updateEmergencyAlert",
+    "updateEmergencyPlan",
+    "updateEmployee",
+    "updateEmployeeTrainingMatrix",
+    "updateFireEquipment",
+    "updateFireEquipmentApprovalRequest",
+    "updateFireEquipmentAsset",
+    "updateFireEquipmentInspection",
+    "updateHSEAudit",
+    "updateHSECorrectiveAction",
+    "updateHSEMonitoringMonthlyExecution",
+    "updateHSENonConformity",
+    "updateHSEObjective",
+    "updateHSERiskAssessment",
+    "updateISODocument",
+    "updateISOForm",
+    "updateISOProcedure",
+    "updateIncident",
+    "updateInjury",
+    "updateIssue",
+    "updateIssuingAuthority",
+    "updateJobDescription",
+    "updateKPI",
+    "updateKPITargets",
+    "updateLeaveTypes",
+    "updateLegalDocument",
+    "updateMedication",
+    "updateMedicationDeletionRequest",
+    "updateModule",
+    "updateNearMiss",
+    "updateObservation",
+    "updateObservationStatus",
+    "updateOrganizationalStructureOrder",
+    "updatePPE",
+    "updatePPEMatrix",
+    "updatePTW",
+    "updatePeriodicInspection",
+    "updatePeriodicInspectionCategory",
+    "updatePeriodicInspectionChecklist",
+    "updatePeriodicInspectionRecord",
+    "updatePeriodicInspectionSchedule",
+    "updatePlace",
+    "updateRiskAssessment",
+    "updateSOPJHA",
+    "updateSafetyAlert",
+    "updateSafetyBudget",
+    "updateSafetyBudgetTransaction",
+    "updateSafetyMember",
+    "updateSafetyTeamAttendance",
+    "updateSafetyTeamKPI",
+    "updateSafetyTeamLeave",
+    "updateSafetyTeamMember",
+    "updateSafetyTeamTask",
+    "updateSickLeave",
+    "updateSite",
+    "updateSupplyRequest",
+    "updateTaskCompletionRate",
+    "updateTraining",
+    "updateUser",
+    "updateUserTask",
+    "updateViolationType",
+    "uploadFileToDrive",
+    "upsertAppEmergencyNumber",
+    "upsertEmergencyPlanUpdate"
+  ],
+  "frontendActions": [
+    "addChangeRequest",
+    "addClinicVisit",
+    "addClinicVisitDeletionRequest",
+    "addContractorApprovalRequest",
+    "addContractorTraining",
+    "addEnvironmentalAspect",
+    "addFireEquipmentApprovalRequest",
+    "addHSEAudit",
+    "addHSECorrectiveAction",
+    "addHSENonConformity",
+    "addHSEObjective",
+    "addIncident",
+    "addIncidentNotification",
+    "addInjury",
+    "addIssue",
+    "addMedication",
+    "addMedicationDeletionRequest",
+    "addNearMiss",
+    "addNotification",
+    "addOrUpdatePPEStockItem",
+    "addPPETransaction",
+    "addPeriodicInspection",
+    "addSafetyTeamAttendance",
+    "addSafetyTeamKPI",
+    "addSafetyTeamLeave",
+    "addSafetyTeamTask",
+    "addSickLeave",
+    "addSupplyRequest",
+    "addTraining",
+    "addUserActivityLog",
+    "appendToSheet",
+    "approvalRequestAdded",
+    "approval_request",
+    "approveClinicVisitDeletion",
+    "approveMedicationDeletion",
+    "approveSupplyRequest",
+    "batchReadSheets",
+    "calculateSafetyTeamKPIs",
+    "cloud_storage_connected",
+    "cloud_storage_download",
+    "cloud_storage_upload",
+    "comment_added",
+    "deactivateEmployee",
+    "deleteAllObservations",
+    "deleteApprovedContractor",
+    "deleteClinicVisit",
+    "deleteContractor",
+    "deleteCustomKPI",
+    "deleteFireEquipment",
+    "deleteFireEquipmentApprovalRequest",
+    "deleteFromSheet",
+    "deleteIncident",
+    "deleteMedication",
+    "deleteNearMiss",
+    "deleteObservation",
+    "deletePPE",
+    "deletePPEStockItem",
+    "deleteSafetyAlert",
+    "deleteSafetyTeamAttendance",
+    "deleteSafetyTeamLeave",
+    "deleteSafetyTeamMember",
+    "deleteSafetyTeamTask",
+    "deleteTraining",
+    "deleteUser",
+    "exportDailyObservationsPptReport",
+    "generateAttendanceReport",
+    "generateSafetyTeamPerformanceReport",
+    "getActionTrackingKPIs",
+    "getActionTrackingSettings",
+    "getAllActionTracking",
+    "getAllApprovedContractors",
+    "getAllBehaviors",
+    "getAllChangeRequests",
+    "getAllClinicVisitDeletionRequests",
+    "getAllClinicVisits",
+    "getAllContractorTrainings",
+    "getAllEmployees",
+    "getAllFireEquipmentAssets",
+    "getAllFireEquipmentInspections",
+    "getAllIncidents",
+    "getAllInjuries",
+    "getAllIssues",
+    "getAllMedicationDeletionRequests",
+    "getAllMedications",
+    "getAllNearMisses",
+    "getAllObservations",
+    "getAllPPE",
+    "getAllPPEStockItems",
+    "getAllPPETransactions",
+    "getAllPTWs",
+    "getAllPeriodicInspectionRecords",
+    "getAllPeriodicInspections",
+    "getAllSickLeaves",
+    "getAllSupplyRequests",
+    "getAllTrainingAttendance",
+    "getAllTrainings",
+    "getAllUserActivityLogs",
+    "getAllUserTasks",
+    "getChangeRequest",
+    "getChangeRequestStatistics",
+    "getCompanySettings",
+    "getContractorDetailedAnalytics",
+    "getDailyObservationsPptTemplateId",
+    "getDailyUserSessionActivityReport",
+    "getEmployeeByCode",
+    "getEmployeeTrainingMatrix",
+    "getFireEquipmentApprovalRequests",
+    "getFormSettings",
+    "getIssue",
+    "getIssueStatistics",
+    "getJobDescription",
+    "getNextChangeRequestNumber",
+    "getObservation",
+    "getOrganizationalStructure",
+    "getPPEItemsList",
+    "getPPEMatrix",
+    "getPublicIP",
+    "getSafetyHealthManagementSettings",
+    "getSafetyTeamAttendance",
+    "getSafetyTeamKPIs",
+    "getSafetyTeamLeaves",
+    "getSafetyTeamMember",
+    "getSafetyTeamMembers",
+    "getSafetyTeamTasks",
+    "getSmartRecommendations",
+    "getTraining",
+    "getTrainingModuleBundle",
+    "getUserTasksByUserId",
+    "getUsersMeta",
+    "high_monthly_visits",
+    "high_risk_sites",
+    "initializeSheets",
+    "inspection_approval",
+    "inspection_approval_status",
+    "logAIQuestion",
+    "medication_deletion",
+    "navigate",
+    "open",
+    "processAIQuestion",
+    "readFromSheet",
+    "rejectClinicVisitDeletion",
+    "rejectContractorApprovalRequest",
+    "rejectMedicationDeletion",
+    "rejectSupplyRequest",
+    "resetUserPassword",
+    "saveCompanySettings",
+    "saveFormSettings",
+    "saveOrUpdateFireEquipmentAsset",
+    "saveOrganizationalStructure",
+    "saveTestReport",
+    "saveToSheet",
+    "saveViolationTypes",
+    "setDailyObservationsPptTemplateId",
+    "skipped",
+    "supply_request",
+    "testConnection",
+    "updateApprovedContractor",
+    "updateAttendanceStatuses",
+    "updateChangeRequest",
+    "updateClinicVisit",
+    "updateContractorTraining",
+    "updateEmployeeTrainingMatrix",
+    "updateFireEquipmentApprovalRequest",
+    "updateIncident",
+    "updateInjury",
+    "updateKPITargets",
+    "updateLeaveTypes",
+    "updateMedication",
+    "updateNearMiss",
+    "updateObservation",
+    "updatePeriodicInspection",
+    "updateSafetyTeamAttendance",
+    "updateSafetyTeamKPI",
+    "updateSafetyTeamLeave",
+    "updateSafetyTeamTask",
+    "updateSickLeave",
+    "updateUser",
+    "update_added",
+    "uploadFileToDrive",
+    "تحديث",
+    "حذف"
+  ],
+  "compatibilityMatrix": {
+    "PTW_DEFAULT_COORDINATES": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "PTW_MAP_COORDINATES": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addAIAssistantSettings": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addActionComment": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addActionTracking": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addActionUpdate": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addAnnualTrainingPlan": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addApprovedContractor": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addAuditLog": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addBehavior": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addBudget": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addCarbonFootprint": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addChangeRequest": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addChemicalSafety": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addClinicInventory": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addClinicVisit": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addClinicVisitDeletionRequest": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addCommentToIssue": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addContractor": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addContractorApprovalRequest": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addContractorDeletionRequest": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addContractorEvaluation": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addContractorIssuingAuthority": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addContractorTraining": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addCustomKPI": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addDepartment": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addDocumentCode": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addDocumentVersion": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addEmergencyAlert": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addEmergencyPlan": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addEmployee": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addEmployeeTrainingMatrix": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addEnergyEfficiency": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addEnvironmentalAspect": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addEnvironmentalMonitoring": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addFireEquipment": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addFireEquipmentApprovalRequest": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addFireEquipmentAsset": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addFireEquipmentInspection": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addHSEAudit": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addHSECorrectiveAction": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addHSENonConformity": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addHSEObjective": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addHSERiskAssessment": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addISODocument": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addISOForm": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addISOProcedure": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addIncident": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addIncidentNotification": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addInjury": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addIssue": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addIssuingAuthority": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addKPI": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addLegalDocument": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addMedication": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addMedicationDeletionRequest": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addNearMiss": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addNotification": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addObservation": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addObservationComment": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addObservationSite": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addObservationUpdate": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addOrUpdatePPEStockItem": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addPPE": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addPPEMatrix": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addPPETransaction": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addPTW": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addPeriodicInspection": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addPeriodicInspectionCategory": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addPeriodicInspectionChecklist": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addPeriodicInspectionRecord": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addPeriodicInspectionSchedule": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addPlace": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addRecyclingProgram": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addRiskAssessment": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addSOPJHA": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addSafetyAlert": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addSafetyBudget": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addSafetyBudgetTransaction": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addSafetyBudgets": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addSafetyMember": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addSafetyPerformanceKPI": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addSafetyTeamAttendance": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addSafetyTeamKPI": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addSafetyTeamLeave": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addSafetyTeamMember": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addSafetyTeamTask": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addSickLeave": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addSite": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addSolutionToIssue": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addSupplyRequest": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addSustainability": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addTraining": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addUser": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": true,
+      "status": "implemented_in_hse_api"
+    },
+    "addUserAILog": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addUserActivityLog": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addUserInstruction": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addUserTask": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addViolation": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addViolationType": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addWasteManagement": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "addWaterManagement": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "analyzeHSEData": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "appendToSheet": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": true,
+      "status": "implemented_in_hse_api"
+    },
+    "approveClinicVisitDeletion": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "approveContractorApprovalRequest": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "approveContractorDeletionRequest": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "approveMedicationDeletion": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "approveSupplyRequest": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "batchReadSheets": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": true,
+      "status": "implemented_in_hse_api"
+    },
+    "calculateAllCustomKPIs": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "calculateSafetyTeamKPIs": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "createActionFromModule": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "createAutomaticBackup": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "createManualBackup": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "deactivateEmployee": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "deleteActionTracking": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "deleteAllEmployees": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "deleteAllObservations": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "deleteAppEmergencyNumber": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "deleteApprovedContractor": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "deleteBackup": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "deleteBehavior": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "deleteChemicalSafety": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "deleteClinicVisit": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "deleteContractor": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "deleteContractorIssuingAuthority": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "deleteCustomKPI": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "deleteDepartment": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "deleteDocumentCode": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "deleteEmergencyPlan": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "deleteEmergencyPlanUpdate": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "deleteEmployee": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "deleteFileFromDrive": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "deleteFireEquipment": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "deleteFireEquipmentApprovalRequest": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "deleteHSEMonitoringPlan": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "deleteIncident": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "deleteIssue": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "deleteIssuingAuthority": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "deleteKPI": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "deleteKPIAnnualPlan": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "deleteLegalDocument": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "deleteMedication": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "deleteModule": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "deleteNearMiss": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "deleteNotification": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "deleteObservation": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "deletePPE": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "deletePPEStockItem": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "deletePTW": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "deletePlace": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "deleteRiskAssessment": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "deleteSOPJHA": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "deleteSafetyAlert": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "deleteSafetyMember": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "deleteSafetyTeamAttendance": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "deleteSafetyTeamLeave": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "deleteSafetyTeamMember": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "deleteSafetyTeamTask": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "deleteSite": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "deleteTraining": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "deleteUser": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": true,
+      "status": "implemented_in_hse_api"
+    },
+    "deleteUserTask": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "deleteViolationFromSheet": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "deleteViolationType": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "detectPatterns": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "disableAutomaticBackup": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "downloadBackup": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "exportDailyObservationsPptReport": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "fixMissingSheetHeaders": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": true,
+      "status": "implemented_in_hse_api"
+    },
+    "fixUsersSheetHeaders": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": true,
+      "status": "implemented_in_hse_api"
+    },
+    "generateAttendanceReport": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "generateSafetyTeamPerformanceReport": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getActionTracking": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getActionTrackingKPIs": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getActionTrackingSettings": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getAllActionTracking": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getAllAppEmergencyNumbers": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getAllApprovedContractors": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getAllAuditLogs": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getAllBackups": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getAllBehaviors": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getAllBudgets": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getAllChangeRequests": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getAllChemicalSafety": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getAllClinicInventory": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getAllClinicVisitDeletionRequests": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getAllClinicVisits": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getAllContractorApprovalRequests": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getAllContractorDeletionRequests": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getAllContractorEvaluations": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getAllContractorIssuingAuthorities": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getAllContractorTrainings": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getAllContractors": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getAllDepartments": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getAllEmergencyAlerts": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getAllEmergencyPlanUpdates": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getAllEmergencyPlans": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getAllEmployees": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getAllFireEquipment": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getAllFireEquipmentAssets": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getAllFireEquipmentInspections": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getAllHSEAudits": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getAllHSECorrectiveActions": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getAllHSENonConformities": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getAllHSEObjectives": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getAllHSERiskAssessments": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getAllISODocuments": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getAllISOForms": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getAllISOProcedures": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getAllIncidentNotifications": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getAllIncidents": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getAllInjuries": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getAllIssues": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getAllIssuingAuthorities": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getAllKPIs": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getAllLegalDocuments": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getAllMedicationDeletionRequests": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getAllMedications": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getAllModules": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getAllNearMisses": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getAllObservations": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getAllPPE": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getAllPPEMatrices": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getAllPPEStockItems": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getAllPPETransactions": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getAllPTWs": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getAllPeriodicInspectionCategories": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getAllPeriodicInspectionRecords": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getAllPeriodicInspectionSchedules": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getAllPeriodicInspections": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getAllPlaces": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getAllRiskAssessments": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getAllSOPJHAs": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getAllSafetyAlerts": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getAllSafetyBudgetTransactions": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getAllSafetyBudgets": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getAllSafetyMembers": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getAllSickLeaves": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getAllSites": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getAllSupplyRequests": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getAllTrainingAttendance": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getAllTrainingCertificates": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getAllTrainingSessions": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getAllTrainings": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getAllUserActivityLogs": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getAllUserTasks": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getAutomaticBackupStatus": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getBackup": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getBackupSettings": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getBackupStatistics": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getBehavior": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getBudgetStatistics": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getChangeRequest": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getChangeRequestStatistics": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getChecklistsByCategory": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getChemicalSafety": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getCompanySettings": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": true,
+      "status": "implemented_in_hse_api"
+    },
+    "getContractor": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getContractorDetailedAnalytics": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getContractorEvaluations": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getContractorIssuingAuthoritiesForPermitType": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getDailyObservationsPptTemplateId": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getDailyUserSessionActivityReport": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getDefaultCoordinates": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getDocumentCodeAndVersion": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getDocumentCodes": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getDocumentVersions": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getEmergencyPlan": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getEmergencyPlanUpdate": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getEmployee": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getEmployeeByCode": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getEmployeeStatistics": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getEmployeeTrainingMatrix": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getFireEquipmentApprovalRequests": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getFireEquipmentInspectionAlerts": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getFormSettings": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": true,
+      "status": "implemented_in_hse_api"
+    },
+    "getHSEMonitoringPlans": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getIncident": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getIncidentAnalysisSettings": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getIncidentStatistics": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getIssue": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getIssueStatistics": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getIssuingAuthoritiesForPermitType": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getJobDescription": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getKPI": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getKPIAnnualPlans": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getLegalDocument": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getLegalDocumentAlerts": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getLogStatistics": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getLowStockItems": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getMapCoordinates": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getMedicationAlerts": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getModuleInfo": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getNearMiss": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getNextChangeRequestNumber": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getObservation": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getObservationStatistics": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getOrCreatePublicProfileToken": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getOrganizationalStructure": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getPPEItemsList": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getPPEMatrix": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getPTW": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getPTWAlerts": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getPeriodicInspectionAlerts": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getPeriodicInspectionChecklist": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getPublicIP": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": true,
+      "status": "implemented_in_hse_api"
+    },
+    "getRiskAssessment": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getSOPJHA": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getSafetyAlert": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getSafetyHealthManagementSettings": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getSafetyTeamAttendance": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getSafetyTeamKPIs": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getSafetyTeamLeaves": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getSafetyTeamMember": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getSafetyTeamMembers": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getSafetyTeamTasks": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getSmartRecommendations": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getTraining": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getTrainingModuleBundle": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getTrainingStatistics": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getUnreadNotificationsCount": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getUserActivityLogs": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getUserInstructionsByUserId": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getUserNotifications": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getUserTasksByUserId": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "getUsersMeta": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": true,
+      "status": "implemented_in_hse_api"
+    },
+    "getViolationTypes": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "importBackup": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "importBackupFromFile": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "initCompanySettingsTable": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "initFormSettingsTables": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "initIssuingAuthoritiesTable": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "initMapCoordinatesTable": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "initializeSheets": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": true,
+      "status": "implemented_in_hse_api"
+    },
+    "markNotificationAsRead": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "notifyObservationWorkflowEvent": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "processAIQuestion": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": true,
+      "status": "implemented_in_hse_api"
+    },
+    "processAttachmentsForSave": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "readFromSheet": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": true,
+      "status": "implemented_in_hse_api"
+    },
+    "rejectClinicVisitDeletion": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "rejectContractorApprovalRequest": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "rejectContractorDeletionRequest": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "rejectMedicationDeletion": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "rejectSupplyRequest": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "resetUserPassword": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": true,
+      "status": "implemented_in_hse_api"
+    },
+    "restoreFromBackup": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "saveActionTrackingSettings": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "saveBackupSettings": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "saveCompanySettings": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": true,
+      "status": "implemented_in_hse_api"
+    },
+    "saveDefaultCoordinates": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "saveFormSettings": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": true,
+      "status": "implemented_in_hse_api"
+    },
+    "saveHSEMonitoringPlan": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "saveIncidentAnalysisSettings": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "saveJobDescription": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "saveKPIAnnualPlan": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "saveMapCoordinates": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "saveOrUpdateFireEquipmentAsset": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "saveOrganizationalStructure": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "savePerformanceReport": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "saveSafetyHealthManagementSettings": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "saveToSheet": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": true,
+      "status": "implemented_in_hse_api"
+    },
+    "saveViolationTypes": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "setDailyObservationsPptTemplateId": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "setupAutomaticBackup": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "testBackupSystem": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "testConnection": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": true,
+      "status": "implemented_in_hse_api"
+    },
+    "transitionObservationWorkflow": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updateActionTracking": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updateApprovedContractor": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updateAttendanceStatuses": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updateBehavior": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updateBudget": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updateChangeRequest": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updateChemicalSafety": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updateClinicInventory": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updateClinicVisit": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updateClinicVisitDeletionRequest": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updateContractor": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updateContractorApprovalRequest": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updateContractorDeletionRequest": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updateContractorEvaluation": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updateContractorIssuingAuthority": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updateCustomKPI": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updateDepartment": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updateDocumentCode": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updateDocumentVersion": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updateEmergencyAlert": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updateEmergencyPlan": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updateEmployee": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updateEmployeeTrainingMatrix": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updateFireEquipment": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updateFireEquipmentApprovalRequest": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updateFireEquipmentAsset": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updateFireEquipmentInspection": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updateHSEAudit": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updateHSECorrectiveAction": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updateHSEMonitoringMonthlyExecution": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updateHSENonConformity": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updateHSEObjective": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updateHSERiskAssessment": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updateISODocument": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updateISOForm": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updateISOProcedure": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updateIncident": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updateInjury": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updateIssue": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updateIssuingAuthority": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updateJobDescription": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updateKPI": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updateKPITargets": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updateLeaveTypes": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updateLegalDocument": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updateMedication": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updateMedicationDeletionRequest": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updateModule": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updateNearMiss": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updateObservation": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updateObservationStatus": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updateOrganizationalStructureOrder": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updatePPE": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updatePPEMatrix": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updatePTW": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updatePeriodicInspection": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updatePeriodicInspectionCategory": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updatePeriodicInspectionChecklist": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updatePeriodicInspectionRecord": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updatePeriodicInspectionSchedule": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updatePlace": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updateRiskAssessment": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updateSOPJHA": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updateSafetyAlert": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updateSafetyBudget": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updateSafetyBudgetTransaction": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updateSafetyMember": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updateSafetyTeamAttendance": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updateSafetyTeamKPI": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updateSafetyTeamLeave": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updateSafetyTeamMember": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updateSafetyTeamTask": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updateSickLeave": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updateSite": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updateSupplyRequest": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updateTaskCompletionRate": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updateTraining": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updateUser": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": true,
+      "status": "implemented_in_hse_api"
+    },
+    "updateUserTask": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "updateViolationType": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "uploadFileToDrive": {
+      "inBackend": true,
+      "inFrontend": true,
+      "inHseApiPlan": true,
+      "status": "implemented_in_hse_api"
+    },
+    "upsertAppEmergencyNumber": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "upsertEmergencyPlanUpdate": {
+      "inBackend": true,
+      "inFrontend": false,
+      "inHseApiPlan": false,
+      "status": "needs_port_from_gas"
+    },
+    "approvalRequestAdded": {
+      "inBackend": false,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "frontend_only_or_dynamic"
+    },
+    "approval_request": {
+      "inBackend": false,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "frontend_only_or_dynamic"
+    },
+    "cloud_storage_connected": {
+      "inBackend": false,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "frontend_only_or_dynamic"
+    },
+    "cloud_storage_download": {
+      "inBackend": false,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "frontend_only_or_dynamic"
+    },
+    "cloud_storage_upload": {
+      "inBackend": false,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "frontend_only_or_dynamic"
+    },
+    "comment_added": {
+      "inBackend": false,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "frontend_only_or_dynamic"
+    },
+    "deleteFromSheet": {
+      "inBackend": false,
+      "inFrontend": true,
+      "inHseApiPlan": true,
+      "status": "implemented_in_hse_api"
+    },
+    "high_monthly_visits": {
+      "inBackend": false,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "frontend_only_or_dynamic"
+    },
+    "high_risk_sites": {
+      "inBackend": false,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "frontend_only_or_dynamic"
+    },
+    "inspection_approval": {
+      "inBackend": false,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "frontend_only_or_dynamic"
+    },
+    "inspection_approval_status": {
+      "inBackend": false,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "frontend_only_or_dynamic"
+    },
+    "logAIQuestion": {
+      "inBackend": false,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "frontend_only_or_dynamic"
+    },
+    "medication_deletion": {
+      "inBackend": false,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "frontend_only_or_dynamic"
+    },
+    "navigate": {
+      "inBackend": false,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "frontend_only_or_dynamic"
+    },
+    "open": {
+      "inBackend": false,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "frontend_only_or_dynamic"
+    },
+    "saveTestReport": {
+      "inBackend": false,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "frontend_only_or_dynamic"
+    },
+    "skipped": {
+      "inBackend": false,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "frontend_only_or_dynamic"
+    },
+    "supply_request": {
+      "inBackend": false,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "frontend_only_or_dynamic"
+    },
+    "updateContractorTraining": {
+      "inBackend": false,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "frontend_only_or_dynamic"
+    },
+    "update_added": {
+      "inBackend": false,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "frontend_only_or_dynamic"
+    },
+    "تحديث": {
+      "inBackend": false,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "frontend_only_or_dynamic"
+    },
+    "حذف": {
+      "inBackend": false,
+      "inFrontend": true,
+      "inHseApiPlan": false,
+      "status": "frontend_only_or_dynamic"
+    }
+  }
+}

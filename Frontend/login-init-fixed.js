@@ -34,9 +34,18 @@ var log = function() { try { console.log.apply(console, arguments); } catch(e) {
         const STORAGE_KEY = 'hse_google_config'; /* مفتاح تخزين تاريخي — يحتوي إعدادات RPC/الخادم */
         const MODAL_ID = 'login-sync-settings-modal';
 
+        function getDefaultRpcUrl() {
+            try {
+                if (typeof window !== 'undefined' && window.__HSE_RPC_URL__) {
+                    return String(window.__HSE_RPC_URL__).trim();
+                }
+            } catch (e) { /* ignore */ }
+            return 'https://apsawzzqurfnpsucyozb.supabase.co/functions/v1/hse-api';
+        }
+
         function getDefaultGoogleConfig() {
             return {
-                appsScript: { enabled: true, scriptUrl: 'https://script.google.com/macros/s/AKfycbx2dCdy7o7cOUSJCiA05OEyOYB5e5e79DgV5WKVqv8fhmOnNKQjZrvI9j8jxFXtT16m/exec' },
+                appsScript: { enabled: true, scriptUrl: getDefaultRpcUrl() },
                 sheets: { enabled: true, spreadsheetId: '1EanavJ2OodOmq8b1GagSj8baa-KF-o4mVme_Jlwmgxc', apiKey: '' },
                 maps: { enabled: false, apiKey: '' }
             };

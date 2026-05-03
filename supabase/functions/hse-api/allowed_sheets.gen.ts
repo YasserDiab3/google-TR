@@ -18,6 +18,7 @@ export const ALLOWED_SHEETS = new Set<string>([
   "ClinicContractorInjuries",
   "ClinicInventory",
   "ClinicVisits",
+  "Company_Settings",
   "ContractorApprovalRequests",
   "ContractorDeletionRequests",
   "ContractorEvaluations",

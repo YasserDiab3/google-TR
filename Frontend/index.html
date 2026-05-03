@@ -26,6 +26,19 @@
                 } catch (e) {}
             })();
         </script>
+        <!-- افتراضي: خلفية Supabase/Postgres (عطّل في secrets.local.js إن احتجت GAS) -->
+        <script>
+            (function () {
+                try {
+                    if (window.__HSE_USE_SUPABASE__ === undefined) {
+                        window.__HSE_USE_SUPABASE__ = true;
+                    }
+                    if (window.__HSE_SUPABASE_ONLY__ === undefined) {
+                        window.__HSE_SUPABASE_ONLY__ = true;
+                    }
+                } catch (e) {}
+            })();
+        </script>
         <!-- إزالة قفل الواجهة يدوياً من Console: اكتب HSE_clearUiLock() (بحروف كما هي) -->
         <script>
             (function () {

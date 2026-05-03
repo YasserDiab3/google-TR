@@ -13,6 +13,10 @@ out/
 .env
 .env.local
 
+# أسرار الواجهة المحلية (لا تُرفع أبداً)
+Frontend/secrets.local.js
+vercel-deploy/frontend/secrets.local.js
+
 # أسرار الدالة (محلية فقط)
 supabase/functions/hse-api/.env.local
 .env.development.local
