@@ -512,7 +512,7 @@ const Settings = {
                                         </label>
                                         <input type="url" id="google-apps-script-url" class="form-input"
                                             value="${AppState.googleConfig.appsScript.scriptUrl || ''}"
-                                            placeholder="https://xxxx.supabase.co/functions/v1/hse-api">
+                                            placeholder="https://apsawzzqurfnpsucyozb.supabase.co/functions/v1/hse-api">
                                     </div>
                                     <div>
                                         <label class="flex items-center mb-4">

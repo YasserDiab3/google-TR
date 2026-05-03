@@ -189,7 +189,7 @@ var log = function() { try { console.log.apply(console, arguments); } catch(e) {
                                     رابط الخادم الخلفي (RPC / Supabase Edge)
                                 </label>
                                 <input id="login-sync-script-url" type="url" class="form-input" dir="ltr"
-                                    placeholder="https://xxxx.supabase.co/functions/v1/hse-api" autocomplete="off">
+                                    placeholder="https://apsawzzqurfnpsucyozb.supabase.co/functions/v1/hse-api" autocomplete="off">
                                 <p class="text-xs text-gray-500 mt-2">للنشر على Supabase: استخدم رابط دالة <b>hse-api</b> تحت <b>/functions/v1/</b>. إن وُجد نشر قديم متوافق، يمكن استخدام رابط ينتهي بـ <b>/exec</b>.</p>
                             </div>
                             <div>

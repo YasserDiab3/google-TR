@@ -780,16 +780,21 @@ const GoogleIntegration = {
                 // التحقق من هل هو payload
                 // التحقق من هل هو headers
                 // التحقق من هل هو preflight requests
+                const supabaseAnon = (typeof window !== 'undefined' && window.__HSE_SUPABASE_ANON_KEY__)
+                    ? String(window.__HSE_SUPABASE_ANON_KEY__).trim()
+                    : '';
+                const fetchHeaders = {
+                    'Content-Type': 'text/plain;charset=utf-8'
+                };
+                if (supabaseAnon && /supabase\.co\/functions\/v1\//i.test(String(scriptUrl || ''))) {
+                    fetchHeaders['Authorization'] = 'Bearer ' + supabaseAnon;
+                    fetchHeaders['apikey'] = supabaseAnon;
+                }
                 response = await fetch(scriptUrl, {
                     method: 'POST',
                     mode: 'cors',
                     credentials: 'omit',
-                    headers: {
-                        'Content-Type': 'text/plain;charset=utf-8'
-                        // التحقق من هل هو 'X-CSRF-Token'
-                        // التحقق من هل هو CSRF Token
-                        // التحقق من هل هو payload.csrfToken
-                    },
+                    headers: fetchHeaders,
                     body: JSON.stringify(payload),
                     signal: controller.signal
                 }).catch(error => {

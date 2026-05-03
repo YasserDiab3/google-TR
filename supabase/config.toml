@@ -1,5 +1,5 @@
 # Supabase local / CLI config — set project_id after `supabase link`
-project_id = "hse-2027"
+project_id = "apsawzzqurfnpsucyozb"
 
 [api]
 enabled = true

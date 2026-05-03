@@ -13,14 +13,16 @@
                 } catch (e) {}
             })();
         </script>
-        <!-- رابط نقطة RPC (Supabase Edge hse-api). عيّن window.__HSE_RPC_URL__ بعد النشر أو عبر Vercel inject -->
+        <!-- رابط نقطة RPC (Supabase Edge hse-api). يُحترم أي قيمة مسبقة لـ window.__HSE_RPC_URL__ -->
         <script>
             (function () {
                 try {
-                    var h = window.location.hostname || "";
-                    if (/safety-icapp\.com$/i.test(h)) {
-                        // window.__HSE_RPC_URL__ = "https://YOUR_PROJECT.supabase.co/functions/v1/hse-api";
+                    if (!window.__HSE_RPC_URL__) {
+                        window.__HSE_RPC_URL__ =
+                            "https://apsawzzqurfnpsucyozb.supabase.co/functions/v1/hse-api";
                     }
+                    /* مفتاح anon العام من لوحة Supabase → Project Settings → API (اختياري إن طلب المتصفح مصادقة الدالة) */
+                    /* window.__HSE_SUPABASE_ANON_KEY__ = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."; */
                 } catch (e) {}
             })();
         </script>
