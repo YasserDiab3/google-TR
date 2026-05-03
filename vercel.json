@@ -1,5 +1,5 @@
 {
-  "outputDirectory": "dist",
+  "outputDirectory": "Frontend/dist",
   "headers": [
     {
       "source": "/service-worker.js",
