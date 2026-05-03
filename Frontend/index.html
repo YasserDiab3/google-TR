@@ -13,8 +13,35 @@
                 } catch (e) {}
             })();
         </script>
-        <!-- أسرار الواجهة: عبّئ Frontend/secrets.local.js (مستبعد عن Git — انظر secrets.local.example.js) -->
-        <script src="secrets.local.js"></script>
+        <!-- secrets.local.js مستبعد عن Git — لا تُحمّله على الإنتاج (404 → text/plain ويُرفض كسكربت) -->
+        <script>
+            (function () {
+                try {
+                    var h = (location.hostname || "").toLowerCase();
+                    var dev =
+                        h === "localhost" ||
+                        h === "127.0.0.1" ||
+                        h === "[::1]" ||
+                        h.endsWith(".local");
+                    if (!dev) return;
+                    var s = document.createElement("script");
+                    s.defer = true;
+                    s.src = "secrets.local.js";
+                    document.head.appendChild(s);
+                } catch (e) {}
+            })();
+        </script>
+        <!-- مفتاح anon العام (واجهة عميل — RLS يحمي البيانات). للتجاوز: secrets.local.js محلياً -->
+        <script>
+            (function () {
+                try {
+                    if (!window.__HSE_SUPABASE_ANON_KEY__) {
+                        window.__HSE_SUPABASE_ANON_KEY__ =
+                            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFwc2F3enpxdXJmbnBzdWN5b3piIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc3OTI4NDMsImV4cCI6MjA5MzM2ODg0M30.hmZEfoyhD7MwAeDjCE3DLDcGHXQP-ecMvtzVlQ1Q4w8";
+                    }
+                } catch (e) {}
+            })();
+        </script>
         <!-- رابط نقطة RPC الافتراضي إن لم يُضبط في secrets.local.js -->
         <script>
             (function () {

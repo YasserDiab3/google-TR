@@ -476,43 +476,44 @@ async function prepareUserRow(
 }
 
 Deno.serve(async (req: Request) => {
-  if (req.method === "OPTIONS") {
-    return new Response("ok", { headers: corsHeaders });
-  }
-
-  if (req.method !== "POST") {
-    return jsonResponse({ success: false, message: "Method not allowed" }, 405);
-  }
-
-  const authErr = checkHseApiKey(req);
-  if (authErr) return authErr;
-
-  const dbUrl = Deno.env.get("DATABASE_URL");
-  if (!dbUrl) {
-    return jsonResponse({
-      success: false,
-      message: "SERVER_CONFIG: DATABASE_URL secret is not set for hse-api",
-    }, 500);
-  }
-
-  let body: Record<string, unknown>;
   try {
-    body = await req.json();
-  } catch {
-    return jsonResponse({ success: false, message: "Invalid JSON body" }, 400);
-  }
+    if (req.method === "OPTIONS") {
+      return new Response("ok", { headers: corsHeaders });
+    }
 
-  const action = String(body.action || "");
-  const data = (body.data ?? {}) as Record<string, unknown>;
-  const payload = {
-    ...data,
-    ...(body.spreadsheetId ? { spreadsheetId: body.spreadsheetId } : {}),
-  };
+    if (req.method !== "POST") {
+      return jsonResponse({ success: false, message: "Method not allowed" }, 405);
+    }
 
-  const client = new Client(parseDatabaseUrl(dbUrl));
+    const authErr = checkHseApiKey(req);
+    if (authErr) return authErr;
 
-  try {
-    await client.connect();
+    const dbUrl = Deno.env.get("DATABASE_URL");
+    if (!dbUrl) {
+      return jsonResponse({
+        success: false,
+        message: "SERVER_CONFIG: DATABASE_URL secret is not set for hse-api",
+      }, 500);
+    }
+
+    let body: Record<string, unknown>;
+    try {
+      body = await req.json();
+    } catch {
+      return jsonResponse({ success: false, message: "Invalid JSON body" }, 400);
+    }
+
+    const action = String(body.action || "");
+    const data = (body.data ?? {}) as Record<string, unknown>;
+    const payload = {
+      ...data,
+      ...(body.spreadsheetId ? { spreadsheetId: body.spreadsheetId } : {}),
+    };
+
+    let client: Client | undefined;
+    try {
+      client = new Client(parseDatabaseUrl(dbUrl));
+      await client.connect();
 
     switch (action) {
       case "testConnection":
@@ -864,15 +865,23 @@ Deno.serve(async (req: Request) => {
           action,
         });
     }
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e);
+      console.error("hse-api error:", msg);
+      return jsonResponse({ success: false, message: msg }, 500);
+    } finally {
+      try {
+        if (client) await client.end();
+      } catch {
+        /* ignore */
+      }
+    }
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e);
-    console.error("hse-api error:", msg);
-    return jsonResponse({ success: false, message: msg }, 500);
-  } finally {
-    try {
-      await client.end();
-    } catch {
-      /* ignore */
-    }
+    console.error("hse-api fatal:", msg);
+    return new Response(JSON.stringify({ success: false, message: msg }), {
+      status: 500,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
   }
 });
