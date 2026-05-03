@@ -1,0 +1,10 @@
+# Supabase local / CLI config — set project_id after `supabase link`
+project_id = "hse-2027"
+
+[api]
+enabled = true
+schemas = ["public"]
+max_rows = 1000
+
+[functions.hse-api]
+verify_jwt = false

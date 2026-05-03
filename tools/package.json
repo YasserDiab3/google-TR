@@ -1,0 +1,8 @@
+{
+  "name": "hse-2027-tools",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "pg": "^8.13.1"
+  }
+}

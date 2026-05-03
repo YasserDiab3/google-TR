@@ -1941,7 +1941,8 @@ window.Auth = {
      * يتم تحميل البيانات بشكل متتالي لضمان عدم فقدان أي بيانات
      */
     async loadModulesDataSequentially() {
-        if (!AppState.googleConfig?.appsScript?.enabled || typeof GoogleIntegration === 'undefined') {
+        const supabaseBackend = typeof Utils !== 'undefined' && typeof Utils.isSupabaseBackend === 'function' && Utils.isSupabaseBackend();
+        if ((!AppState.googleConfig?.appsScript?.enabled && !supabaseBackend) || typeof GoogleIntegration === 'undefined') {
             return;
         }
 

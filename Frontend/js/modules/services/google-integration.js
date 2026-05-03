@@ -129,8 +129,9 @@ const GoogleIntegration = {
         }
 
         try {
+            const useSupabase = typeof Utils !== 'undefined' && typeof Utils.isSupabaseBackend === 'function' && Utils.isSupabaseBackend();
             const spreadsheetId = AppState.googleConfig.sheets?.spreadsheetId;
-            if (!spreadsheetId || spreadsheetId.trim() === '' || spreadsheetId === 'YOUR_SPREADSHEET_ID_HERE') {
+            if (!useSupabase && (!spreadsheetId || spreadsheetId.trim() === '' || spreadsheetId === 'YOUR_SPREADSHEET_ID_HERE')) {
                 // لا يوجد spreadsheetId - يتم تخزينه في التقدم
                 Utils.safeWarn(`فشل تحميل الملف إلى Google Sheets - يتم تخزينه في التقدم ${sheetName}`);
                 if (typeof DataManager !== 'undefined' && DataManager.addToPendingSync) {
@@ -145,7 +146,7 @@ const GoogleIntegration = {
             await this.sendToAppsScript('saveToSheet', {
                 sheetName,
                 data: preparedData,
-                spreadsheetId: spreadsheetId.trim()
+                spreadsheetId: useSupabase ? '' : spreadsheetId.trim()
             });
 
             // يتم حذف الملف من التقدم
