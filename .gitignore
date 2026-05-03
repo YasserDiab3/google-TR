@@ -12,6 +12,9 @@ out/
 # Environment variables
 .env
 .env.local
+
+# أسرار الدالة (محلية فقط)
+supabase/functions/hse-api/.env.local
 .env.development.local
 .env.test.local
 .env.production.local

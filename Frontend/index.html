@@ -13,7 +13,9 @@
                 } catch (e) {}
             })();
         </script>
-        <!-- رابط نقطة RPC (Supabase Edge hse-api). يُحترم أي قيمة مسبقة لـ window.__HSE_RPC_URL__ -->
+        <!-- أسرار الواجهة: عبّئ Frontend/secrets.local.js (مستبعد عن Git — انظر secrets.local.example.js) -->
+        <script src="secrets.local.js"></script>
+        <!-- رابط نقطة RPC الافتراضي إن لم يُضبط في secrets.local.js -->
         <script>
             (function () {
                 try {
@@ -21,8 +23,6 @@
                         window.__HSE_RPC_URL__ =
                             "https://apsawzzqurfnpsucyozb.supabase.co/functions/v1/hse-api";
                     }
-                    /* مفتاح anon العام من لوحة Supabase → Project Settings → API (اختياري إن طلب المتصفح مصادقة الدالة) */
-                    /* window.__HSE_SUPABASE_ANON_KEY__ = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."; */
                 } catch (e) {}
             })();
         </script>
