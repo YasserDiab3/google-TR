@@ -1,0 +1,12 @@
+{
+  "name": "hse-frontend",
+  "private": true,
+  "description": "بناء إنتاجي: تصغير JS وإزالة console/debugger بدون source maps",
+  "scripts": {
+    "build": "node scripts/build-frontend-prod.mjs",
+    "build:prod": "node scripts/build-frontend-prod.mjs"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.0"
+  }
+}

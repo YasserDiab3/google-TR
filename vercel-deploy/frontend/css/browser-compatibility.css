@@ -1,0 +1,399 @@
+/* ========================================
+   Browser Compatibility Enhancements
+   تحسينات التوافق مع المتصفحات
+   ======================================== */
+
+/* ===== 1. CSS Variables Fallbacks ===== */
+/* Fallbacks للمتصفحات التي لا تدعم CSS Variables */
+@supports not (--css: variables) {
+    :root {
+        --primary-color: #2563eb;
+        --primary-dark: #1e40af;
+        --primary-light: #3b82f6;
+        --success-color: #10b981;
+        --warning-color: #f59e0b;
+        --danger-color: #aa3636;
+        --info-color: #06b6d4;
+        --gray-50: #f9fafb;
+        --gray-100: #f3f4f6;
+        --gray-200: #e5e7eb;
+        --gray-300: #d1d5db;
+        --gray-400: #9ca3af;
+        --gray-500: #6b7280;
+        --gray-600: #4b5563;
+        --gray-700: #374151;
+        --gray-800: #1f2937;
+        --gray-900: #111827;
+    }
+}
+
+/* ===== 2. Grid Layout Fallbacks ===== */
+/* Fallback للمتصفحات القديمة التي لا تدعم CSS Grid */
+@supports not (display: grid) {
+    .content-grid,
+    .kpi-grid,
+    .stats-grid,
+    .grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .content-grid > *,
+    .kpi-grid > *,
+    .stats-grid > *,
+    .grid > * {
+        flex: 1 1 auto;
+        min-width: 200px;
+    }
+}
+
+/* ===== 3. Flexbox Fallbacks ===== */
+/* Fallback للمتصفحات القديمة جداً */
+@supports not (display: flex) {
+    .flex,
+    .d-flex {
+        display: block;
+    }
+
+    .btn {
+        display: inline-block;
+    }
+
+    .modal-overlay {
+        display: table;
+    }
+
+    .modal-content {
+        display: table-cell;
+        vertical-align: middle;
+    }
+}
+
+/* ===== 4. Backdrop Filter Fallbacks ===== */
+/* Fallback للمتصفحات التي لا تدعم backdrop-filter */
+@supports not (backdrop-filter: blur(4px)) {
+    .modal-overlay {
+        background: rgba(0, 0, 0, 0.6) !important;
+    }
+
+    .loading-overlay {
+        background: rgba(255, 255, 255, 0.95) !important;
+    }
+}
+
+/* ===== 5. Safari Specific Fixes ===== */
+@supports (-webkit-touch-callout: none) {
+    /* Safari على macOS و iOS */
+
+    /* إصلاح Viewport Height في Safari */
+    html,
+    body {
+        min-height: 100vh;
+        min-height: -webkit-fill-available;
+    }
+
+    /* إصلاح Safe Area Insets */
+    @supports (padding: max(0px)) {
+        .main-content,
+        .mobile-topbar {
+            padding-left: max(1rem, env(safe-area-inset-left));
+            padding-right: max(1rem, env(safe-area-inset-right));
+            padding-top: max(1rem, env(safe-area-inset-top));
+            padding-bottom: max(1rem, env(safe-area-inset-bottom));
+        }
+    }
+
+    /* إصلاح مشكلة Scroll في Safari */
+    .sidebar,
+    .main-content,
+    .modal-body {
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* إصلاح backdrop-filter في Safari */
+    .modal-overlay {
+        -webkit-backdrop-filter: blur(4px);
+        backdrop-filter: blur(4px);
+    }
+
+    /* منع التكبير التلقائي في حقول الإدخال على iOS */
+    @media (max-width: 1024px) {
+        input,
+        select,
+        textarea {
+            font-size: 16px !important;
+        }
+    }
+
+    /* إصلاح مشكلة position: sticky في Safari */
+    .mobile-topbar,
+    .data-table thead {
+        position: -webkit-sticky;
+        position: sticky;
+    }
+}
+
+/* ===== 6. Firefox Specific Fixes ===== */
+@-moz-document url-prefix() {
+    /* إصلاح مشكلة overflow في Firefox */
+    html,
+    body {
+        overflow-x: hidden;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+    }
+
+    /* تحسين Sidebar scrollbar */
+    .sidebar {
+        scrollbar-width: thin;
+        scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+    }
+
+    /* إصلاح مشكلة backdrop-filter في Firefox */
+    .modal-overlay {
+        background: rgba(0, 0, 0, 0.6);
+    }
+
+    /* تحسين Forms في Firefox */
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    select,
+    textarea {
+        -moz-appearance: none;
+        appearance: none;
+    }
+
+    /* إصلاح مشكلة focus في Firefox */
+    *:focus {
+        outline: 2px solid var(--primary-color, #2563eb);
+        outline-offset: 2px;
+    }
+}
+
+/* Edge الجديد (Chromium-based) */
+@supports (selector(:has(*))) {
+    /* Edge Chromium يدعم :has() */
+    .content-card:has(.table-wrapper) {
+        overflow-x: auto;
+    }
+}
+
+/* ===== 8. Chrome/Chromium Specific Fixes ===== */
+/* Chrome يدعم معظم الميزات الحديثة، لكن قد نحتاج بعض التحسينات */
+
+/* إصلاح مشكلة text-size-adjust */
+@media (max-width: 1024px) {
+    html,
+    body {
+        -webkit-text-size-adjust: 100%;
+        -ms-text-size-adjust: 100%;
+    }
+}
+
+/* ===== 9. Mobile WebView Specific Fixes ===== */
+@media (max-width: 1024px) {
+    /* تحسينات عامة لـ WebView */
+    html,
+    body {
+        -webkit-text-size-adjust: 100%;
+        -ms-text-size-adjust: 100%;
+    }
+
+    /* تحسين Touch Events */
+    * {
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: rgba(37, 99, 235, 0.2);
+    }
+
+    /* إصلاح Safe Area في WebView */
+    @supports (padding: max(0px)) {
+        .main-content,
+        .mobile-topbar,
+        .sidebar {
+            padding-left: max(1rem, env(safe-area-inset-left));
+            padding-right: max(1rem, env(safe-area-inset-right));
+        }
+    }
+}
+
+/* ===== 11. RTL Support Enhancements ===== */
+[dir="rtl"] {
+    direction: rtl;
+    text-align: right;
+}
+
+[dir="rtl"] .form-select {
+    background-position: right 0.75rem center;
+    padding-right: 2.5rem;
+    padding-left: 1rem;
+}
+
+[dir="rtl"] .input-group-prepend {
+    border-left: none;
+    border-right: 2px solid var(--ent-border, #e2e8f0);
+    border-top-left-radius: var(--radius-md, 8px);
+    border-bottom-left-radius: var(--radius-md, 8px);
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+[dir="rtl"] .input-group-append {
+    border-right: none;
+    border-left: 2px solid var(--ent-border, #e2e8f0);
+    border-top-right-radius: var(--radius-md, 8px);
+    border-bottom-right-radius: var(--radius-md, 8px);
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+/* ===== 12. Print Styles ===== */
+@media print {
+    .modal-overlay {
+        position: static;
+        background: transparent;
+        backdrop-filter: none;
+    }
+
+    .modal-content {
+        box-shadow: none;
+        border: 1px solid #000;
+        max-width: 100%;
+        max-height: none;
+    }
+
+    .btn,
+    .modal-close,
+    .table-actions {
+        display: none;
+    }
+
+    .data-table {
+        border: 1px solid #000;
+    }
+
+    .data-table th,
+    .data-table td {
+        border: 1px solid #000;
+    }
+}
+
+/* ===== 13. High Contrast Mode Support ===== */
+@media (prefers-contrast: more) {
+    .btn-primary {
+        border: 2px solid currentColor;
+    }
+
+    .btn-secondary {
+        border: 2px solid currentColor;
+    }
+
+    .form-input,
+    .form-select,
+    .form-textarea {
+        border-width: 2px;
+    }
+
+    .data-table th {
+        border-bottom-width: 3px;
+    }
+}
+
+/* ===== 14. Reduced Motion Support ===== */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* ===== 15. Dark Mode Enhancements ===== */
+[data-theme="dark"] {
+    color-scheme: dark;
+}
+
+[data-theme="light"] {
+    color-scheme: light;
+}
+
+/* ===== 16. Focus Visible Support ===== */
+/* دعم focus-visible للمتصفحات القديمة */
+@supports not selector(:focus-visible) {
+    *:focus {
+        outline: 2px solid var(--ent-accent, #2563eb);
+        outline-offset: 2px;
+    }
+}
+
+/* ===== 17. Container Queries Fallback ===== */
+@supports not (container-type: inline-size) {
+    .container-responsive {
+        width: 100%;
+    }
+}
+
+/* ===== 18. Aspect Ratio Fallback ===== */
+@supports not (aspect-ratio: 16 / 9) {
+    .aspect-video {
+        position: relative;
+        padding-bottom: 56.25%; /* 16:9 */
+    }
+
+    .aspect-video > * {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+}
+
+/* ===== 19. Gap Property Fallback ===== */
+@supports not (gap: 1rem) {
+    .grid,
+    .flex {
+        margin: -0.5rem;
+    }
+
+    .grid > *,
+    .flex > * {
+        margin: 0.5rem;
+    }
+}
+
+/* ===== 20. General Cross-Browser Fixes ===== */
+/* ضمان عدم وجود Scroll أفقي */
+html {
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+}
+
+body {
+    overflow-x: hidden;
+    position: relative;
+    width: 100%;
+    max-width: 100vw;
+}
+
+/* إصلاح box-sizing */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+/* إصلاح line-height في جميع المتصفحات */
+button,
+input,
+select,
+textarea {
+    line-height: inherit;
+}
+
+/* ===== End of Browser Compatibility ===== */
+

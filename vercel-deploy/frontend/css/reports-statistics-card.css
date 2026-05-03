@@ -1,0 +1,316 @@
+/* ========================================
+   تصميم كارت التقارير والإحصائيات
+   Reports & Statistics Card Design
+   ======================================== */
+
+/* ===== كارت التقارير والإحصائيات الرئيسي (بدون transition لتفادي وميض الكروت) ===== */
+.content-card.reports-statistics-section {
+    position: relative;
+    background: var(--card-bg);
+    border-radius: 24px;
+    border: 1px solid var(--border-color);
+    box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.06),
+        0 2px 8px rgba(0, 0, 0, 0.04);
+    overflow: hidden;
+    transition: none !important;
+    animation: none !important;
+}
+
+/* خط علوي ملون */
+.content-card.reports-statistics-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg,
+            #6366f1 0%,
+            #8b5cf6 25%,
+            #ec4899 50%,
+            #f59e0b 75%,
+            #10b981 100%);
+    z-index: 1;
+}
+
+.content-card.reports-statistics-section:hover {
+    transform: translateY(-4px);
+    box-shadow:
+        0 16px 48px rgba(0, 0, 0, 0.08),
+        0 4px 16px rgba(0, 0, 0, 0.06);
+}
+
+/* ===== رأس الكارت ===== */
+.content-card.reports-statistics-section .card-header {
+    padding: 2rem 2rem 1.5rem;
+    background: linear-gradient(135deg,
+            rgba(99, 102, 241, 0.03) 0%,
+            rgba(139, 92, 246, 0.03) 100%);
+    border-bottom: 1px solid var(--border-color);
+    position: relative;
+}
+
+.content-card.reports-statistics-section .card-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.content-card.reports-statistics-section .card-title i {
+    font-size: 1.5rem;
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* ===== جسم الكارت (بدون transition لتفادي وميض) ===== */
+.content-card.reports-statistics-section .card-body {
+    padding: 2rem;
+    transition: none !important;
+    animation: none !important;
+}
+
+/* ===== شبكة الكروت - 4 كروت في صف ===== */
+.content-card.reports-statistics-section .grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+/* ===== الكروت - تصميم أفقي (بدون transition لتفادي وميض) ===== */
+.content-card.reports-statistics-section .kpi-card {
+    position: relative;
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 1.25rem 1rem;
+    border: none;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    transition: none !important;
+    overflow: visible;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    text-align: left;
+    min-height: 140px;
+}
+
+/* خط علوي ملون - 3px */
+.content-card.reports-statistics-section .kpi-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: currentColor;
+    transition: none;
+    border-radius: 8px 8px 0 0;
+}
+
+.content-card.reports-statistics-section .kpi-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    transition: none !important;
+}
+
+/* ===== ألوان الكروت حسب النوع ===== */
+/* Indigo */
+.content-card.reports-statistics-section .kpi-card.kpi-indigo::before {
+    background: #6366f1;
+}
+
+.content-card.reports-statistics-section .kpi-card.kpi-indigo {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.08) 0%, rgba(220, 220, 255, 0.15) 100%);
+}
+
+/* Danger */
+.content-card.reports-statistics-section .kpi-card.kpi-danger::before {
+    background: #ff6b9d;
+}
+
+.content-card.reports-statistics-section .kpi-card.kpi-danger {
+    background: linear-gradient(135deg, rgba(255, 107, 157, 0.08) 0%, rgba(255, 220, 235, 0.15) 100%);
+}
+
+/* Warning */
+.content-card.reports-statistics-section .kpi-card.kpi-warning::before {
+    background: #ff9f43;
+}
+
+.content-card.reports-statistics-section .kpi-card.kpi-warning {
+    background: linear-gradient(135deg, rgba(255, 159, 67, 0.08) 0%, rgba(255, 235, 215, 0.15) 100%);
+}
+
+/* Success */
+.content-card.reports-statistics-section .kpi-card.kpi-success::before {
+    background: #4ade80;
+}
+
+.content-card.reports-statistics-section .kpi-card.kpi-success {
+    background: linear-gradient(135deg, rgba(74, 222, 128, 0.08) 0%, rgba(220, 255, 235, 0.15) 100%);
+}
+
+/* Info */
+.content-card.reports-statistics-section .kpi-card.kpi-info::before {
+    background: #5f9ff8;
+}
+
+.content-card.reports-statistics-section .kpi-card.kpi-info {
+    background: linear-gradient(135deg, rgba(95, 159, 248, 0.08) 0%, rgba(220, 235, 255, 0.15) 100%);
+}
+
+/* Primary */
+.content-card.reports-statistics-section .kpi-card.kpi-primary::before {
+    background: #ec4899;
+}
+
+.content-card.reports-statistics-section .kpi-card.kpi-primary {
+    background: linear-gradient(135deg, rgba(236, 72, 153, 0.08) 0%, rgba(255, 220, 240, 0.15) 100%);
+}
+
+/* Purple */
+.content-card.reports-statistics-section .kpi-card.kpi-purple::before {
+    background: #a78bfa;
+}
+
+.content-card.reports-statistics-section .kpi-card.kpi-purple {
+    background: linear-gradient(135deg, rgba(167, 139, 250, 0.08) 0%, rgba(235, 225, 255, 0.15) 100%);
+}
+
+/* ===== Responsive Design ===== */
+
+/* شاشات كبيرة جداً (>1600px) - 4 كروت في صف */
+@media (min-width: 1600px) {
+    .content-card.reports-statistics-section .grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* شاشات كبيرة (1200-1599px) - 4 كروت في صف */
+@media (min-width: 1200px) and (max-width: 1599px) {
+    .content-card.reports-statistics-section .grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* شاشات متوسطة (768-1199px) - 2 كروت في صف */
+@media (min-width: 768px) and (max-width: 1199px) {
+    .content-card.reports-statistics-section .grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* شاشات صغيرة (<768px) - كارت واحد في صف */
+@media (max-width: 767px) {
+    .content-card.reports-statistics-section .grid {
+        grid-template-columns: 1fr;
+    }
+
+    .content-card.reports-statistics-section .card-header,
+    .content-card.reports-statistics-section .card-body {
+        padding: 1.5rem;
+    }
+}
+
+/* ===== الوضع الليلي ===== */
+[data-theme="dark"] .content-card.reports-statistics-section {
+    background: rgba(255, 255, 255, 0.03);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .content-card.reports-statistics-section .kpi-card {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .content-card.reports-statistics-section .card-header {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);
+    border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+/* ===== تثبيت الكروت: لا إعادة رسم؛ تعطيل animation و transition على القسم بالكامل ===== */
+.content-card.reports-statistics-section.kpis-values-ready,
+.content-card.reports-statistics-section.kpis-values-ready .card-body,
+.content-card.reports-statistics-section.kpis-values-ready .metrics-grid-container,
+.content-card.reports-statistics-section .metrics-grid-container,
+.content-card.reports-statistics-section .metric-card-frame {
+    animation: none !important;
+    transition: none !important;
+    -webkit-transition: none !important;
+    -moz-transition: none !important;
+    opacity: 1 !important;
+}
+.reports-statistics-section .metric-card-frame {
+    contain: layout style;
+}
+
+.safety-metrics-section .metrics-grid-container,
+.safety-metrics-section .metric-card-frame {
+    animation: none !important;
+    transition: none !important;
+    opacity: 1 !important;
+}
+.safety-metrics-section .metric-card-frame {
+    contain: layout style;
+}
+
+/* ===== لا إخفاء ولا conditional rendering: القيم ظاهرة دائماً، التحديث داخلي فقط (textContent) =====
+   منع display:none و visibility toggle؛ الكروت تظهر مرة واحدة وتبقى ثابتة في جميع المتصفحات. */
+
+/* ===== ثبات عرض قيم مؤشرات السلامة: FA ثم TIR ثم LTI ثم TRIR (بدون animation/transition) ===== */
+.safety-metrics-section #fa-value,
+.safety-metrics-section #tir-value,
+.safety-metrics-section #lti-value,
+.safety-metrics-section #trir-value {
+    direction: ltr !important;
+    text-align: left !important;
+    font-variant-numeric: tabular-nums !important;
+    font-feature-settings: "tnum" !important;
+    display: inline-block !important;
+    white-space: nowrap !important;
+    min-width: 3.5ch !important;
+    transition: none !important;
+    animation: none !important;
+    contain: layout style;
+}
+
+/* ===== ثبات كروت التقارير والإحصائيات (مثل إعداد المقاولين المعتمدين) =====
+   Incident Reports, Near Miss, Safety Violations, استهلاك الكهرباء، استهلاك الغاز، إعداد المقاولين المعتمدين
+   منع تغيّر العرض عند تحديث الرقم وتوحيد السلوك مع transition: none */
+.reports-statistics-section #incident-reports-value,
+.reports-statistics-section #nearmiss-reports-value,
+.reports-statistics-section #violations-value,
+.reports-statistics-section #inspections-reports-value,
+.reports-statistics-section #approved-contractors-value,
+.reports-statistics-section #electricity-consumption-value,
+.reports-statistics-section #gas-consumption-value {
+    min-width: 3.5ch !important;
+    transition: none !important;
+    animation: none !important;
+    contain: layout style;
+}
+
+/* ===== ضمان عرض الأرقام بالإنجليزية في التقارير والإحصائيات ===== */
+.content-card.reports-statistics-section p[id$="-value"],
+.content-card.reports-statistics-section .english-number,
+.content-card.reports-statistics-section .metric-card-frame p[id$="-value"] {
+    direction: ltr !important;
+    text-align: left !important;
+    unicode-bidi: embed !important;
+    font-variant-numeric: tabular-nums !important;
+    font-feature-settings: "tnum" !important;
+    font-family: 'Inter', 'Cairo', 'Arial', sans-serif !important;
+    writing-mode: horizontal-tb !important;
+    text-orientation: mixed !important;
+    display: inline-block;
+    white-space: nowrap;
+    min-width: 2.5ch;
+    animation: none !important;
+    transition: none !important;
+}

@@ -1,0 +1,32 @@
+/* Import variables.css */
+@import url('variables.css');
+
+/* Import base.css */
+@import url('base.css');
+
+/* Import components.css */
+@import url('components.css');
+
+/* Import layout.css */
+@import url('layout.css');
+
+/* Import responsive.css */
+@import url('responsive.css');
+
+/* Import modules.css */
+@import url('modules.css');
+
+/* Import behavior-monitoring.css */
+@import url('behavior-monitoring.css');
+
+/* Import contractors-tabs.css */
+@import url('contractors-tabs.css');
+
+/* Import module-tabs.css */
+@import url('module-tabs.css');
+
+/* Import tailwind-utilities.css */
+@import url('tailwind-utilities.css');
+
+/* Import browser-compatibility.css */
+@import url('browser-compatibility.css');

@@ -1,0 +1,1102 @@
+/* ===== KPI Cards ===== */
+.kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+/* Base KPI Card Style - Applies to all kpi-card elements */
+.kpi-card {
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    box-shadow: var(--shadow-md);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    backdrop-filter: blur(10px);
+}
+
+/* Override for cards with kpi- prefix classes (kpi-danger, kpi-success, etc.) */
+/* These have higher specificity and will override the legacy styles below */
+
+/* Subtle background colors for each KPI card type */
+.kpi-card.kpi-primary {
+    background: linear-gradient(135deg, rgba(0, 56, 101, 0.03) 0%, rgba(0, 76, 140, 0.05) 100%);
+}
+
+.kpi-card.kpi-success {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.03) 0%, rgba(5, 150, 105, 0.05) 100%);
+}
+
+.kpi-card.kpi-warning {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.03) 0%, rgba(217, 119, 6, 0.05) 100%);
+}
+
+.kpi-card.kpi-info {
+    background: linear-gradient(135deg, rgba(6, 182, 212, 0.03) 0%, rgba(8, 145, 178, 0.05) 100%);
+}
+
+.kpi-card.kpi-danger {
+    background: linear-gradient(135deg, rgba(170, 54, 54, 0.03) 0%, rgba(153, 27, 27, 0.05) 100%);
+}
+
+.kpi-card.kpi-purple {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.03) 0%, rgba(124, 58, 237, 0.05) 100%);
+}
+
+[data-theme="dark"] .kpi-card.kpi-primary {
+    background: linear-gradient(135deg, rgba(0, 56, 101, 0.15) 0%, rgba(0, 76, 140, 0.2) 100%);
+}
+
+[data-theme="dark"] .kpi-card.kpi-success {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(5, 150, 105, 0.2) 100%);
+}
+
+[data-theme="dark"] .kpi-card.kpi-warning {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(217, 119, 6, 0.2) 100%);
+}
+
+[data-theme="dark"] .kpi-card.kpi-info {
+    background: linear-gradient(135deg, rgba(6, 182, 212, 0.15) 0%, rgba(8, 145, 178, 0.2) 100%);
+}
+
+[data-theme="dark"] .kpi-card.kpi-danger {
+    background: linear-gradient(135deg, rgba(170, 54, 54, 0.15) 0%, rgba(153, 27, 27, 0.2) 100%);
+}
+
+[data-theme="dark"] .kpi-card.kpi-purple {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(124, 58, 237, 0.2) 100%);
+}
+
+.kpi-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 5px;
+    height: 100%;
+    background: var(--primary-color);
+    z-index: 1;
+}
+
+.kpi-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, transparent 100%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.kpi-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-xl);
+    border-color: var(--primary-color);
+}
+
+/* KPI Card Color Variants - Border */
+.kpi-card.kpi-primary::before {
+    background: linear-gradient(180deg, #003865 0%, #004C8C 100%);
+    width: 5px;
+    box-shadow: 0 0 10px rgba(0, 56, 101, 0.3);
+}
+
+.kpi-card.kpi-primary:hover {
+    border-color: #003865;
+    box-shadow: 0 8px 20px rgba(0, 56, 101, 0.25);
+}
+
+.kpi-card.kpi-success::before {
+    background: linear-gradient(180deg, #10b981 0%, #059669 100%);
+    width: 5px;
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
+}
+
+.kpi-card.kpi-success:hover {
+    border-color: #10b981;
+    box-shadow: 0 8px 20px rgba(16, 185, 129, 0.25);
+}
+
+.kpi-card.kpi-warning::before {
+    background: linear-gradient(180deg, #f59e0b 0%, #d97706 100%);
+    width: 5px;
+    box-shadow: 0 0 10px rgba(245, 158, 11, 0.3);
+}
+
+.kpi-card.kpi-warning:hover {
+    border-color: #f59e0b;
+    box-shadow: 0 8px 20px rgba(245, 158, 11, 0.25);
+}
+
+.kpi-card.kpi-info::before {
+    background: linear-gradient(180deg, #06b6d4 0%, #0891b2 100%);
+    width: 5px;
+    box-shadow: 0 0 10px rgba(6, 182, 212, 0.3);
+}
+
+.kpi-card.kpi-info:hover {
+    border-color: #06b6d4;
+    box-shadow: 0 8px 20px rgba(6, 182, 212, 0.25);
+}
+
+.kpi-card.kpi-danger::before {
+    background: linear-gradient(180deg, #aa3636 0%, #991b1b 100%);
+    width: 5px;
+    box-shadow: 0 0 10px rgba(170, 54, 54, 0.3);
+}
+
+.kpi-card.kpi-danger:hover {
+    border-color: #aa3636;
+    box-shadow: 0 8px 20px rgba(170, 54, 54, 0.25);
+}
+
+.kpi-card.kpi-purple::before {
+    background: linear-gradient(180deg, #8b5cf6 0%, #7c3aed 100%);
+    width: 5px;
+    box-shadow: 0 0 10px rgba(139, 92, 246, 0.3);
+}
+
+.kpi-card.kpi-purple:hover {
+    border-color: #8b5cf6;
+    box-shadow: 0 8px 20px rgba(139, 92, 246, 0.25);
+}
+
+/* KPI Icon - تم نقل التعريفات المحسّنة إلى الأسفل مع vendor prefixes */
+/* التعريفات القديمة تم استبدالها بالتعريفات الجديدة المحسّنة في السطر 8000 */
+
+.kpi-content {
+    flex: 1;
+    position: relative;
+    z-index: 2;
+    min-width: 0;
+    /* منع overflow issues */
+}
+
+.kpi-label {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+    transition: color 0.3s ease;
+    letter-spacing: 0.01em;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    line-height: 1.4;
+}
+
+/* KPI Label Colors by Type */
+.kpi-primary .kpi-label {
+    color: #003865;
+    font-weight: 700;
+}
+
+.kpi-success .kpi-label {
+    color: #059669;
+    font-weight: 700;
+}
+
+.kpi-warning .kpi-label {
+    color: #d97706;
+    font-weight: 700;
+}
+
+.kpi-info .kpi-label {
+    color: #0891b2;
+    font-weight: 700;
+}
+
+.kpi-danger .kpi-label {
+    color: #aa3636;
+    font-weight: 700;
+}
+
+.kpi-purple .kpi-label {
+    color: #7c3aed;
+    font-weight: 700;
+}
+
+.kpi-value {
+    font-size: 2.25rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-bottom: 0.25rem;
+    transition: color 0.3s ease;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-family: 'Cairo', sans-serif;
+}
+
+/* KPI Value Colors by Type */
+.kpi-primary .kpi-value {
+    color: #003865;
+    text-shadow: 0 2px 6px rgba(0, 56, 101, 0.2);
+}
+
+.kpi-success .kpi-value {
+    color: #059669;
+    text-shadow: 0 2px 6px rgba(16, 185, 129, 0.2);
+}
+
+.kpi-warning .kpi-value {
+    color: #d97706;
+    text-shadow: 0 2px 6px rgba(245, 158, 11, 0.2);
+}
+
+.kpi-info .kpi-value {
+    color: #0891b2;
+    text-shadow: 0 2px 6px rgba(6, 182, 212, 0.2);
+}
+
+.kpi-danger .kpi-value {
+    color: #aa3636;
+    text-shadow: 0 2px 6px rgba(170, 54, 54, 0.2);
+}
+
+.kpi-purple .kpi-value {
+    color: #7c3aed;
+    text-shadow: 0 2px 6px rgba(139, 92, 246, 0.2);
+}
+
+.kpi-description {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    transition: color 0.3s ease;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    line-height: 1.5;
+    margin-top: 0.25rem;
+}
+
+/* KPI Description Colors by Type */
+.kpi-primary .kpi-description {
+    color: #4b5563;
+    font-weight: 600;
+}
+
+.kpi-success .kpi-description {
+    color: #4b5563;
+    font-weight: 600;
+}
+
+.kpi-warning .kpi-description {
+    color: #4b5563;
+    font-weight: 600;
+}
+
+.kpi-info .kpi-description {
+    color: #4b5563;
+    font-weight: 600;
+}
+
+.kpi-danger .kpi-description {
+    color: #4b5563;
+    font-weight: 600;
+}
+
+.kpi-purple .kpi-description {
+    color: #4b5563;
+    font-weight: 600;
+}
+
+/* Dark Mode Adjustments */
+[data-theme="dark"] .kpi-label {
+    color: var(--text-secondary);
+}
+
+[data-theme="dark"] .kpi-primary .kpi-label {
+    color: #60a5fa;
+}
+
+[data-theme="dark"] .kpi-success .kpi-label {
+    color: #34d399;
+}
+
+[data-theme="dark"] .kpi-warning .kpi-label {
+    color: #fbbf24;
+}
+
+[data-theme="dark"] .kpi-info .kpi-label {
+    color: #22d3ee;
+}
+
+[data-theme="dark"] .kpi-danger .kpi-label {
+    color: #f87171;
+}
+
+[data-theme="dark"] .kpi-purple .kpi-label {
+    color: #a78bfa;
+}
+
+[data-theme="dark"] .kpi-value {
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .kpi-primary .kpi-value {
+    color: #60a5fa;
+}
+
+[data-theme="dark"] .kpi-success .kpi-value {
+    color: #34d399;
+}
+
+[data-theme="dark"] .kpi-warning .kpi-value {
+    color: #fbbf24;
+}
+
+[data-theme="dark"] .kpi-info .kpi-value {
+    color: #22d3ee;
+}
+
+[data-theme="dark"] .kpi-danger .kpi-value {
+    color: #f87171;
+}
+
+[data-theme="dark"] .kpi-purple .kpi-value {
+    color: #a78bfa;
+}
+
+[data-theme="dark"] .kpi-description {
+    color: var(--text-tertiary);
+}
+
+/* Safety Metrics Cards - Enhanced styling to match previous design */
+/* These styles override the base kpi-card styles for safety metrics cards */
+/* استخدام selector أكثر تحديداً لضمان الأولوية */
+.content-card .kpi-card.kpi-danger,
+.section-content .kpi-card.kpi-danger {
+    background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%) !important;
+    border: 1px solid #fecaca !important;
+    border-radius: 0.5rem !important;
+}
+
+.content-card .kpi-card.kpi-warning,
+.section-content .kpi-card.kpi-warning {
+    background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%) !important;
+    border: 1px solid #fed7aa !important;
+    border-radius: 0.5rem !important;
+}
+
+.content-card .kpi-card.kpi-info,
+.section-content .kpi-card.kpi-info {
+    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%) !important;
+    border: 1px solid #bfdbfe !important;
+    border-radius: 0.5rem !important;
+}
+
+.content-card .kpi-card.kpi-purple,
+.section-content .kpi-card.kpi-purple {
+    background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%) !important;
+    border: 1px solid #ddd6fe !important;
+    border-radius: 0.5rem !important;
+}
+
+/* Override kpi-card default styles for safety metrics cards */
+.content-card .kpi-card.kpi-danger::before,
+.content-card .kpi-card.kpi-warning::before,
+.content-card .kpi-card.kpi-info::before,
+.content-card .kpi-card.kpi-purple::before,
+.section-content .kpi-card.kpi-danger::before,
+.section-content .kpi-card.kpi-warning::before,
+.section-content .kpi-card.kpi-info::before,
+.section-content .kpi-card.kpi-purple::before {
+    display: none !important;
+}
+
+.content-card .kpi-card.kpi-danger::after,
+.content-card .kpi-card.kpi-warning::after,
+.content-card .kpi-card.kpi-info::after,
+.content-card .kpi-card.kpi-purple::after,
+.section-content .kpi-card.kpi-danger::after,
+.section-content .kpi-card.kpi-warning::after,
+.section-content .kpi-card.kpi-info::after,
+.section-content .kpi-card.kpi-purple::after {
+    display: none !important;
+}
+
+[data-theme="dark"] .content-card .kpi-card.kpi-danger,
+[data-theme="dark"] .section-content .kpi-card.kpi-danger {
+    background: linear-gradient(135deg, rgba(127, 29, 29, 0.2) 0%, rgba(153, 27, 27, 0.25) 100%) !important;
+    border: 1px solid rgba(185, 28, 28, 0.3) !important;
+}
+
+[data-theme="dark"] .content-card .kpi-card.kpi-warning,
+[data-theme="dark"] .section-content .kpi-card.kpi-warning {
+    background: linear-gradient(135deg, rgba(146, 64, 14, 0.2) 0%, rgba(154, 52, 18, 0.25) 100%) !important;
+    border: 1px solid rgba(217, 119, 6, 0.3) !important;
+}
+
+[data-theme="dark"] .content-card .kpi-card.kpi-info,
+[data-theme="dark"] .section-content .kpi-card.kpi-info {
+    background: linear-gradient(135deg, rgba(30, 64, 175, 0.2) 0%, rgba(29, 78, 216, 0.25) 100%) !important;
+    border: 1px solid rgba(59, 130, 246, 0.3) !important;
+}
+
+[data-theme="dark"] .content-card .kpi-card.kpi-purple,
+[data-theme="dark"] .section-content .kpi-card.kpi-purple {
+    background: linear-gradient(135deg, rgba(107, 33, 168, 0.2) 0%, rgba(124, 58, 237, 0.25) 100%) !important;
+    border: 1px solid rgba(139, 92, 246, 0.3) !important;
+}
+
+/* Clinic Cards - Enhanced styling */
+.content-card .w-12.h-12.rounded-xl {
+    transition: all 0.3s ease;
+}
+
+.content-card:hover .w-12.h-12.rounded-xl {
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* ===== Content Cards ===== */
+.content-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 1.5rem;
+}
+
+.content-card {
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.card-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    background: var(--bg-secondary);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.card-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    transition: color 0.3s ease;
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+/* ===== Activity List ===== */
+.activity-list {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.activity-item {
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    transition: var(--transition);
+}
+
+.activity-item:hover {
+    background: var(--bg-tertiary);
+}
+
+.activity-item:last-child {
+    border-bottom: none;
+}
+
+.activity-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 1rem;
+    font-size: 1rem;
+}
+
+.activity-content {
+    flex: 1;
+}
+
+.activity-title {
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.25rem;
+    transition: color 0.3s ease;
+}
+
+.activity-time {
+    font-size: 0.875rem;
+    color: var(--text-tertiary);
+    transition: color 0.3s ease;
+}
+
+/* ===== Stats Grid ===== */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+.stat-item {
+    padding: 1rem;
+    background: var(--bg-tertiary);
+    border-radius: 12px;
+    text-align: center;
+    transition: background-color 0.3s ease;
+}
+
+.stat-label {
+    display: block;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+    transition: color 0.3s ease;
+}
+
+.stat-value {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    transition: color 0.3s ease;
+}
+
+/* ===== Stat Cards ===== */
+.stat-card {
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.stat-content {
+    flex: 1;
+}
+
+.stat-content .stat-value {
+    font-size: 2rem;
+    margin-bottom: 0.25rem;
+}
+
+.stat-content .stat-label {
+    font-size: 0.875rem;
+    margin-bottom: 0;
+}
+
+/* ===== تحسينات KPI Cards ===== */
+.kpi-card {
+    /* Fallback للمتصفحات القديمة */
+    background: #ffffff;
+    background: var(--card-gradient);
+    border: 1px solid #e5e7eb;
+    border: 1px solid var(--card-border);
+    border-radius: 20px;
+    -webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
+    padding: 2rem 1.75rem;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    -moz-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    gap: 1.5rem;
+    -webkit-column-gap: 1.5rem;
+    -moz-column-gap: 1.5rem;
+    column-gap: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.06);
+    box-shadow: var(--card-shadow);
+    -webkit-box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.06);
+    -moz-box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.06);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: var(--card-transition);
+    -webkit-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    -moz-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    -o-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    -moz-backdrop-filter: blur(10px);
+    /* إزالة will-change لمنع memory leaks */
+    /* will-change: transform, box-shadow; */
+    /* استخدام translateZ فقط عند الحاجة */
+    /* -webkit-transform: translateZ(0); */
+    /* transform: translateZ(0); */
+    min-height: 140px;
+    /* Fallback للمتصفحات القديمة التي لا تدعم gap */
+    margin-left: 1.5rem;
+}
+
+.kpi-card:first-child {
+    margin-left: 0;
+}
+
+@supports (gap: 1.5rem) {
+    .kpi-card {
+        margin-left: 0;
+    }
+}
+
+.kpi-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--primary-color);
+    opacity: 0.6;
+    transition: width 0.3s ease, opacity 0.3s ease;
+    z-index: 1;
+}
+
+.kpi-card::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.05) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.kpi-card:hover {
+    -webkit-transform: translateY(-6px) scale(1.02);
+    -moz-transform: translateY(-6px) scale(1.02);
+    -ms-transform: translateY(-6px) scale(1.02);
+    -o-transform: translateY(-6px) scale(1.02);
+    transform: translateY(-6px) scale(1.02);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.06);
+    box-shadow: var(--card-shadow-hover);
+    -webkit-box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.06);
+    -moz-box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.06);
+    border-color: rgba(59, 130, 246, 0.4);
+}
+
+.kpi-card:hover::before {
+    width: 5px;
+    opacity: 1;
+}
+
+.kpi-card:hover::after {
+    opacity: 1;
+}
+
+/* ===== تحسينات الأيقونات ===== */
+.kpi-icon {
+    width: 72px;
+    height: 72px;
+    min-width: 72px;
+    min-height: 72px;
+    border-radius: 18px;
+    -webkit-border-radius: 18px;
+    -moz-border-radius: 18px;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    -moz-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -webkit-justify-content: center;
+    -moz-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    margin-left: 1rem;
+    font-size: 2rem;
+    color: white;
+    font-weight: 600;
+    position: relative;
+    z-index: 2;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transition: var(--icon-transition);
+    -webkit-transition: -webkit-transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    -moz-transition: -moz-transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    -o-transition: -o-transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    -webkit-box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    -moz-box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    /* إزالة translateZ(0) لمنع memory leaks */
+    /* -webkit-transform: translateZ(0); */
+    /* transform: translateZ(0); */
+}
+
+.kpi-card:hover .kpi-icon {
+    -webkit-transform: scale(1.1) rotate(5deg);
+    -moz-transform: scale(1.1) rotate(5deg);
+    -ms-transform: scale(1.1) rotate(5deg);
+    -o-transform: scale(1.1) rotate(5deg);
+    transform: scale(1.1) rotate(5deg);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    -webkit-box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    -moz-box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+}
+
+/* ألوان الأيقونات حسب النوع */
+.kpi-primary .kpi-icon {
+    background: var(--icon-bg-primary);
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+}
+
+.kpi-success .kpi-icon {
+    background: var(--icon-bg-success);
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+}
+
+.kpi-warning .kpi-icon {
+    background: var(--icon-bg-warning);
+    box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+}
+
+.kpi-danger .kpi-icon {
+    background: var(--icon-bg-danger);
+    box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+}
+
+.kpi-info .kpi-icon {
+    background: var(--icon-bg-info);
+    box-shadow: 0 4px 15px rgba(6, 182, 212, 0.4);
+}
+
+.kpi-purple .kpi-icon {
+    background: var(--icon-bg-purple);
+    box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
+}
+
+/* ===== تحسينات المحتوى ===== */
+/* تم دمج تعريف .kpi-content مع التعريف الأساسي في السطر 175 */
+
+.kpi-label {
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+    margin-bottom: 0.75rem;
+    transition: color 0.3s ease;
+    letter-spacing: 0.01em;
+    line-height: 1.5;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+.kpi-value {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+    transition: color 0.3s ease;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    font-family: 'Cairo', sans-serif;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.kpi-description {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    transition: color 0.3s ease;
+    line-height: 1.4;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+/* ===== ألوان KPI Cards حسب النوع - الوضع النهاري ===== */
+.kpi-card.kpi-primary {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(37, 99, 235, 0.08) 100%);
+    border-color: rgba(59, 130, 246, 0.2);
+}
+
+.kpi-card.kpi-primary::before {
+    background: linear-gradient(180deg, #3b82f6 0%, #2563eb 100%);
+}
+
+.kpi-card.kpi-success {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(5, 150, 105, 0.08) 100%);
+    border-color: rgba(16, 185, 129, 0.2);
+}
+
+.kpi-card.kpi-success::before {
+    background: linear-gradient(180deg, #10b981 0%, #059669 100%);
+}
+
+.kpi-card.kpi-warning {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.05) 0%, rgba(217, 119, 6, 0.08) 100%);
+    border-color: rgba(245, 158, 11, 0.2);
+}
+
+.kpi-card.kpi-warning::before {
+    background: linear-gradient(180deg, #f59e0b 0%, #d97706 100%);
+}
+
+.kpi-card.kpi-danger {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.05) 0%, rgba(220, 38, 38, 0.08) 100%);
+    border-color: rgba(239, 68, 68, 0.2);
+}
+
+.kpi-card.kpi-danger::before {
+    background: linear-gradient(180deg, #ef4444 0%, #dc2626 100%);
+}
+
+.kpi-card.kpi-info {
+    background: linear-gradient(135deg, rgba(6, 182, 212, 0.05) 0%, rgba(8, 145, 178, 0.08) 100%);
+    border-color: rgba(6, 182, 212, 0.2);
+}
+
+.kpi-card.kpi-info::before {
+    background: linear-gradient(180deg, #06b6d4 0%, #0891b2 100%);
+}
+
+.kpi-card.kpi-purple {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.05) 0%, rgba(124, 58, 237, 0.08) 100%);
+    border-color: rgba(139, 92, 246, 0.2);
+}
+
+.kpi-card.kpi-purple::before {
+    background: linear-gradient(180deg, #8b5cf6 0%, #7c3aed 100%);
+}
+
+/* ===== ألوان KPI Cards حسب النوع - الوضع الليلي ===== */
+[data-theme="dark"] .kpi-card.kpi-primary {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(37, 99, 235, 0.2) 100%);
+    border-color: rgba(59, 130, 246, 0.3);
+}
+
+[data-theme="dark"] .kpi-card.kpi-success {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(5, 150, 105, 0.2) 100%);
+    border-color: rgba(16, 185, 129, 0.3);
+}
+
+[data-theme="dark"] .kpi-card.kpi-warning {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(217, 119, 6, 0.2) 100%);
+    border-color: rgba(245, 158, 11, 0.3);
+}
+
+[data-theme="dark"] .kpi-card.kpi-danger {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(220, 38, 38, 0.2) 100%);
+    border-color: rgba(239, 68, 68, 0.3);
+}
+
+[data-theme="dark"] .kpi-card.kpi-info {
+    background: linear-gradient(135deg, rgba(6, 182, 212, 0.15) 0%, rgba(8, 145, 178, 0.2) 100%);
+    border-color: rgba(6, 182, 212, 0.3);
+}
+
+[data-theme="dark"] .kpi-card.kpi-purple {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(124, 58, 237, 0.2) 100%);
+    border-color: rgba(139, 92, 246, 0.3);
+}
+
+/* ===== ألوان النصوص في الوضع الليلي ===== */
+[data-theme="dark"] .kpi-label {
+    color: rgba(209, 213, 219, 0.9);
+}
+
+[data-theme="dark"] .kpi-primary .kpi-label {
+    color: #60a5fa;
+}
+
+[data-theme="dark"] .kpi-success .kpi-label {
+    color: #34d399;
+}
+
+[data-theme="dark"] .kpi-warning .kpi-label {
+    color: #fbbf24;
+}
+
+[data-theme="dark"] .kpi-danger .kpi-label {
+    color: #f87171;
+}
+
+[data-theme="dark"] .kpi-info .kpi-label {
+    color: #22d3ee;
+}
+
+[data-theme="dark"] .kpi-purple .kpi-label {
+    color: #a78bfa;
+}
+
+[data-theme="dark"] .kpi-value {
+    color: #f5f5f5;
+}
+
+[data-theme="dark"] .kpi-primary .kpi-value {
+    color: #60a5fa;
+}
+
+[data-theme="dark"] .kpi-success .kpi-value {
+    color: #34d399;
+}
+
+[data-theme="dark"] .kpi-warning .kpi-value {
+    color: #fbbf24;
+}
+
+[data-theme="dark"] .kpi-danger .kpi-value {
+    color: #f87171;
+}
+
+[data-theme="dark"] .kpi-info .kpi-value {
+    color: #22d3ee;
+}
+
+[data-theme="dark"] .kpi-purple .kpi-value {
+    color: #a78bfa;
+}
+
+[data-theme="dark"] .kpi-description {
+    color: rgba(156, 163, 175, 0.8);
+}
+
+/* ===== تحسينات Card Header و Card Body ===== */
+.card-header {
+    padding: 1.75rem 2rem;
+    border-bottom: 1px solid var(--card-border);
+    background: var(--card-gradient);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+    position: relative;
+}
+
+.card-body {
+    padding: 2rem;
+    position: relative;
+}
+
+[data-theme="dark"] .card-header {
+    background: linear-gradient(135deg, rgba(37, 37, 37, 0.95) 0%, rgba(31, 41, 55, 0.98) 100%);
+    border-bottom-color: rgba(55, 65, 81, 0.6);
+}
+
+[data-theme="dark"] .card-body {
+    background: var(--card-gradient-dark);
+}
+
+/* ========================================
+   إصلاحات إضافية للكروت داخل المديولات
+   ======================================== */
+
+/* إصلاح عرض الكروت داخل tab-content */
+.tab-content .content-card,
+.tab-content .kpi-card,
+#incidents-tab-content .content-card,
+#incidents-tab-content .kpi-card {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    position: relative;
+    overflow: visible;
+    display: block;
+}
+
+/* إصلاح عرض kpi-grid داخل tab-content */
+.tab-content .kpi-grid,
+#incidents-tab-content .kpi-grid {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    position: relative;
+    overflow: visible;
+    display: grid;
+}
+
+/* إصلاح عرض الكروت داخل content-card */
+.content-card .kpi-card {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    margin: 0;
+    position: relative;
+    overflow: visible;
+}
+
+/* إصلاح overflow للكروت */
+.content-card {
+    overflow: visible;
+}
+
+.content-card .card-body,
+.content-card .card-header {
+    overflow: visible;
+}
+
+/* ضمان تطبيق الألوان بشكل صحيح */
+.kpi-card.kpi-primary,
+.kpi-card.kpi-success,
+.kpi-card.kpi-warning,
+.kpi-card.kpi-info,
+.kpi-card.kpi-danger,
+.kpi-card.kpi-purple {
+    position: relative;
+    overflow: visible;
+}
+
+/* إصلاح خاص للكروت في Grid */
+.kpi-grid .kpi-card {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    margin: 0;
+    position: relative;
+    overflow: visible;
+    min-width: 0;
+}
+
+/* إصلاح خاص للكروت في content-card */
+.content-card .kpi-grid {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    margin: 0;
+    position: relative;
+    overflow: visible;
+    display: grid;
+}

@@ -1,0 +1,96 @@
+/* ========================================
+   Behavior Monitoring Module - UI Enhancements
+   تطوير واجهة موديول مراقبة السلوكيات
+   ======================================== */
+
+/* Cards */
+.behavior-overview-card .card-header,
+.behavior-form-card .card-header,
+.behavior-filters-card .card-header {
+    background: linear-gradient(135deg, rgba(147, 51, 234, 0.08), rgba(59, 130, 246, 0.06));
+}
+
+[data-theme="dark"] .behavior-overview-card .card-header,
+[data-theme="dark"] .behavior-form-card .card-header,
+[data-theme="dark"] .behavior-filters-card .card-header {
+    background: linear-gradient(135deg, rgba(147, 51, 234, 0.18), rgba(59, 130, 246, 0.12));
+}
+
+/* Overview stats */
+.behavior-stat {
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    padding: 1rem 1.25rem;
+    background: var(--bg-primary);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.behavior-stat:hover {
+    transform: translateY(-2px);
+    border-color: rgba(147, 51, 234, 0.35);
+    box-shadow: 0 6px 18px rgba(147, 51, 234, 0.12);
+}
+
+.behavior-stat-label {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    font-weight: 700;
+}
+
+.behavior-stat-value {
+    font-size: 1.75rem;
+    font-weight: 800;
+    margin-top: 0.25rem;
+    color: var(--text-primary);
+    letter-spacing: 0.02em;
+}
+
+/* Form wrapper color accents */
+.behavior-form-wrapper {
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 1rem;
+    background: linear-gradient(180deg, rgba(99, 102, 241, 0.04), rgba(255, 255, 255, 0));
+}
+
+[data-theme="dark"] .behavior-form-wrapper {
+    background: linear-gradient(180deg, rgba(99, 102, 241, 0.1), rgba(0, 0, 0, 0));
+}
+
+.behavior-form-wrapper[data-behavior-type="إيجابي"] {
+    border-color: rgba(16, 185, 129, 0.35);
+    box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.06);
+}
+
+.behavior-form-wrapper[data-behavior-type="سلبي"] {
+    border-color: rgba(239, 68, 68, 0.35);
+    box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.06);
+}
+
+/* Modal header theming */
+.behavior-modal .modal-header {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.08), rgba(147, 51, 234, 0.06));
+}
+
+.behavior-modal[data-behavior-type="إيجابي"] .modal-header {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.14), rgba(59, 130, 246, 0.08));
+}
+
+.behavior-modal[data-behavior-type="سلبي"] .modal-header {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.14), rgba(245, 158, 11, 0.08));
+}
+
+[data-theme="dark"] .behavior-modal .modal-header {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.18), rgba(147, 51, 234, 0.12));
+}
+
+[data-theme="dark"] .behavior-modal[data-behavior-type="إيجابي"] .modal-header {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.22), rgba(59, 130, 246, 0.14));
+}
+
+[data-theme="dark"] .behavior-modal[data-behavior-type="سلبي"] .modal-header {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.22), rgba(245, 158, 11, 0.14));
+}
+
+

@@ -1,0 +1,728 @@
+/* ========================================
+   Module Tabs - Unified Tab Definitions
+   تبويبات الموديولات - تعريفات موحدة
+   ======================================== */
+
+/* ===== Base Tab Button Styles ===== */
+.module-tab-btn,
+.visit-type-tab,
+.contractors-tab-btn {
+    padding: 0.75rem 1.5rem;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: #6b7280;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+    flex-shrink: 0;
+    min-width: fit-content;
+    font-family: 'Cairo', sans-serif;
+    position: relative;
+    outline: none;
+}
+
+.module-tab-btn i,
+.visit-type-tab i,
+.contractors-tab-btn i {
+    margin-left: 0.5rem;
+    font-size: 0.875rem;
+    transition: color 0.2s ease;
+}
+
+/* ===== Hover States ===== */
+.module-tab-btn:hover,
+.visit-type-tab:hover,
+.contractors-tab-btn:hover {
+    color: #2563eb;
+    background: rgba(37, 99, 235, 0.05);
+}
+
+/* ===== Active States ===== */
+.module-tab-btn.active,
+.visit-type-tab.active,
+.contractors-tab-btn.active {
+    color: #2563eb;
+    border-bottom-color: #2563eb;
+    background: transparent;
+    font-weight: 700;
+}
+
+.module-tab-btn.active i,
+.visit-type-tab.active i,
+.contractors-tab-btn.active i {
+    color: #2563eb;
+}
+
+/* ===== Focus States ===== */
+.module-tab-btn:focus,
+.visit-type-tab:focus,
+.contractors-tab-btn:focus {
+    outline: 2px solid #2563eb;
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+
+.module-tab-btn:focus:not(:focus-visible),
+.visit-type-tab:focus:not(:focus-visible),
+.contractors-tab-btn:focus:not(:focus-visible) {
+    outline: none;
+}
+
+/* ===== Visit Type Tab Specific Styles ===== */
+.visit-type-tab {
+    position: relative;
+}
+
+.visit-type-tab .badge {
+    margin-right: 0.5rem;
+    font-size: 0.75rem;
+    padding: 0.125rem 0.5rem;
+    border-radius: 0.375rem;
+    font-weight: 600;
+}
+
+/* ===== Tab Wrapper Styles ===== */
+.module-tabs-wrapper,
+.contractors-tabs-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: visible;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+    margin-bottom: 1.5rem;
+}
+
+@supports selector(::-webkit-scrollbar-thumb) {
+    .module-tabs-wrapper::-webkit-scrollbar,
+    .contractors-tabs-wrapper::-webkit-scrollbar {
+        height: 6px;
+    }
+
+    .module-tabs-wrapper::-webkit-scrollbar-track,
+    .contractors-tabs-wrapper::-webkit-scrollbar-track {
+        background: transparent;
+        border-radius: 3px;
+    }
+
+    .module-tabs-wrapper::-webkit-scrollbar-thumb,
+    .contractors-tabs-wrapper::-webkit-scrollbar-thumb {
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 3px;
+    }
+
+    .module-tabs-wrapper::-webkit-scrollbar-thumb:hover,
+    .contractors-tabs-wrapper::-webkit-scrollbar-thumb:hover {
+        background: rgba(0, 0, 0, 0.3);
+    }
+}
+
+/* ===== Tab Container Styles ===== */
+.module-tabs-container,
+.contractors-tabs-container {
+    display: flex;
+    border-bottom: 2px solid #e5e7eb;
+    min-width: fit-content;
+    flex-wrap: nowrap;
+    gap: 0;
+}
+
+/* ===== Tab Content Styles ===== */
+.module-tab-content,
+.contractors-tab-content {
+    display: none;
+    width: 100%;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.module-tab-content.active,
+.contractors-tab-content.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ===== Dark Mode Support ===== */
+[data-theme="dark"] .module-tab-btn,
+[data-theme="dark"] .visit-type-tab,
+[data-theme="dark"] .contractors-tab-btn {
+    color: #9ca3af;
+}
+
+[data-theme="dark"] .module-tab-btn:hover,
+[data-theme="dark"] .visit-type-tab:hover,
+[data-theme="dark"] .contractors-tab-btn:hover {
+    color: #60a5fa;
+    background: rgba(96, 165, 250, 0.1);
+}
+
+[data-theme="dark"] .module-tab-btn.active,
+[data-theme="dark"] .visit-type-tab.active,
+[data-theme="dark"] .contractors-tab-btn.active {
+    color: #60a5fa;
+    border-bottom-color: #60a5fa;
+}
+
+[data-theme="dark"] .module-tabs-container,
+[data-theme="dark"] .contractors-tabs-container {
+    border-bottom-color: #374151;
+}
+
+[data-theme="dark"] .module-tabs-wrapper,
+[data-theme="dark"] .contractors-tabs-wrapper {
+    scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}
+
+@supports selector(::-webkit-scrollbar-thumb) {
+    [data-theme="dark"] .module-tabs-wrapper::-webkit-scrollbar-thumb,
+    [data-theme="dark"] .contractors-tabs-wrapper::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.2);
+    }
+
+    [data-theme="dark"] .module-tabs-wrapper::-webkit-scrollbar-thumb:hover,
+    [data-theme="dark"] .contractors-tabs-wrapper::-webkit-scrollbar-thumb:hover {
+        background: rgba(255, 255, 255, 0.3);
+    }
+}
+
+/* ===== Responsive Design ===== */
+@media (max-width: 768px) {
+    .module-tab-btn,
+    .visit-type-tab,
+    .contractors-tab-btn {
+        padding: 0.625rem 1rem;
+        font-size: 0.875rem;
+    }
+    
+    .module-tab-btn i,
+    .visit-type-tab i,
+    .contractors-tab-btn i {
+        font-size: 0.75rem;
+        margin-left: 0.375rem;
+    }
+}
+
+@media (max-width: 640px) {
+    .module-tab-btn,
+    .visit-type-tab,
+    .contractors-tab-btn {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.8125rem;
+    }
+}
+
+/* ========================================
+   PPE Module Tabs - Enhanced Design
+   تبويبات موديول مهمات الوقاية - تصميم محسّن
+   ======================================== */
+
+/* ===== PPE Tab Button Base Styles ===== */
+.ppe-tab-btn {
+    padding: 0.875rem 1.75rem;
+    background: transparent;
+    border: none;
+    border-bottom: 3px solid transparent;
+    color: #64748b;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+    flex-shrink: 0;
+    min-width: fit-content;
+    width: auto;
+    max-width: none;
+    font-family: 'Cairo', sans-serif;
+    position: relative;
+    outline: none;
+    border-radius: 0.5rem 0.5rem 0 0;
+    margin-bottom: -2px;
+}
+
+.ppe-tab-btn i {
+    margin-left: 0.625rem;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    opacity: 0.8;
+}
+
+/* ===== PPE Tab Hover States ===== */
+.ppe-tab-btn:hover {
+    color: #2563eb;
+    background: rgba(37, 99, 235, 0.08);
+    border-bottom-color: rgba(37, 99, 235, 0.3);
+    transform: translateY(-1px);
+}
+
+.ppe-tab-btn:hover i {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+/* ===== PPE Tab Active States ===== */
+.ppe-tab-btn.active {
+    color: #2563eb;
+    border-bottom-color: #2563eb;
+    background: linear-gradient(to bottom, rgba(37, 99, 235, 0.05), transparent);
+    font-weight: 700;
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.1);
+}
+
+.ppe-tab-btn.active::before {
+    content: '';
+    position: absolute;
+    bottom: -3px;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #2563eb, #3b82f6);
+    border-radius: 3px 3px 0 0;
+}
+
+.ppe-tab-btn.active i {
+    color: #2563eb;
+    opacity: 1;
+    transform: scale(1.05);
+}
+
+/* ===== PPE Tab Focus States ===== */
+.ppe-tab-btn:focus {
+    outline: 2px solid #2563eb;
+    outline-offset: 2px;
+    border-radius: 0.5rem;
+}
+
+.ppe-tab-btn:focus:not(:focus-visible) {
+    outline: none;
+}
+
+/* ===== PPE Tab Container ===== */
+.ppe-tabs-container {
+    display: flex;
+    border-bottom: 2px solid #e5e7eb;
+    min-width: fit-content;
+    flex-wrap: nowrap;
+    gap: 0.5rem;
+    padding: 0 0.5rem;
+    background: linear-gradient(to bottom, #f8fafc, #ffffff);
+    border-radius: 0.5rem 0.5rem 0 0;
+    overflow-x: auto;
+    overflow-y: visible;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.1) transparent;
+}
+
+@supports selector(::-webkit-scrollbar-thumb) {
+    .ppe-tabs-container::-webkit-scrollbar {
+        height: 4px;
+    }
+
+    .ppe-tabs-container::-webkit-scrollbar-track {
+        background: transparent;
+        border-radius: 2px;
+    }
+
+    .ppe-tabs-container::-webkit-scrollbar-thumb {
+        background: rgba(0, 0, 0, 0.1);
+        border-radius: 2px;
+    }
+
+    .ppe-tabs-container::-webkit-scrollbar-thumb:hover {
+        background: rgba(0, 0, 0, 0.2);
+    }
+}
+
+/* ===== Dark Mode Support for PPE Tabs ===== */
+[data-theme="dark"] .ppe-tab-btn {
+    color: #94a3b8;
+}
+
+[data-theme="dark"] .ppe-tab-btn:hover {
+    color: #60a5fa;
+    background: rgba(96, 165, 250, 0.12);
+    border-bottom-color: rgba(96, 165, 250, 0.4);
+}
+
+[data-theme="dark"] .ppe-tab-btn.active {
+    color: #60a5fa;
+    border-bottom-color: #60a5fa;
+    background: linear-gradient(to bottom, rgba(96, 165, 250, 0.1), transparent);
+    box-shadow: 0 2px 8px rgba(96, 165, 250, 0.15);
+}
+
+[data-theme="dark"] .ppe-tab-btn.active::before {
+    background: linear-gradient(90deg, #60a5fa, #3b82f6);
+}
+
+[data-theme="dark"] .ppe-tabs-container {
+    border-bottom-color: #475569;
+    background: linear-gradient(to bottom, #1e293b, #0f172a);
+}
+
+/* ===== Responsive Design for PPE Tabs ===== */
+@media (max-width: 768px) {
+    .ppe-tab-btn {
+        padding: 0.75rem 1.25rem;
+        font-size: 0.875rem;
+    }
+    
+    .ppe-tab-btn i {
+        font-size: 0.875rem;
+        margin-left: 0.5rem;
+    }
+    
+    .ppe-tabs-container {
+        gap: 0.25rem;
+        padding: 0 0.25rem;
+    }
+}
+
+@media (max-width: 640px) {
+    .ppe-tab-btn {
+        padding: 0.625rem 1rem;
+        font-size: 0.8125rem;
+    }
+    
+    .ppe-tab-btn i {
+        font-size: 0.75rem;
+        margin-left: 0.375rem;
+    }
+}
+
+/* ========================================
+   Action Tracking Register Tabs
+   تبويبات سجل متابعة الإجراءات
+   ======================================== */
+
+/* ===== Action Tab Container ===== */
+.action-tabs-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-bottom: 2px solid #e5e7eb;
+    padding: 0.5rem 0.75rem 0;
+    background: linear-gradient(to bottom, rgba(249, 250, 251, 0.8), rgba(255, 255, 255, 0.95));
+    border-radius: 0.75rem 0.75rem 0 0;
+    margin-bottom: 0;
+    overflow-x: auto;
+    overflow-y: visible;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.1) transparent;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+@supports selector(::-webkit-scrollbar-thumb) {
+    .action-tabs-container::-webkit-scrollbar {
+        height: 4px;
+    }
+
+    .action-tabs-container::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .action-tabs-container::-webkit-scrollbar-thumb {
+        background: rgba(0, 0, 0, 0.1);
+        border-radius: 2px;
+    }
+
+    .action-tabs-container::-webkit-scrollbar-thumb:hover {
+        background: rgba(0, 0, 0, 0.2);
+    }
+}
+
+/* ===== Action Tab Button Base Styles ===== */
+.action-tab-btn {
+    padding: 0.875rem 1.75rem;
+    background: transparent;
+    border: none;
+    border-bottom: 3px solid transparent;
+    color: #64748b;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+    flex-shrink: 0;
+    min-width: fit-content;
+    width: auto;
+    max-width: none;
+    font-family: 'Cairo', sans-serif;
+    position: relative;
+    outline: none;
+    border-radius: 0.5rem 0.5rem 0 0;
+    margin-bottom: -2px;
+}
+
+.action-tab-btn i {
+    margin-left: 0.625rem;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    opacity: 0.85;
+}
+
+/* ===== Action Tab Hover States ===== */
+.action-tab-btn:hover {
+    color: #2563eb;
+    background: rgba(37, 99, 235, 0.08);
+    border-bottom-color: rgba(37, 99, 235, 0.3);
+    transform: translateY(-1px);
+}
+
+.action-tab-btn:hover i {
+    opacity: 1;
+    transform: scale(1.1);
+    color: #2563eb;
+}
+
+/* ===== Action Tab Active States ===== */
+.action-tab-btn.active {
+    color: #2563eb;
+    border-bottom-color: #2563eb;
+    background: linear-gradient(to bottom, rgba(37, 99, 235, 0.08), rgba(37, 99, 235, 0.02));
+    font-weight: 700;
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.12);
+}
+
+.action-tab-btn.active::before {
+    content: '';
+    position: absolute;
+    bottom: -3px;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #2563eb, #3b82f6, #60a5fa);
+    border-radius: 3px 3px 0 0;
+    box-shadow: 0 0 8px rgba(37, 99, 235, 0.3);
+}
+
+.action-tab-btn.active::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40%;
+    height: 2px;
+    background: #ffffff;
+    border-radius: 2px;
+    opacity: 0.6;
+}
+
+.action-tab-btn.active i {
+    color: #2563eb;
+    opacity: 1;
+    transform: scale(1.05);
+}
+
+/* ===== Action Tab Focus States ===== */
+.action-tab-btn:focus {
+    outline: 2px solid #2563eb;
+    outline-offset: 2px;
+    border-radius: 0.5rem;
+}
+
+.action-tab-btn:focus:not(:focus-visible) {
+    outline: none;
+}
+
+/* ===== Dark Mode Support ===== */
+[data-theme="dark"] .action-tabs-container {
+    background: linear-gradient(to bottom, rgba(31, 41, 55, 0.8), rgba(17, 24, 39, 0.95));
+    border-bottom-color: #374151;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .action-tab-btn {
+    color: #9ca3af;
+}
+
+[data-theme="dark"] .action-tab-btn:hover {
+    color: #60a5fa;
+    background: rgba(96, 165, 250, 0.1);
+    border-bottom-color: rgba(96, 165, 250, 0.4);
+}
+
+[data-theme="dark"] .action-tab-btn.active {
+    color: #60a5fa;
+    background: linear-gradient(to bottom, rgba(96, 165, 250, 0.15), rgba(96, 165, 250, 0.05));
+    border-bottom-color: #60a5fa;
+}
+
+[data-theme="dark"] .action-tab-btn.active::before {
+    background: linear-gradient(90deg, #60a5fa, #3b82f6, #2563eb);
+    box-shadow: 0 0 8px rgba(96, 165, 250, 0.4);
+}
+
+[data-theme="dark"] .action-tab-btn.active i {
+    color: #60a5fa;
+}
+
+/* ===== Mobile Responsive ===== */
+@media (max-width: 768px) {
+    .action-tabs-container {
+        padding: 0.375rem 0.5rem 0;
+        gap: 0.25rem;
+    }
+
+    .action-tab-btn {
+        padding: 0.75rem 1.25rem;
+        font-size: 0.875rem;
+    }
+
+    .action-tab-btn i {
+        margin-left: 0.5rem;
+        font-size: 0.875rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .action-tab-btn {
+        padding: 0.625rem 1rem;
+        font-size: 0.8125rem;
+    }
+}
+
+/* ========================================
+   KPI Annual Plan & HSE Monitoring Tables
+   جداول الخطة السنوية لمؤشرات الأداء وخطة متابعة HSE
+   ======================================== */
+
+/* ===== KPI Annual Plan Table ===== */
+.kpi-annual-plan-table {
+    border-radius: 0.5rem;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.kpi-annual-plan-table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+}
+
+.kpi-annual-plan-table tbody tr {
+    transition: all 0.2s ease;
+}
+
+.kpi-annual-plan-table tbody tr:hover {
+    background-color: #eff6ff;
+    transform: scale(1.001);
+}
+
+.kpi-annual-plan-table tbody td {
+    vertical-align: middle;
+    font-size: 0.8125rem;
+}
+
+/* ===== HSE Monitoring Table ===== */
+.hse-monitoring-table {
+    border-radius: 0.5rem;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.hse-monitoring-table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.6875rem;
+    letter-spacing: 0.03em;
+}
+
+.hse-monitoring-table tbody tr {
+    transition: all 0.2s ease;
+}
+
+.hse-monitoring-table tbody tr:hover {
+    background-color: #ecfdf5;
+    transform: scale(1.001);
+}
+
+.hse-monitoring-table tbody td {
+    vertical-align: middle;
+    font-size: 0.75rem;
+}
+
+/* ===== Dark Mode Support ===== */
+[data-theme="dark"] .kpi-annual-plan-table,
+[data-theme="dark"] .hse-monitoring-table {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .kpi-annual-plan-table tbody tr:hover {
+    background-color: rgba(59, 130, 246, 0.1);
+}
+
+[data-theme="dark"] .hse-monitoring-table tbody tr:hover {
+    background-color: rgba(16, 185, 129, 0.1);
+}
+
+/* ===== Responsive Table Handling ===== */
+@media (max-width: 1024px) {
+    .kpi-annual-plan-table,
+    .hse-monitoring-table {
+        font-size: 0.6875rem;
+    }
+
+    .kpi-annual-plan-table thead th,
+    .hse-monitoring-table thead th {
+        font-size: 0.625rem;
+        padding: 8px 4px !important;
+    }
+
+    .kpi-annual-plan-table tbody td,
+    .hse-monitoring-table tbody td {
+        padding: 6px 4px !important;
+    }
+}
+
+/* ===== Tab Content Container ===== */
+.tab-content-container {
+    min-height: 400px;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+

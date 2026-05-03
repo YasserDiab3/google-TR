@@ -1,0 +1,653 @@
+/* ========================================
+   تصميم كارت الإحصائيات والتقارير - مربع
+   Safety Metrics Card Square Design
+   ======================================== */
+
+/* ===== كارت مؤشرات السلامة الرئيسي ===== */
+.content-card.safety-metrics-section {
+    position: relative;
+    background: var(--card-bg);
+    border-radius: 24px;
+    border: 1px solid var(--border-color);
+    box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.06),
+        0 2px 8px rgba(0, 0, 0, 0.04);
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    animation: none !important;
+}
+
+/* خط علوي ملون */
+.content-card.safety-metrics-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg,
+            #667eea 0%,
+            #764ba2 25%,
+            #f093fb 50%,
+            #f5576c 75%,
+            #4facfe 100%);
+    z-index: 1;
+}
+
+.content-card.safety-metrics-section:hover {
+    transform: translateY(-4px);
+    box-shadow:
+        0 16px 48px rgba(0, 0, 0, 0.08),
+        0 4px 16px rgba(0, 0, 0, 0.06);
+}
+
+/* ===== رأس الكارت ===== */
+.content-card.safety-metrics-section .card-header {
+    padding: 2rem 2rem 1.5rem;
+    background: linear-gradient(135deg,
+            rgba(102, 126, 234, 0.03) 0%,
+            rgba(118, 75, 162, 0.03) 100%);
+    border-bottom: 1px solid var(--border-color);
+    position: relative;
+}
+
+.content-card.safety-metrics-section .card-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.content-card.safety-metrics-section .card-title i {
+    font-size: 1.5rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* ===== جسم الكارت ===== */
+.content-card.safety-metrics-section .card-body {
+    padding: 2rem;
+}
+
+/* ===== شبكة الكروت - 4 كروت أفقية كما في الصورة ===== */
+.content-card.safety-metrics-section .grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+/* ===== الكروت - تصميم أفقي كما في الصورة ===== */
+.content-card.safety-metrics-section .kpi-card {
+    position: relative;
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 1.25rem 1rem;
+    border: none;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    overflow: visible;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    text-align: left;
+    min-height: 140px;
+}
+
+/* خط علوي ملون - 3px كما في الصورة */
+.content-card.safety-metrics-section .kpi-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: currentColor;
+    transition: none;
+    border-radius: 8px 8px 0 0;
+}
+
+.content-card.safety-metrics-section .kpi-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+/* ===== ألوان الكروت حسب النوع ===== */
+/* LTI - وردي فاتح */
+.content-card.safety-metrics-section .kpi-card.kpi-danger::before {
+    background: #ff6b9d;
+}
+
+.content-card.safety-metrics-section .kpi-card.kpi-danger {
+    background: linear-gradient(135deg, rgba(255, 107, 157, 0.08) 0%, rgba(255, 220, 235, 0.15) 100%);
+}
+
+/* TIR - برتقالي فاتح */
+.content-card.safety-metrics-section .kpi-card.kpi-warning::before {
+    background: #ff9f43;
+}
+
+.content-card.safety-metrics-section .kpi-card.kpi-warning {
+    background: linear-gradient(135deg, rgba(255, 159, 67, 0.08) 0%, rgba(255, 235, 215, 0.15) 100%);
+}
+
+/* FA - أزرق فاتح */
+.content-card.safety-metrics-section .kpi-card.kpi-info::before {
+    background: #5f9ff8;
+}
+
+.content-card.safety-metrics-section .kpi-card.kpi-info {
+    background: linear-gradient(135deg, rgba(95, 159, 248, 0.08) 0%, rgba(220, 235, 255, 0.15) 100%);
+}
+
+/* TRIR - بنفسجي فاتح */
+.content-card.safety-metrics-section .kpi-card.kpi-purple::before {
+    background: #a78bfa;
+}
+
+.content-card.safety-metrics-section .kpi-card.kpi-purple {
+    background: linear-gradient(135deg, rgba(167, 139, 250, 0.08) 0%, rgba(230, 225, 255, 0.15) 100%);
+}
+
+/* Green */
+.content-card.safety-metrics-section .kpi-card.kpi-success::before {
+    background: #4ade80;
+}
+
+.content-card.safety-metrics-section .kpi-card.kpi-success {
+    background: linear-gradient(135deg, rgba(74, 222, 128, 0.08) 0%, rgba(220, 252, 231, 0.15) 100%);
+}
+
+/* Pink */
+.content-card.safety-metrics-section .kpi-card.kpi-primary::before {
+    background: #ec4899;
+}
+
+.content-card.safety-metrics-section .kpi-card.kpi-primary {
+    background: linear-gradient(135deg, rgba(236, 72, 153, 0.08) 0%, rgba(252, 231, 243, 0.15) 100%);
+}
+
+/* Indigo */
+.content-card.safety-metrics-section .kpi-card.kpi-indigo::before {
+    background: #6366f1;
+}
+
+.content-card.safety-metrics-section .kpi-card.kpi-indigo {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.08) 0%, rgba(224, 231, 255, 0.15) 100%);
+}
+
+/* ===== محتوى الكارت ===== */
+.content-card.safety-metrics-section .kpi-card>div {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+}
+
+/* إظهار الشارة والأيقونة - كما في الصورة */
+.content-card.safety-metrics-section .kpi-card .flex.items-center {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+}
+
+/* ===== الأيقونة - صغيرة في الزاوية كما في الصورة ===== */
+.content-card.safety-metrics-section .kpi-card .text-2xl,
+.content-card.safety-metrics-section .kpi-card i.fas,
+.content-card.safety-metrics-section .kpi-card i.fa {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+    margin: 0;
+}
+
+/* ألوان الأيقونات - ألوان فاتحة */
+.content-card.safety-metrics-section .kpi-card.kpi-danger .text-2xl,
+.content-card.safety-metrics-section .kpi-card.kpi-danger i {
+    background: rgba(255, 107, 157, 0.2);
+    color: #ff6b9d;
+}
+
+.content-card.safety-metrics-section .kpi-card.kpi-success .text-2xl,
+.content-card.safety-metrics-section .kpi-card.kpi-success i {
+    background: rgba(74, 222, 128, 0.2);
+    color: #22c55e;
+}
+
+.content-card.safety-metrics-section .kpi-card.kpi-info .text-2xl,
+.content-card.safety-metrics-section .kpi-card.kpi-info i {
+    background: rgba(95, 159, 248, 0.2);
+    color: #5f9ff8;
+}
+
+.content-card.safety-metrics-section .kpi-card.kpi-warning .text-2xl,
+.content-card.safety-metrics-section .kpi-card.kpi-warning i {
+    background: rgba(255, 159, 67, 0.2);
+    color: #ff9f43;
+}
+
+.content-card.safety-metrics-section .kpi-card.kpi-purple .text-2xl,
+.content-card.safety-metrics-section .kpi-card.kpi-purple i {
+    background: rgba(167, 139, 250, 0.2);
+    color: #a78bfa;
+}
+
+.content-card.safety-metrics-section .kpi-card.kpi-primary .text-2xl,
+.content-card.safety-metrics-section .kpi-card.kpi-primary i {
+    background: rgba(236, 72, 153, 0.2);
+    color: #ec4899;
+}
+
+.content-card.safety-metrics-section .kpi-card.kpi-indigo .text-2xl,
+.content-card.safety-metrics-section .kpi-card.kpi-indigo i {
+    background: rgba(99, 102, 241, 0.2);
+    color: #6366f1;
+}
+
+/* ======الشارة - في الزاوية اليسرى كما في الصورة ===== */
+.content-card.safety-metrics-section .kpi-card .flex.items-center span {
+    background: rgba(0, 0, 0, 0.05);
+    color: #4b5563;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    letter-spacing: 0.5px;
+}
+
+/* Force TRIR/FA/TIR/LTI code badges to match value size */
+.content-card.safety-metrics-section .metric-card-frame .metric-short-code {
+    font-size: 2rem !important;
+    font-weight: 900 !important;
+    line-height: 1 !important;
+    min-width: 3.4rem !important;
+    text-align: center;
+    padding: 0.2rem 0.45rem !important;
+    letter-spacing: 0.03em !important;
+}
+
+/* ===== القيمة (الرقم) - كبيرة في الوسط ===== */
+.content-card.safety-metrics-section .kpi-card p.text-2xl {
+    font-size: 2rem;
+    font-weight: 900;
+    line-height: 1;
+    margin: 0.75rem 0 0.25rem 0;
+    font-family: 'Cairo', -apple-system, sans-serif;
+    letter-spacing: -1px;
+    width: 100%;
+    text-align: left;
+    background: none;
+    border-radius: 0;
+    padding: 0;
+    display: block;
+}
+
+/* ألوان القيم */
+.content-card.safety-metrics-section .kpi-card.kpi-danger p.text-2xl {
+    color: #1f2937;
+}
+
+.content-card.safety-metrics-section .kpi-card.kpi-success p.text-2xl {
+    color: #1f2937;
+}
+
+.content-card.safety-metrics-section .kpi-card.kpi-info p.text-2xl {
+    color: #1f2937;
+}
+
+.content-card.safety-metrics-section .kpi-card.kpi-warning p.text-2xl {
+    color: #1f2937;
+}
+
+.content-card.safety-metrics-section .kpi-card.kpi-purple p.text-2xl {
+    color: #1f2937;
+}
+
+.content-card.safety-metrics-section .kpi-card.kpi-primary p.text-2xl {
+    color: #1f2937;
+}
+
+.content-card.safety-metrics-section .kpi-card.kpi-indigo p.text-2xl {
+    color: #1f2937;
+}
+
+/* ===== العنوان الإنجليزي - في الوسط كما في الصورة ===== */
+.content-card.safety-metrics-section .kpi-card h3.text-sm {
+    display: block;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #1f2937;
+    text-align: left;
+    width: 100%;
+    margin: 0.5rem 0 0.75rem 0;
+    line-height: 1.3;
+}
+
+/* ===== الوصف العربي - في الأسفل ===== */
+.content-card.safety-metrics-section .kpi-card p.text-xs {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #6b7280;
+    line-height: 1.3;
+    text-align: left;
+    width: 100%;
+    margin: 0;
+}
+
+/* ===== صندوق الملاحظة ===== */
+.content-card.safety-metrics-section .bg-blue-50 {
+    background: linear-gradient(135deg,
+            rgba(59, 130, 246, 0.06) 0%,
+            rgba(37, 99, 235, 0.04) 100%);
+    border: 1px solid rgba(59, 130, 246, 0.15);
+    border-radius: 16px;
+    padding: 1.25rem;
+    margin-top: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.content-card.safety-metrics-section .bg-blue-50:hover {
+    background: linear-gradient(135deg,
+            rgba(59, 130, 246, 0.08) 0%,
+            rgba(37, 99, 235, 0.06) 100%);
+    border-color: rgba(59, 130, 246, 0.25);
+}
+
+.content-card.safety-metrics-section .bg-blue-50 p {
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+.content-card.safety-metrics-section .bg-blue-50 i {
+    color: #3b82f6;
+}
+
+.content-card.safety-metrics-section .bg-blue-50 strong {
+    color: var(--text-primary);
+    font-weight: 700;
+}
+
+/* ===== الوضع الليلي ===== */
+[data-theme="dark"] .content-card.safety-metrics-section {
+    background: rgba(255, 255, 255, 0.03);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .content-card.safety-metrics-section .card-header {
+    background: linear-gradient(135deg,
+            rgba(102, 126, 234, 0.08) 0%,
+            rgba(118, 75, 162, 0.08) 100%);
+    border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .content-card.safety-metrics-section .kpi-card {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .content-card.safety-metrics-section .bg-blue-50 {
+    background: linear-gradient(135deg,
+            rgba(59, 130, 246, 0.12) 0%,
+            rgba(37, 99, 235, 0.08) 100%);
+    border-color: rgba(59, 130, 246, 0.25);
+}
+
+/* ===== استجابة الشاشات ===== */
+
+/* شاشات كبيرة جداً (>1600px) */
+@media (min-width: 1600px) {
+    .content-card.safety-metrics-section .grid {
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .content-card.safety-metrics-section .kpi-card {
+        min-height: 130px;
+    }
+
+    .content-card.safety-metrics-section .kpi-card p.text-2xl {
+        font-size: 2.5rem;
+    }
+
+    .content-card.safety-metrics-section .kpi-card .text-2xl,
+    .content-card.safety-metrics-section .kpi-card i.fas,
+    .content-card.safety-metrics-section .kpi-card i.fa {
+        width: 64px;
+        height: 64px;
+        font-size: 1.75rem;
+    }
+}
+
+/* شاشات كبيرة (1200px - 1599px) */
+@media (min-width: 1200px) and (max-width: 1599px) {
+    .content-card.safety-metrics-section .grid {
+        grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .content-card.safety-metrics-section .kpi-card {
+        min-height: 190px;
+    }
+}
+
+/* شاشات متوسطة (768px - 1199px) */
+@media (min-width: 768px) and (max-width: 1199px) {
+    .content-card.safety-metrics-section .grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+
+    .content-card.safety-metrics-section .kpi-card {
+        min-height: 115px;
+    }
+
+    .content-card.safety-metrics-section .kpi-card p.text-2xl {
+        font-size: 2rem;
+    }
+
+    .content-card.safety-metrics-section .kpi-card .text-2xl,
+    .content-card.safety-metrics-section .kpi-card i.fas,
+    .content-card.safety-metrics-section .kpi-card i.fa {
+        width: 52px;
+        height: 52px;
+        font-size: 1.375rem;
+    }
+
+    .content-card.safety-metrics-section .card-header {
+        padding: 1.5rem 1.5rem 1.25rem;
+    }
+
+    .content-card.safety-metrics-section .card-title {
+        font-size: 1.25rem;
+    }
+}
+
+/* ===== Responsive للشاشات الصغيرة ===== */
+@media (max-width: 1200px) {
+    .content-card.safety-metrics-section .grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .content-card.safety-metrics-section .grid {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+
+    .content-card.safety-metrics-section .kpi-card {
+        min-height: 120px;
+        padding: 1rem;
+    }
+
+    .content-card.safety-metrics-section .card-title {
+        font-size: 1.25rem;
+    }
+
+    .content-card.safety-metrics-section .card-body {
+        padding: 1.25rem;
+    }
+
+    .content-card.safety-metrics-section .bg-blue-50 {
+        padding: 1rem;
+    }
+
+    .content-card.safety-metrics-section .kpi-card p.text-2xl {
+        font-size: 1.5rem;
+    }
+
+    .content-card.safety-metrics-section .kpi-card h3.text-sm,
+    .content-card.safety-metrics-section .kpi-card p.text-xs {
+        font-size: 0.75rem;
+    }
+}
+
+/* شاشات صغيرة (480px - 767px) */
+@media (min-width: 480px) and (max-width: 767px) {
+    .content-card.safety-metrics-section .grid {
+        grid-template-columns: 1fr;
+        gap: 0.875rem;
+    }
+
+    .content-card.safety-metrics-section .kpi-card {
+        min-height: 100px;
+    }
+
+    .content-card.safety-metrics-section .kpi-card p.text-2xl {
+        font-size: 1.875rem;
+    }
+
+    .content-card.safety-metrics-section .kpi-card .text-2xl,
+    .content-card.safety-metrics-section .kpi-card i.fas,
+    .content-card.safety-metrics-section .kpi-card i.fa {
+        width: 48px;
+        height: 48px;
+        font-size: 1.25rem;
+    }
+
+    .content-card.safety-metrics-section .kpi-card h3,
+    .content-card.safety-metrics-section .kpi-card p.text-xs {
+        font-size: 0.8125rem;
+    }
+
+    .content-card.safety-metrics-section .card-header {
+        padding: 1.25rem;
+    }
+
+    .content-card.safety-metrics-section .card-title {
+        font-size: 1.125rem;
+    }
+
+    .content-card.safety-metrics-section .card-body {
+        padding: 1.25rem;
+    }
+}
+
+/* شاشات صغيرة جداً (<480px) */
+@media (max-width: 479px) {
+    .content-card.safety-metrics-section .grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.875rem;
+    }
+
+    .content-card.safety-metrics-section .kpi-card {
+        min-height: 150px;
+    }
+
+    .content-card.safety-metrics-section .kpi-card>div {
+        padding: 1rem;
+        gap: 0.75rem;
+    }
+
+    .content-card.safety-metrics-section .kpi-card p.text-2xl {
+        font-size: 2rem;
+    }
+
+    .content-card.safety-metrics-section .kpi-card .text-2xl,
+    .content-card.safety-metrics-section .kpi-card i.fas,
+    .content-card.safety-metrics-section .kpi-card i.fa {
+        width: 48px;
+        height: 48px;
+        font-size: 1.25rem;
+    }
+
+    .content-card.safety-metrics-section .kpi-card h3,
+    .content-card.safety-metrics-section .kpi-card p.text-xs {
+        font-size: 0.8125rem;
+    }
+
+    .content-card.safety-metrics-section .card-header {
+        padding: 1.25rem;
+    }
+
+    .content-card.safety-metrics-section .card-title {
+        font-size: 1rem;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .content-card.safety-metrics-section .card-title i {
+        font-size: 1.25rem;
+    }
+
+    .content-card.safety-metrics-section .card-body {
+        padding: 1.25rem;
+    }
+
+    .content-card.safety-metrics-section .bg-blue-50 {
+        padding: 1rem;
+    }
+}
+
+/* ===== تحسينات الأداء ===== */
+.content-card.safety-metrics-section,
+.content-card.safety-metrics-section .kpi-card {
+    /* Removed will-change: transform to reduce memory consumption - apply dynamically during animations */
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+/* دعم prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+
+    .content-card.safety-metrics-section,
+    .content-card.safety-metrics-section .kpi-card,
+    .content-card.safety-metrics-section .kpi-card *,
+    .content-card.safety-metrics-section .card-title i {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+/* ===== تحسينات الطباعة ===== */
+@media print {
+    .content-card.safety-metrics-section {
+        box-shadow: none;
+        border: 1px solid #ddd;
+        page-break-inside: avoid;
+    }
+
+    .content-card.safety-metrics-section .kpi-card {
+        box-shadow: none;
+        border: 1px solid #ddd;
+    }
+
+    .content-card.safety-metrics-section::before,
+    .content-card.safety-metrics-section .kpi-card::before {
+        display: none;
+    }
+}

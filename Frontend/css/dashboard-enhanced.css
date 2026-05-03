@@ -1,0 +1,1440 @@
+/* ========================================
+   Professional Enterprise Dashboard Theme
+   تصميم احترافي للشركات - نظيف، منظم، وعملي
+   ======================================== */
+
+:root {
+    /* Enterprise Palette - Refined Colors */
+    --ent-primary: #0f172a;
+    /* Slate 900 */
+    --ent-secondary: #475569;
+    /* Slate 600 */
+    --ent-accent: #2563eb;
+    /* Blue 600 */
+
+    --ent-bg-page: #f8fafc;
+    /* Slate 50 */
+    --ent-bg-card: #ffffff;
+
+    --ent-border: #e2e8f0;
+    /* Slate 200 */
+    --ent-border-hover: #cbd5e1;
+    /* Slate 300 */
+
+    --ent-shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+    --ent-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --ent-shadow-nav: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+
+    /* Text Colors */
+    --ent-text-head: #1e293b;
+    /* Slate 800 */
+    --ent-text-body: #334155;
+    /* Slate 700 */
+    --ent-text-muted: #64748b;
+    /* Slate 500 */
+
+    /* Status Colors (Subtle) */
+    --status-red-bg: #fef2f2;
+    --status-red-text: #991b1b;
+    --status-red-border: #fca5a5;
+
+    --status-blue-bg: #eff6ff;
+    --status-blue-text: #1e40af;
+    --status-blue-border: #93c5fd;
+
+    --status-green-bg: #f0fdf4;
+    --status-green-text: #166534;
+    --status-green-border: #86efac;
+
+    --status-amber-bg: #fffbeb;
+    --status-amber-text: #92400e;
+    --status-amber-border: #fcd34d;
+
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
+}
+
+[data-theme="dark"] {
+    --ent-primary: #f8fafc;
+    --ent-secondary: #94a3b8;
+    --ent-accent: #60a5fa;
+    --ent-bg-page: #0f172a;
+    --ent-bg-card: #1e293b;
+    --ent-border: #334155;
+    --ent-border-hover: #475569;
+    --ent-text-head: #f1f5f9;
+    --ent-text-body: #e2e8f0;
+    --ent-text-muted: #94a3b8;
+    --ent-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.3);
+
+    --status-red-bg: rgba(153, 27, 27, 0.2);
+    --status-red-text: #fca5a5;
+    --status-red-border: rgba(153, 27, 27, 0.5);
+
+    --status-blue-bg: rgba(30, 64, 175, 0.2);
+    --status-blue-text: #93c5fd;
+    --status-blue-border: rgba(30, 64, 175, 0.5);
+
+    --status-green-bg: rgba(22, 101, 52, 0.2);
+    --status-green-text: #86efac;
+    --status-green-border: rgba(22, 101, 52, 0.5);
+
+    --status-amber-bg: rgba(146, 64, 14, 0.2);
+    --status-amber-text: #fcd34d;
+    --status-amber-border: rgba(146, 64, 14, 0.5);
+}
+
+/* ===== Global Dashboard Formatting ===== */
+#dashboard-section {
+    background-color: var(--ent-bg-page);
+    padding: 1.5rem;
+    font-family: 'Inter', 'Cairo', sans-serif;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: visible;
+    overflow-y: visible;
+    box-sizing: border-box;
+    margin: 0;
+    position: relative;
+}
+
+/* Ensure all dashboard children are visible */
+#dashboard-section > * {
+    position: relative;
+    z-index: 1;
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Header Section */
+.section-header {
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--ent-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.section-title {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: var(--ent-text-head);
+    margin: 0;
+    letter-spacing: -0.025em;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.section-title i {
+    color: var(--ent-accent);
+}
+
+.section-subtitle {
+    font-size: 1rem;
+    color: var(--ent-text-muted);
+    margin-top: 0.5rem;
+    font-weight: 400;
+}
+
+/* ===== KPI Grid ===== */
+.kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 2rem;
+    grid-auto-flow: dense;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+/* Ensure grid items fill available space equally */
+.kpi-grid>* {
+    width: 100%;
+}
+
+/* Professional KPI Card */
+.kpi-card {
+    background: var(--ent-bg-card);
+    border: 1px solid var(--ent-border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    box-shadow: var(--ent-shadow-sm);
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    transition: all 0.2s ease-in-out;
+    position: relative;
+    overflow: hidden;
+    /* Fixed Frame Properties */
+    min-height: 120px;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+/* Ensure content doesn't break layout */
+.kpi-content {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* Specific size enforcement for consistency */
+/* ضمان عرض الأرقام بالإنجليزية في جميع KPI cards */
+.kpi-value,
+#total-incidents,
+#active-users,
+#open-ptw-count,
+#closed-ptw-count,
+#total-ptw-count,
+#active-ptw,
+#compliance-rate,
+#total-work-hours,
+#days-without-injury {
+    direction: ltr !important;
+    text-align: left !important;
+    unicode-bidi: embed !important;
+    font-variant-numeric: tabular-nums !important;
+    font-feature-settings: "tnum" !important;
+    font-family: 'Inter', 'Cairo', 'Arial', sans-serif !important;
+}
+
+.kpi-value {
+    font-size: 1.875rem;
+    /* Standardized size like Incidents */
+    font-weight: 700;
+    color: var(--ent-text-head);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-top: 0.25rem;
+    margin-bottom: 0;
+}
+
+/* Force all KPI cards to have identical dimensions */
+.kpi-grid>.kpi-card {
+    min-height: 140px;
+    max-height: 140px;
+    height: 140px;
+}
+
+/* Ensure icons are identical size */
+.kpi-grid>.kpi-card .kpi-icon {
+    width: 56px;
+    height: 56px;
+    min-width: 56px;
+    min-height: 56px;
+    flex-shrink: 0;
+}
+
+/* Ensure labels are identical */
+.kpi-grid>.kpi-card .kpi-label {
+    font-size: 0.875rem;
+    line-height: 1.3;
+    min-height: 1.3em;
+}
+
+/* Ensure values are identical */
+.kpi-grid>.kpi-card .kpi-value {
+    font-size: 1.875rem;
+    line-height: 1.1;
+    min-height: 1.1em;
+}
+
+/* Ensure descriptions are identical */
+.kpi-grid>.kpi-card .kpi-description {
+    font-size: 0.8rem;
+    line-height: 1.2;
+    min-height: 1.2em;
+}
+
+/* Ensure content area is distributed evenly */
+.kpi-grid>.kpi-card .kpi-content {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.25rem;
+}
+
+/* Grid for Metrics Sections (Safety Metrics, Reports) */
+.metrics-grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 0;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    padding: 0;
+}
+
+/* Ensure metrics grid fills container properly */
+.safety-metrics-section .metrics-grid-container,
+.reports-statistics-section .metrics-grid-container {
+    margin-left: 0;
+    margin-right: 0;
+    width: 100%;
+    max-width: 100%;
+    overflow: visible;
+    box-sizing: border-box;
+}
+
+/* Metric Cards (Inside Safety/Reports Sections) */
+.metric-card-frame {
+    background: var(--ent-bg-card);
+    border: 1px solid var(--ent-border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 180px;
+    /* Increased for better content spacing */
+    height: 100%;
+    transition: all 0.2s;
+    position: relative;
+    overflow: visible;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
+}
+
+.metric-card-frame:hover {
+    box-shadow: var(--ent-shadow);
+    transform: translateY(-2px);
+    border-color: var(--ent-accent);
+}
+
+.metric-card-frame[data-clickable="true"] {
+    cursor: pointer;
+}
+
+.metric-card-frame[data-clickable="true"]:hover {
+    cursor: pointer;
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+}
+
+/* Ensure metric card content is well distributed */
+.metric-card-frame>div {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    height: 100%;
+}
+
+/* Metric card headers */
+.metric-card-frame h3 {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--ent-text-body);
+    line-height: 1.4;
+    margin: 0;
+}
+
+/* Metric card values */
+.metric-card-frame p[id$="-value"] {
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1;
+    margin: 0.5rem 0;
+    direction: ltr !important;
+    text-align: left !important;
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum";
+    font-family: 'Inter', 'Cairo', 'Arial', sans-serif;
+}
+
+/* Ensure numbers are always in English format */
+.metric-card-frame p[id$="-value"],
+.reports-statistics-section p[id$="-value"],
+.reports-statistics-section .english-number,
+.metric-card-frame .english-number,
+.content-card.reports-statistics-section p[id$="-value"],
+.content-card.reports-statistics-section .english-number {
+    direction: ltr !important;
+    text-align: left !important;
+    unicode-bidi: embed !important;
+    font-variant-numeric: tabular-nums !important;
+    font-feature-settings: "tnum" !important;
+    font-family: 'Inter', 'Cairo', 'Arial', sans-serif !important;
+    /* منع أي تأثيرات RTL على الأرقام */
+    writing-mode: horizontal-tb !important;
+    text-orientation: mixed !important;
+    /* ضمان عرض الأرقام بشكل صحيح */
+    display: inline-block;
+    white-space: nowrap;
+}
+
+/* Metric card descriptions */
+.metric-card-frame p:last-child {
+    font-size: 0.75rem;
+    color: var(--ent-text-muted);
+    line-height: 1.3;
+    margin: 0;
+}
+
+/* Make TRIR/FA/TIR/LTI abbreviations larger and bolder */
+.metric-short-code {
+    font-size: 2rem !important;
+    font-weight: 900 !important;
+    line-height: 1 !important;
+    min-width: 3.4rem;
+    text-align: center;
+    letter-spacing: 0.03em;
+    padding: 0.2rem 0.45rem !important;
+}
+
+.kpi-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--ent-shadow);
+    border-color: var(--ent-border-hover);
+}
+
+/* ===== Content Grid for Tasks and Stats ===== */
+.content-grid {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 0 !important;
+    margin-bottom: 0 !important;
+    margin-top: 0 !important;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    padding: 0;
+    clear: both;
+    overflow: visible !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: relative;
+    z-index: 1;
+    align-items: stretch !important;
+    grid-auto-rows: 1fr;
+    /* ضمان أن جميع العناصر على نفس المستوى */
+    align-content: start;
+}
+
+/* Ensure content grid items don't overflow */
+.content-grid>* {
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: relative !important;
+    z-index: 1;
+    display: flex !important;
+    flex-direction: column;
+    height: 100% !important;
+    align-self: stretch !important;
+    /* ضمان أن جميع الكروت على نفس المستوى */
+    min-height: 0;
+}
+
+/* Content Card - Used for Tasks, Activities, Stats */
+.content-card {
+    background: var(--ent-bg-card);
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--ent-border);
+    box-shadow: var(--ent-shadow-sm);
+    overflow: visible !important;
+    transition: all 0.2s;
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 0;
+    height: 100% !important;
+    min-height: 0 !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: relative !important;
+    z-index: 1;
+    align-self: stretch !important;
+    /* ضمان أن جميع الكروت على نفس المستوى */
+    align-items: stretch;
+}
+
+/* Remove bottom margin from all content cards in content-grid */
+.content-grid .content-card {
+    margin-bottom: 0 !important;
+    margin-top: 0 !important;
+    padding-bottom: 0 !important;
+    padding-top: 0 !important;
+}
+
+/* Remove bottom margin from last content card */
+.content-card:last-of-type {
+    margin-bottom: 0;
+}
+
+/* Special styling for full-width sections */
+.safety-metrics-section {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 0 2rem 0;
+    margin-left: 0;
+    margin-right: 0;
+    overflow: visible;
+    box-sizing: border-box;
+    clear: both;
+}
+
+/* التقارير والإحصائيات - بدون مسافة سفلية */
+.reports-statistics-section {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 0 0 0 !important;
+    margin-left: 0;
+    margin-right: 0;
+    overflow: visible;
+    box-sizing: border-box;
+    clear: both;
+}
+
+/* Additional Reports Section - بدون مسافة سفلية */
+.additional-reports-section {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 0 0 0 !important;
+    margin-left: 0;
+    margin-right: 0;
+    overflow: visible;
+    box-sizing: border-box;
+    clear: both;
+}
+
+/* ضمان أن content-grid يبدأ مباشرة بعد additional-reports-section بدون أي مسافة */
+.additional-reports-section + .content-grid {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    border-top: none !important;
+}
+
+/* إزالة أي مسافة من العناصر الأخيرة في additional-reports-section قبل content-grid */
+.additional-reports-section:has(+ .content-grid) {
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+.additional-reports-section:has(+ .content-grid) .card-body {
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+.additional-reports-section:has(+ .content-grid) .card-body > *:last-child {
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+/* ضمان أن content-grid يبدأ مباشرة بعد reports-statistics-section إذا لم يكن هناك additional-reports-section */
+.reports-statistics-section + .content-grid {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+/* ضمان عدم وجود مسافات بين reports-statistics-section و additional-reports-section */
+.reports-statistics-section + .additional-reports-section {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+}
+
+/* ضمان عدم وجود مسافات داخل reports-statistics-section */
+.reports-statistics-section .card-body {
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+/* ضمان عدم وجود مسافات داخل additional-reports-section */
+.additional-reports-section .card-body {
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+}
+
+/* إزالة جميع المسافات من additional-reports-section */
+.additional-reports-section {
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+/* ===== قواعد نهائية لضمان عدم وجود مسافات ===== */
+/* إزالة جميع المسافات بين الأقسام المهمة - قاعدة شاملة */
+.reports-statistics-section,
+.additional-reports-section {
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+/* إزالة جميع المسافات من العناصر الأخيرة في additional-reports-section */
+.additional-reports-section *:last-child {
+    margin-bottom: 0 !important;
+}
+
+/* إزالة المسافات من جميع العناصر الداخلية في additional-reports-section */
+.additional-reports-section .card-body {
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+.additional-reports-section .card-body > *:last-child {
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+/* إزالة المسافات من content-grid بشكل نهائي */
+.content-grid {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+/* إزالة المسافات من جميع الكروت بشكل نهائي */
+.content-grid .content-card {
+    margin: 0 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+/* Styling for widgets inside additional reports section */
+.additional-reports-section #employee-report-widget,
+.additional-reports-section #dashboard-charts,
+.additional-reports-section #dashboard-reports-widget {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 1.5rem;
+}
+
+.additional-reports-section #employee-report-widget:not(:last-child),
+.additional-reports-section #dashboard-charts:not(:last-child) {
+    border-bottom: 1px solid var(--ent-border, #e2e8f0);
+}
+
+/* إزالة المسافة السفلية من آخر widget في additional-reports-section */
+.additional-reports-section #dashboard-reports-widget:last-child,
+.additional-reports-section #dashboard-charts:last-child,
+.additional-reports-section #employee-report-widget:last-child {
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+/* إزالة padding-bottom من آخر عنصر داخل card-body في additional-reports-section */
+.additional-reports-section .card-body > *:last-child {
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+/* إزالة أي مسافة من العناصر الداخلية في آخر widget */
+.additional-reports-section #dashboard-reports-widget:last-child *:last-child,
+.additional-reports-section #dashboard-charts:last-child *:last-child,
+.additional-reports-section #employee-report-widget:last-child *:last-child {
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+/* ضمان عدم وجود مسافة سفلية من additional-reports-section */
+.additional-reports-section:last-child {
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+/* إزالة أي مسافة من العناصر الأخيرة داخل additional-reports-section */
+.additional-reports-section .card-body > *:last-child {
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+/* Ensure card body doesn't overflow or hide content */
+.safety-metrics-section .card-body,
+.reports-statistics-section .card-body,
+.additional-reports-section .card-body {
+    overflow: visible;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    position: relative;
+    visibility: visible;
+}
+
+/* Ensure all metric cards are visible */
+.metric-card-frame {
+    visibility: visible !important;
+    opacity: 1 !important;
+    display: flex !important;
+}
+
+/* Ensure card header is full width */
+.safety-metrics-section .card-header,
+.reports-statistics-section .card-header,
+.additional-reports-section .card-header {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.content-card:hover {
+    box-shadow: var(--ent-shadow);
+    border-color: var(--ent-border-hover);
+}
+
+/* Card Header - Full width */
+.card-header {
+    padding: 1.25rem 1.5rem;
+    background: var(--ent-bg-card);
+    border-bottom: 1px solid var(--ent-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.card-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--ent-text-head);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.card-title i {
+    color: var(--ent-accent);
+    font-size: 1rem;
+}
+
+/* Card Body - Full width with proper overflow handling */
+.card-body {
+    padding: 1.5rem;
+    flex: 1 1 auto !important;
+    overflow: visible !important;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: relative;
+    z-index: 1;
+    display: flex !important;
+    flex-direction: column;
+    min-height: 0 !important;
+    /* ضمان أن card-body يملأ المساحة المتبقية */
+    align-items: stretch;
+}
+
+/* Stats Grid inside Quick Stats card */
+.stats-grid {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1.25rem;
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: relative;
+    z-index: 1;
+    overflow: visible !important;
+    /* ضمان أن stats-grid يملأ المساحة المتبقية */
+    align-content: start;
+}
+
+.stat-item {
+    display: flex !important;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1rem;
+    background: var(--ent-bg-page);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--ent-border);
+    transition: all 0.2s;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow: visible !important;
+}
+
+.stat-item:hover {
+    background: var(--status-blue-bg);
+    border-color: var(--status-blue-border);
+}
+
+.stat-label {
+    font-size: 0.8125rem;
+    color: var(--ent-text-muted);
+    font-weight: 500;
+}
+
+.stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--ent-text-head);
+    line-height: 1;
+    visibility: visible !important;
+    opacity: 1 !important;
+    display: block !important;
+    /* ضمان عرض الأرقام بالإنجليزية */
+    direction: ltr !important;
+    text-align: left !important;
+    unicode-bidi: embed !important;
+    font-variant-numeric: tabular-nums !important;
+    font-feature-settings: "tnum" !important;
+    font-family: 'Inter', 'Cairo', 'Arial', sans-serif !important;
+}
+
+/* ضمان عرض الأرقام بالإنجليزية في Quick Statistics */
+#week-incidents,
+#open-ptw,
+#completed-training,
+#days-without-incident,
+.stat-value.english-number {
+    direction: ltr !important;
+    text-align: left !important;
+    unicode-bidi: embed !important;
+    font-variant-numeric: tabular-nums !important;
+    font-feature-settings: "tnum" !important;
+    font-family: 'Inter', 'Cairo', 'Arial', sans-serif !important;
+}
+
+/* Specific styles to ensure visibility of the three main cards */
+#recent-activities,
+#user-tasks-widget,
+.stats-grid {
+    visibility: visible !important;
+    opacity: 1 !important;
+    display: flex !important;
+    position: relative !important;
+    z-index: 2;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow: visible !important;
+}
+
+/* Ensure content-grid cards are not hidden */
+.content-grid .content-card:first-child,
+.content-grid .content-card:nth-child(2),
+.content-grid .content-card:nth-child(3) {
+    visibility: visible !important;
+    opacity: 1 !important;
+    display: flex !important;
+    position: relative !important;
+    z-index: 1;
+    overflow: visible !important;
+    height: 100% !important;
+    align-self: stretch;
+}
+
+/* Ensure all three cards have equal height */
+.content-grid .content-card {
+    height: 100% !important;
+    min-height: 0 !important;
+    align-self: stretch !important;
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+/* ضمان أن الكروت الثلاثة تبدأ من نفس المستوى تماماً */
+.content-grid .content-card:first-child,
+.content-grid .content-card:nth-child(2),
+.content-grid .content-card:nth-child(3) {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+    top: 0 !important;
+    transform: translateY(0) !important;
+}
+
+/* Final guarantee - ensure no clipping or hiding */
+.content-grid .content-card .card-body,
+.content-grid .content-card .card-header {
+    clip: unset !important;
+    clip-path: none !important;
+    -webkit-clip-path: none !important;
+    mask: none !important;
+    -webkit-mask: none !important;
+}
+
+/* Activity List (for Tasks and Recent Activities) */
+.activity-list {
+    display: flex !important;
+    flex-direction: column;
+    gap: 0.75rem;
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    overflow-y: auto;
+    overflow-x: visible !important;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: relative;
+    z-index: 1;
+    /* ضمان أن activity-list يملأ المساحة المتبقية */
+    align-items: stretch;
+}
+
+.activity-item {
+    padding: 1rem;
+    background: var(--ent-bg-page);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--ent-border);
+    transition: all 0.2s;
+}
+
+.activity-item:hover {
+    background: var(--ent-bg-card);
+    border-color: var(--ent-accent);
+    box-shadow: var(--ent-shadow-sm);
+}
+
+/* LeftAccent Border (Optional, clean touch) */
+.kpi-card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: transparent;
+    transition: background 0.2s;
+}
+
+.kpi-card:hover::before {
+    background: var(--ent-accent);
+}
+
+.kpi-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+    /* Soft Subtle Backgrounds */
+    background: var(--ent-bg-page);
+    color: var(--ent-secondary);
+    transition: all 0.2s;
+}
+
+.kpi-card:hover .kpi-icon {
+    background: var(--status-blue-bg);
+    color: var(--ent-accent);
+}
+
+/* KPI Content Container - Already defined above at line 156-162 */
+/* Removed duplicate definition */
+
+.kpi-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--ent-text-muted);
+    margin: 0 0 0.5rem 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* KPI Value - Already defined above at line 165-173 */
+/* Using standardized size: 1.875rem for consistency */
+
+.kpi-description {
+    font-size: 0.8rem;
+    color: var(--ent-text-muted);
+    margin-top: 0.25rem;
+    font-weight: 400;
+}
+
+/* Color Variants for KPI Cards */
+.kpi-danger .kpi-icon {
+    color: var(--status-red-text);
+    background: var(--status-red-bg);
+}
+
+.kpi-success .kpi-icon {
+    color: var(--status-green-text);
+    background: var(--status-green-bg);
+}
+
+.kpi-warning .kpi-icon {
+    color: var(--status-amber-text);
+    background: var(--status-amber-bg);
+}
+
+.kpi-info .kpi-icon {
+    color: var(--status-blue-text);
+    background: var(--status-blue-bg);
+}
+
+.kpi-primary .kpi-icon {
+    color: var(--ent-accent);
+    background: var(--status-blue-bg);
+}
+
+.kpi-purple .kpi-icon {
+    color: #7c3aed;
+    background: #f5f3ff;
+}
+
+.kpi-indigo .kpi-icon {
+    color: #4f46e5;
+    background: #eef2ff;
+}
+
+/* ===== Content/Report Widget ===== */
+.content-card,
+.reports-widget-card {
+    background: var(--ent-bg-card);
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--ent-border);
+    box-shadow: var(--ent-shadow);
+    margin-bottom: 2rem;
+    overflow: hidden;
+}
+
+.card-header,
+.reports-widget-header {
+    padding: 1.5rem 2rem;
+    background: var(--ent-bg-card);
+    border-bottom: 1px solid var(--ent-border);
+}
+
+.header-content-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-title-section {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.reports-icon-wrapper {
+    width: 48px;
+    height: 48px;
+    background: var(--status-blue-bg);
+    color: var(--status-blue-text);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+.title-text h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--ent-text-head);
+    margin: 0;
+}
+
+.title-text p {
+    color: var(--ent-text-muted);
+    font-size: 0.95rem;
+    margin: 0.25rem 0 0 0;
+}
+
+.card-body {
+    padding: 2rem;
+}
+
+/* Stats Section Headers */
+.section-header-row {
+    margin-bottom: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.section-header-row h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--ent-text-head);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.section-header-row h3 i {
+    color: var(--ent-accent);
+}
+
+/* Stats Cards Grid - Professional */
+.stats-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1.5rem;
+}
+
+.enhanced-stat-card {
+    background: var(--ent-bg-card);
+    border: 1px solid var(--ent-border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    text-align: center;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+    /* Fixed Frame Properties - Matching Metric Cards */
+    min-height: 160px;
+    height: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: var(--ent-shadow-sm);
+}
+
+.enhanced-stat-card:hover {
+    border-color: var(--ent-accent);
+    box-shadow: var(--ent-shadow);
+    transform: translateY(-2px);
+}
+
+.enhanced-stat-card[data-clickable="true"] {
+    cursor: pointer;
+}
+
+.enhanced-stat-card[data-clickable="true"]:hover {
+    cursor: pointer;
+}
+
+.stat-card-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    /* Rounded for softer look or use --radius-md */
+    background: var(--ent-bg-page);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    color: var(--ent-text-muted);
+    margin-bottom: 0.5rem;
+    transition: all 0.2s;
+}
+
+.enhanced-stat-card:hover .stat-card-icon {
+    background: var(--status-blue-bg);
+    color: var(--status-blue-text);
+}
+
+/* Color modifier classes for icons on hover/active */
+.stat-card-red .stat-card-icon {
+    color: var(--status-red-text);
+    background: var(--status-red-bg);
+}
+
+.enhanced-stat-card.stat-card-red:hover {
+    border-color: var(--status-red-border);
+}
+
+.stat-card-blue .stat-card-icon {
+    color: var(--status-blue-text);
+    background: var(--status-blue-bg);
+}
+
+.enhanced-stat-card.stat-card-blue:hover {
+    border-color: var(--status-blue-border);
+}
+
+.stat-card-green .stat-card-icon {
+    color: var(--status-green-text);
+    background: var(--status-green-bg);
+}
+
+.enhanced-stat-card.stat-card-green:hover {
+    border-color: var(--status-green-border);
+}
+
+.stat-card-yellow .stat-card-icon {
+    color: var(--status-amber-text);
+    background: var(--status-amber-bg);
+}
+
+.enhanced-stat-card.stat-card-yellow:hover {
+    border-color: var(--status-amber-border);
+}
+
+.stat-card-value {
+    font-size: 2.25rem;
+    font-weight: 700;
+    color: var(--ent-text-head);
+    line-height: 1;
+    /* ضمان عرض الأرقام بالإنجليزية */
+    direction: ltr !important;
+    text-align: left !important;
+    unicode-bidi: embed !important;
+    font-variant-numeric: tabular-nums !important;
+    font-feature-settings: "tnum" !important;
+    font-family: 'Inter', 'Cairo', 'Arial', sans-serif !important;
+}
+
+/* ضمان عرض الأرقام بالإنجليزية في stat-value-number */
+.stat-value-number,
+.stat-value-number.english-number {
+    direction: ltr !important;
+    text-align: left !important;
+    unicode-bidi: embed !important;
+    font-variant-numeric: tabular-nums !important;
+    font-feature-settings: "tnum" !important;
+    font-family: 'Inter', 'Cairo', 'Arial', sans-serif !important;
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.stat-card-label {
+    font-size: 0.9rem;
+    color: var(--ent-text-muted);
+    font-weight: 500;
+}
+
+/* Export Buttons */
+.reports-export-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.25rem;
+    margin-top: 1rem;
+}
+
+.report-export-btn {
+    background: var(--ent-bg-card);
+    border: 1px solid var(--ent-border);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: right;
+}
+
+.report-export-btn:hover {
+    border-color: var(--ent-accent);
+    background: var(--status-blue-bg);
+}
+
+.btn-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+}
+
+.btn-icon-wrapper {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-md);
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ent-text-muted);
+    border: 1px solid var(--ent-border);
+}
+
+.report-export-btn:hover .btn-icon-wrapper {
+    color: var(--ent-accent);
+    border-color: var(--ent-accent);
+}
+
+.btn-label {
+    font-weight: 600;
+    color: var(--ent-text-head);
+    font-size: 1rem;
+}
+
+.btn-description {
+    font-size: 0.85rem;
+    color: var(--ent-text-muted);
+}
+
+/* Primary Export Button (Full Report) */
+.report-export-btn-full {
+    background: var(--ent-primary);
+    border-color: var(--ent-primary);
+}
+
+.report-export-btn-full .btn-label,
+.report-export-btn-full .btn-description {
+    color: #fff;
+}
+
+.report-export-btn-full .btn-icon-wrapper {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.report-export-btn-full:hover {
+    background: #1e293b;
+    /* Slightly lighter shade of primary */
+    box-shadow: 0 4px 12px rgba(30, 41, 59, 0.4);
+}
+
+/* Empty State */
+.empty-state {
+    padding: 4rem 2rem;
+    text-align: center;
+}
+
+.empty-state i {
+    font-size: 3rem;
+    color: var(--ent-border);
+    margin-bottom: 1.5rem;
+}
+
+.empty-state p {
+    color: var(--ent-text-muted);
+    font-size: 1.1rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    #dashboard-section {
+        padding: 1rem;
+        overflow: visible;
+    }
+
+    .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .kpi-grid,
+    .stats-cards-grid,
+    .metrics-grid-container,
+    .content-grid {
+        grid-template-columns: 1fr;
+        /* Full width on mobile */
+        width: 100%;
+        max-width: 100%;
+        gap: 1rem;
+    }
+
+    /* Maintain consistent height on mobile */
+    .kpi-grid>.kpi-card {
+        min-height: 120px;
+        max-height: none;
+        height: auto;
+    }
+
+    .metric-card-frame {
+        min-height: 160px;
+        width: 100%;
+    }
+
+    /* Stats grid on mobile */
+    .stats-grid {
+        grid-template-columns: 1fr;
+        width: 100%;
+    }
+
+    .header-content-wrapper {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .header-title-section {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    /* Reduce padding on mobile */
+    .card-body {
+        padding: 1rem;
+    }
+
+    .metric-card-frame {
+        padding: 1.25rem;
+    }
+}
+
+/* Tablet adjustments */
+@media (min-width: 769px) and (max-width: 1024px) {
+    #dashboard-section {
+        overflow: visible;
+    }
+
+    .kpi-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.25rem;
+    }
+
+    .metrics-grid-container {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .content-grid {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        width: 100%;
+        max-width: 100%;
+        align-items: stretch !important;
+        grid-auto-rows: 1fr;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Large screens - ensure optimal layout */
+@media (min-width: 1025px) and (max-width: 1399px) {
+    .metrics-grid-container {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        max-width: 100%;
+    }
+
+    .content-grid {
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        max-width: 100%;
+        align-items: stretch !important;
+        grid-auto-rows: 1fr;
+    }
+}
+
+/* Extra large screens - 4 columns for better use of space */
+@media (min-width: 1400px) {
+    .metrics-grid-container {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        max-width: 100%;
+    }
+
+    .content-grid {
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        max-width: 100%;
+        align-items: stretch !important;
+        grid-auto-rows: 1fr;
+    }
+}

@@ -1,0 +1,11 @@
+/* Loaded after leaflet.css (CDN): avoid invalid image-rendering in Gecko/Blink where
+   -webkit-optimize-contrast is not a valid value. */
+.leaflet-safari .leaflet-tile {
+    image-rendering: auto;
+}
+
+@supports (image-rendering: -webkit-optimize-contrast) {
+    .leaflet-safari .leaflet-tile {
+        image-rendering: -webkit-optimize-contrast;
+    }
+}
