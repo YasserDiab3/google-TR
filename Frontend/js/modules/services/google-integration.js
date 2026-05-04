@@ -2084,6 +2084,10 @@ const GoogleIntegration = {
                     Object.keys(user).forEach(key => {
                         normalized[key] = user[key];
                     });
+                    // بعض سائقي Postgres يعيدون passwordhash بحروف صغيرة — يجب ألا يُستبدل hash الخادم بنسخة قديمة من previousUsersMap
+                    if (normalized.passwordHash == null && user.passwordhash != null) {
+                        normalized.passwordHash = user.passwordhash;
+                    }
 
                     // تطبيع email
                     if (normalized.email) {

@@ -51,6 +51,15 @@ function serializeCell(v: unknown): string | null {
   return String(v);
 }
 
+function normalizePgUserRow(row: Record<string, unknown>): Record<string, unknown> {
+  const out: Record<string, unknown> = { ...row };
+  const ph = out.passwordHash ?? out.passwordhash;
+  if (ph != null && out.passwordHash == null) {
+    out.passwordHash = ph;
+  }
+  return out;
+}
+
 async function readSheet(
   client: Client,
   sheetName: string,
@@ -59,7 +68,11 @@ async function readSheet(
   const result = await client.queryObject<Record<string, unknown>>(
     `SELECT * FROM public.${t}`,
   );
-  return result.rows;
+  const rows = result.rows;
+  if (sheetName === "Users") {
+    return rows.map((r) => normalizePgUserRow(r));
+  }
+  return rows;
 }
 
 async function replaceSheet(

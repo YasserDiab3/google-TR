@@ -162,7 +162,37 @@ window.Auth = {
             typeof GoogleIntegration !== 'undefined' &&
             typeof GoogleIntegration.syncUsers === 'function');
 
-        if (localUsersCount > 0) {
+        const useSupabaseBackend = !!(typeof AppState !== 'undefined' && AppState.useSupabaseBackend === true);
+
+        // مع Postgres/Supabase: لا تعتمد على IndexedDB/المخزن المحلي لكلمة المرور — جلب Users من الخادم دائماً قبل التحقق
+        if (canSyncUsers && useSupabaseBackend) {
+            Utils.safeLog('🔄 Postgres/Supabase: جلب Users من الخادم قبل التحقق من كلمة المرور...');
+            try {
+                const syncTimeoutMs = 12000;
+                const syncOk = await Promise.race([
+                    GoogleIntegration.syncUsers(true),
+                    new Promise((resolve) => setTimeout(() => resolve(false), syncTimeoutMs)),
+                ]);
+                if (syncOk) {
+                    Utils.safeLog('✅ تم تحديث قائمة المستخدمين من الخادم');
+                } else {
+                    Utils.safeWarn('⚠️ انتهت مهلة جلب Users من الخادم — يُكمَل بالمخزن المحلي إن وُجد');
+                }
+            } catch (error) {
+                Utils.safeWarn('⚠️ فشل جلب Users من الخادم قبل تسجيل الدخول:', error);
+                if (typeof window.DataManager !== 'undefined' && window.DataManager.load) {
+                    try {
+                        await Promise.race([
+                            window.DataManager.load(),
+                            new Promise((resolve) => setTimeout(resolve, 500)),
+                        ]);
+                    } catch (loadError) {
+                        Utils.safeWarn('⚠️ فشل تحميل البيانات المحلية:', loadError);
+                    }
+                }
+            }
+            localUsersCount = Array.isArray(AppState.appData.users) ? AppState.appData.users.length : 0;
+        } else if (localUsersCount > 0) {
             Utils.safeLog(`📊 استخدام ${localUsersCount} مستخدم محلي - تسجيل دخول سريع`);
         } else if (canSyncUsers) {
             Utils.safeLog('🔄 لا توجد بيانات محلية - مزامنة Users من Google Sheets قبل تسجيل الدخول...');
@@ -325,6 +355,9 @@ window.Auth = {
         // إذا لم يتم العثور عليه في المستخدمين الثابتين، نستخدم المستخدم من قاعدة البيانات
         if (!user && foundUser) {
             Utils.safeLog('✅ تم العثور على المستخدم في قاعدة البيانات');
+            if (!foundUser.passwordHash && foundUser.passwordhash) {
+                foundUser.passwordHash = foundUser.passwordhash;
+            }
             // التحقق من حالة الحساب (إذا كانت active غير محددة أو true، نعتبرها معّلة)
             if (foundUser.active === false || foundUser.active === 'false') {
                 Utils.safeWarn('⚠️ الحساب غير معّل');
@@ -649,7 +682,7 @@ window.Auth = {
                 try {
                     const syncDone = await Promise.race([
                         GoogleIntegration.syncUsers(true).then(() => true),
-                        new Promise((resolve) => setTimeout(() => resolve(false), 900))
+                        new Promise((resolve) => setTimeout(() => resolve(false), 12000))
                     ]);
                     if (!syncDone) {
                         Utils.safeLog('⚠️ انتهت مهلة المزامنة القسرية — إرجاع خطأ كلمة المرور بسرعة');
@@ -662,8 +695,9 @@ window.Auth = {
                             return userEmail === email;
                         });
 
-                        if (refreshedUser && refreshedUser.passwordHash) {
-                            const newStoredHash = refreshedUser.passwordHash.trim().toLowerCase();
+                        const refreshedPh = refreshedUser && (refreshedUser.passwordHash || refreshedUser.passwordhash);
+                        if (refreshedUser && refreshedPh) {
+                            const newStoredHash = String(refreshedPh).trim().toLowerCase();
                             const newComparableInput = (await Utils.normalizePasswordForComparison(inputPasswordRaw, newStoredHash)).toLowerCase().trim();
 
                             if (newStoredHash === newComparableInput) {
