@@ -131,7 +131,7 @@ async function replaceSheet(
     const vals = keys.map((k) => serializeCell(row[k]));
     await client.queryObject(
       `INSERT INTO public.${t} (${cols}) VALUES (${placeholders})`,
-      ...vals,
+      vals,
     );
   }
 }
@@ -150,7 +150,7 @@ async function appendRows(
     const vals = keys.map((k) => serializeCell(row[k]));
     await client.queryObject(
       `INSERT INTO public.${t} (${cols}) VALUES (${placeholders})`,
-      ...vals,
+      vals,
     );
   }
 }
@@ -161,7 +161,7 @@ async function deleteFromSheetImpl(
   id: string,
 ): Promise<void> {
   const t = qTable(sheetName);
-  await client.queryObject(`DELETE FROM public.${t} WHERE "id" = $1`, id);
+  await client.queryObject(`DELETE FROM public.${t} WHERE "id" = $1`, [id]);
 }
 
 function checkHseApiKey(req: Request): Response | null {
@@ -203,8 +203,7 @@ async function bumpUsersMeta(client: Client): Promise<void> {
        "value_text" = EXCLUDED."value_text",
        "value_num" = EXCLUDED."value_num",
        "updated_at" = now()`,
-    iso,
-    ms,
+    [iso, ms],
   );
 }
 
