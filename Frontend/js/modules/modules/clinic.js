@@ -11173,6 +11173,26 @@ const Clinic = {
                             </div>
                             <p id="clinic-import-preview-count" class="text-sm text-gray-600 mt-2"></p>
                         </div>
+                        <div id="clinic-import-rejected-report" class="hidden border border-amber-200 bg-amber-50 rounded p-3">
+                            <div class="flex items-center justify-between gap-2 flex-wrap mb-2">
+                                <p class="text-sm font-semibold text-amber-800">تفاصيل الصفوف المرفوضة</p>
+                                <button type="button" id="clinic-import-download-rejected-btn" class="btn-secondary text-xs">
+                                    <i class="fas fa-file-excel ml-2"></i>تنزيل تقرير المرفوضات
+                                </button>
+                            </div>
+                            <div class="max-h-56 overflow-auto border rounded bg-white">
+                                <table class="data-table text-xs">
+                                    <thead>
+                                        <tr>
+                                            <th>رقم الصف</th>
+                                            <th>سبب الرفض</th>
+                                            <th>مفتاح السجل</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="clinic-import-rejected-body"></tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -11193,8 +11213,12 @@ const Clinic = {
         const previewHead = modal.querySelector('#clinic-import-preview-head');
         const previewBody = modal.querySelector('#clinic-import-preview-body');
         const previewCount = modal.querySelector('#clinic-import-preview-count');
+        const rejectedPanel = modal.querySelector('#clinic-import-rejected-report');
+        const rejectedBody = modal.querySelector('#clinic-import-rejected-body');
+        const downloadRejectedBtn = modal.querySelector('#clinic-import-download-rejected-btn');
         let importedRows = [];
         let headers = [];
+        let lastRejectedRows = [];
 
         downloadTemplateBtn?.addEventListener('click', () => this.downloadClinicImportTemplate(kind));
 
@@ -11223,6 +11247,9 @@ const Clinic = {
                 previewBody.innerHTML = importedRows.slice(0, 5).map((r) => `<tr>${headers.map((h) => `<td>${Utils.escapeHTML(String(r[h] ?? ''))}</td>`).join('')}</tr>`).join('');
                 previewCount.textContent = `إجمالي الصفوف: ${importedRows.length}`;
                 preview.classList.remove('hidden');
+                rejectedPanel.classList.add('hidden');
+                rejectedBody.innerHTML = '';
+                lastRejectedRows = [];
                 confirmBtn.disabled = importedRows.length === 0;
             } catch (error) {
                 Notification.error('فشل قراءة الملف: ' + (error?.message || error));
@@ -11235,15 +11262,33 @@ const Clinic = {
             if (!Array.isArray(importedRows) || importedRows.length === 0) return;
             Loading.show();
             try {
-                if (kind === 'injuries') await this.importInjuriesRows(importedRows);
-                else if (kind === 'dispensed-medications') await this.importDispensedRowsAsVisits(importedRows);
-                else await this.importClinicVisitsRows(importedRows);
-                modal.remove();
+                let report;
+                if (kind === 'injuries') report = await this.importInjuriesRows(importedRows);
+                else if (kind === 'dispensed-medications') report = await this.importDispensedRowsAsVisits(importedRows);
+                else report = await this.importClinicVisitsRows(importedRows);
+
+                lastRejectedRows = Array.isArray(report?.rejectedRows) ? report.rejectedRows : [];
+                if (lastRejectedRows.length > 0) {
+                    rejectedBody.innerHTML = lastRejectedRows.slice(0, 100).map((r) => `
+                        <tr>
+                            <td>${Utils.escapeHTML(String(r.rowNumber || ''))}</td>
+                            <td>${Utils.escapeHTML(String(r.reason || ''))}</td>
+                            <td>${Utils.escapeHTML(String(r.key || ''))}</td>
+                        </tr>
+                    `).join('');
+                    rejectedPanel.classList.remove('hidden');
+                } else {
+                    modal.remove();
+                }
             } catch (error) {
                 Notification.error('فشل الاستيراد: ' + (error?.message || error));
             } finally {
                 Loading.hide();
             }
+        });
+
+        downloadRejectedBtn?.addEventListener('click', () => {
+            this.exportClinicRejectedRowsReport(lastRejectedRows, kind);
         });
     },
 
@@ -11283,6 +11328,26 @@ const Clinic = {
         return isNaN(d.getTime()) ? new Date().toISOString() : d.toISOString();
     },
 
+    exportClinicRejectedRowsReport(rejectedRows, kind = 'import') {
+        if (!Array.isArray(rejectedRows) || rejectedRows.length === 0) {
+            Notification.info('لا توجد صفوف مرفوضة للتصدير');
+            return;
+        }
+        if (typeof XLSX === 'undefined') {
+            Notification.error('مكتبة Excel غير متوفرة');
+            return;
+        }
+        const rows = rejectedRows.map((r) => ({
+            'رقم الصف': r.rowNumber || '',
+            'سبب الرفض': r.reason || '',
+            'المفتاح': r.key || '',
+            'البيانات': JSON.stringify(r.data || {})
+        }));
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rows), 'RejectedRows');
+        XLSX.writeFile(wb, `clinic_${kind}_rejected_rows_${new Date().toISOString().slice(0, 10)}.xlsx`);
+    },
+
     async importClinicVisitsRows(rows) {
         this.ensureData();
         const lowerGet = (row, keys) => {
@@ -11304,7 +11369,8 @@ const Clinic = {
         }));
         let added = 0;
         let duplicates = 0;
-        rows.forEach((row) => {
+        const rejectedRows = [];
+        rows.forEach((row, index) => {
             const personRaw = this._toSafeStr(lowerGet(row, ['person type', 'personType', 'نوع الشخص']));
             const personType = (personRaw.toLowerCase() === 'contractor' || personRaw === 'مقاول') ? 'contractor' : 'employee';
             const employeeCode = this._toSafeStr(lowerGet(row, ['employee code', 'employee number', 'الكود الوظيفي', 'رقم الموظف']));
@@ -11316,10 +11382,14 @@ const Clinic = {
             const medsText = this._toSafeStr(lowerGet(row, ['medications', 'medication name', 'الأدوية']));
             const qty = parseInt(this._toSafeStr(lowerGet(row, ['quantity', 'الكمية'])), 10) || 0;
             const sigCode = this._toSafeStr(employeeCode || employeeName || contractorWorker).toLowerCase();
-            if (!sigCode) return;
+            if (!sigCode) {
+                rejectedRows.push({ rowNumber: index + 2, reason: 'بيانات تعريف غير مكتملة (كود/اسم)', key: '', data: row });
+                return;
+            }
             const sig = `${personType}|${sigCode}|${visitDate.slice(0, 16)}|${reason.toLowerCase()}`;
             if (signatures.has(sig)) {
                 duplicates++;
+                rejectedRows.push({ rowNumber: index + 2, reason: 'سجل مكرر', key: sig, data: row });
                 return;
             }
             signatures.add(sig);
@@ -11364,13 +11434,15 @@ const Clinic = {
         if (!result?.success) throw new Error(result?.message || 'تعذر مزامنة سجل التردد مع الخادم');
         this.renderVisitsTab(true);
         Notification.success(`تم استيراد ${added} سجل - تم تخطي ${duplicates} سجل مكرر`);
+        return { added, duplicates, rejectedRows };
     },
 
     async importDispensedRowsAsVisits(rows) {
-        await this.importClinicVisitsRows(rows);
+        const report = await this.importClinicVisitsRows(rows);
         if (this.state.activeTab === 'dispensed-medications') {
             await this.renderDispensedMedicationsTab();
         }
+        return report;
     },
 
     async importInjuriesRows(rows) {
@@ -11394,7 +11466,8 @@ const Clinic = {
         }));
         let added = 0;
         let duplicates = 0;
-        rows.forEach((row) => {
+        const rejectedRows = [];
+        rows.forEach((row, index) => {
             const personRaw = this._toSafeStr(lowerGet(row, ['person type', 'personType', 'نوع الشخص']));
             const personType = (personRaw.toLowerCase() === 'contractor' || personRaw === 'مقاول') ? 'contractor' : 'employee';
             const employeeCode = this._toSafeStr(lowerGet(row, ['employee code', 'employee number', 'الكود الوظيفي', 'رقم الموظف']));
@@ -11403,10 +11476,14 @@ const Clinic = {
             const injuryDate = this._toIsoDateTime(lowerGet(row, ['injury date', 'تاريخ الإصابة']));
             const injuryType = this._toSafeStr(lowerGet(row, ['injury type', 'نوع الإصابة']));
             const sigCode = this._toSafeStr(employeeCode || employeeName || contractorName).toLowerCase();
-            if (!sigCode || !injuryType) return;
+            if (!sigCode || !injuryType) {
+                rejectedRows.push({ rowNumber: index + 2, reason: 'بيانات تعريف/نوع الإصابة غير مكتملة', key: '', data: row });
+                return;
+            }
             const sig = `${personType}|${sigCode}|${injuryDate.slice(0, 10)}|${injuryType.toLowerCase()}`;
             if (signatures.has(sig)) {
                 duplicates++;
+                rejectedRows.push({ rowNumber: index + 2, reason: 'سجل مكرر', key: sig, data: row });
                 return;
             }
             signatures.add(sig);
@@ -11442,6 +11519,7 @@ const Clinic = {
         if (!result?.success) throw new Error(result?.message || 'تعذر مزامنة الإصابات مع الخادم');
         this.renderInjuriesTab();
         Notification.success(`تم استيراد ${added} إصابة - تم تخطي ${duplicates} سجل مكرر`);
+        return { added, duplicates, rejectedRows };
     },
 
     async exportVisitsToPDF() {
