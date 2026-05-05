@@ -50,6 +50,15 @@ const GoogleIntegration = {
         }
     },
 
+    _isSupabaseRpcUrl() {
+        try {
+            const url = String(AppState?.googleConfig?.appsScript?.scriptUrl || '').trim();
+            return /supabase\.co\/functions\/v1\//i.test(url);
+        } catch (e) {
+            return false;
+        }
+    },
+
     /**
      * عمليات تعديل على الخادم — لا يجب أبداً اعتبار نسخة localStorage/cache قديمة «نجاحاً» لها
      * (وإلا يظهر للمستخدم أن الزيارة/السجل حُفظ وهو غير موجود في الشيت).
@@ -3496,9 +3505,10 @@ const GoogleIntegration = {
             return { success: false, shouldDefer: true, message: 'الخادم الخلفي غير مفعّل' };
         }
 
-        // التحقق من spreadsheetId
+        // في مسار Supabase لا نحتاج spreadsheetId؛ يُستخدم فقط مع GAS/Sheets التقليدي
+        const isSupabaseRpc = this._isSupabaseRpcUrl();
         const spreadsheetId = AppState.googleConfig.sheets?.spreadsheetId?.trim();
-        if (!spreadsheetId || spreadsheetId === '' || spreadsheetId === 'YOUR_SPREADSHEET_ID_HERE') {
+        if (!isSupabaseRpc && (!spreadsheetId || spreadsheetId === '' || spreadsheetId === 'YOUR_SPREADSHEET_ID_HERE')) {
             if (!silent) {
                 Utils.safeWarn('معرف Google Sheets غير محدد - سيتم حفظ البيانات محلياً');
             }
@@ -3519,7 +3529,7 @@ const GoogleIntegration = {
                         data: {
                             sheetName: sheetName,
                             data: data,
-                            spreadsheetId: spreadsheetId
+                            ...(spreadsheetId ? { spreadsheetId } : {})
                         }
                     });
 

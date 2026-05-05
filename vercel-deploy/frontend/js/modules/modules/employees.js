@@ -3600,7 +3600,10 @@ const Employees = {
         } else {
             Utils.safeWarn('⚠️ DataManager غير متاح - لم يتم حفظ البيانات');
         }
-                await GoogleIntegration.autoSave('Employees', AppState.appData.employees);
+                const saveResult = await GoogleIntegration.autoSave('Employees', AppState.appData.employees, { silent: false });
+                if (!saveResult?.success) {
+                    throw new Error(saveResult?.message || 'تعذر مزامنة بيانات الموظفين مع الخادم الخلفي');
+                }
 
                 // تحديث Cache
                 this.cache.data = AppState.appData.employees;
