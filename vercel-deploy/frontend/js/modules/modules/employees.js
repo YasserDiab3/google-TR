@@ -3386,11 +3386,15 @@ const Employees = {
                                 <li><strong>الرقم التأميني</strong> أو <strong>Insurance Number</strong></li>
                             </ul>
                         </div>
-                        <div>
+                        <div class="flex items-center justify-between gap-3 flex-wrap">
                             <label for="employee-excel-file-input" class="block text-sm font-semibold text-gray-700 mb-2">
                                 <i class="fas fa-file-excel ml-2"></i>
                                 اختر مل Excel (.xlsx, .xls)
                             </label>
+                            <button type="button" id="employee-download-template-btn" class="btn-secondary text-xs">
+                                <i class="fas fa-download ml-2"></i>
+                                ${this.t('module.employees.downloadTemplate', 'تحميل قالب الاستيراد')}
+                            </button>
                             <input type="file" id="employee-excel-file-input" accept=".xlsx,.xls" class="form-input">
                         </div>
                         <div id="employee-import-preview" class="hidden">
@@ -3420,7 +3424,12 @@ const Employees = {
         const fileInput = document.getElementById('employee-excel-file-input');
         const preview = document.getElementById('employee-import-preview');
         const confirmBtn = document.getElementById('employee-import-confirm-btn');
+        const downloadTemplateBtn = document.getElementById('employee-download-template-btn');
         let importedData = [];
+
+        if (downloadTemplateBtn) {
+            downloadTemplateBtn.addEventListener('click', () => this.downloadEmployeesImportTemplate());
+        }
 
         fileInput.addEventListener('change', async (e) => {
             const file = e.target.files[0];
@@ -3479,7 +3488,37 @@ const Employees = {
             try {
                 let successCount = 0;
                 let errorCount = 0;
+                let duplicateCount = 0;
                 const safeStr = (v) => (v === null || v === undefined) ? '' : String(v).trim();
+                const norm = (v) => safeStr(v).toLowerCase();
+                const addKey = (set, prefix, value) => {
+                    const n = norm(value);
+                    if (n) set.add(`${prefix}:${n}`);
+                };
+                const collectKeys = (name, employeeNumber, sapId, nationalId, email) => {
+                    const keys = [];
+                    const pushKey = (prefix, value) => {
+                        const n = norm(value);
+                        if (n) keys.push(`${prefix}:${n}`);
+                    };
+                    pushKey('emp', employeeNumber);
+                    pushKey('sap', sapId);
+                    pushKey('nid', nationalId);
+                    pushKey('mail', email);
+                    pushKey('name', name);
+                    return keys;
+                };
+
+                const existingKeys = new Set();
+                (AppState.appData.employees || []).forEach(e => {
+                    addKey(existingKeys, 'emp', e.employeeNumber || e.id);
+                    addKey(existingKeys, 'sap', e.sapId);
+                    addKey(existingKeys, 'nid', e.nationalId);
+                    addKey(existingKeys, 'mail', e.email);
+                    addKey(existingKeys, 'name', e.name);
+                });
+
+                const importSeenKeys = new Set();
 
                 importedData.forEach(row => {
                     try {
@@ -3506,13 +3545,22 @@ const Employees = {
                             return;
                         }
 
-                        // التحقق من عدم وجود الموظف مسبقاً
-                        const existing = AppState.appData.employees.find(e =>
-                            (e.employeeNumber && e.employeeNumber === employeeNumber) ||
-                            (e.name && e.name.toLowerCase() === safeStr(name).toLowerCase())
-                        );
+                        const rowKeys = collectKeys(name, employeeNumber, sapId, nationalId, email);
+                        const isDuplicateInSystem = rowKeys.some(k => existingKeys.has(k));
+                        const isDuplicateInImport = rowKeys.some(k => importSeenKeys.has(k));
 
-                        if (!existing) {
+                        if (isDuplicateInSystem || isDuplicateInImport) {
+                            duplicateCount++;
+                            return;
+                        }
+
+                        if (rowKeys.length > 0) {
+                            rowKeys.forEach(k => {
+                                existingKeys.add(k);
+                                importSeenKeys.add(k);
+                            });
+                        }
+
                             const employee = {
                                 // ✅ مطلوب: id = رقم الموظف (employeeNumber)
                                 id: employeeNumber || Utils.generateId('EMP'),
@@ -3541,9 +3589,6 @@ const Employees = {
 
                             AppState.appData.employees.push(employee);
                             successCount++;
-                        } else {
-                            errorCount++;
-                        }
                     } catch (err) {
                         errorCount++;
                     }
@@ -3563,7 +3608,12 @@ const Employees = {
                 this.cache.lastUpdate = Date.now();
 
                 Loading.hide();
-                Notification.success(`تم استيراد ${successCount} موظف${errorCount > 0 ? ` (فشل ${errorCount} موظفين)` : ''}`);
+                const summary = [
+                    `تم استيراد ${successCount} موظف`,
+                    duplicateCount > 0 ? `تم تخطي ${duplicateCount} صف مكرر` : '',
+                    errorCount > 0 ? `فشل ${errorCount} صف` : ''
+                ].filter(Boolean).join(' - ');
+                Notification.success(summary);
                 modal.remove();
                 
                 // تحديث الكروت الإحصائية
@@ -3584,6 +3634,45 @@ const Employees = {
         modal.addEventListener('click', (e) => {
             if (e.target === modal) modal.remove();
         });
+    },
+
+    downloadEmployeesImportTemplate() {
+        try {
+            if (typeof XLSX === 'undefined') {
+                Notification.error(this.t('module.employees.xlsxMissing', 'مكتبة Excel غير متوفرة حالياً'));
+                return;
+            }
+
+            const headers = [
+                'ID SAP',
+                'Employee Number',
+                'Employee Name',
+                'Hire Date',
+                'Job',
+                'Department',
+                'Branch',
+                'Location',
+                'Gender',
+                'National ID',
+                'Date of Birth',
+                'Insurance Number',
+                'Email',
+                'Phone'
+            ];
+
+            const sampleRows = [
+                headers,
+                ['SAP-1001', 'EMP-1001', 'Ahmed Ali', '2026-01-15', 'Operator', 'Production', 'Main', 'Plant A', 'Male', '29801011234567', '1998-01-01', 'INS-1001', 'ahmed.ali@company.com', '01000000001'],
+                ['SAP-1002', 'EMP-1002', 'Sara Mohamed', '2026-02-01', 'Supervisor', 'HSE', 'Main', 'Plant B', 'Female', '29902021234567', '1999-02-02', 'INS-1002', 'sara.mohamed@company.com', '01000000002']
+            ];
+
+            const ws = XLSX.utils.aoa_to_sheet(sampleRows);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'EmployeesTemplate');
+            XLSX.writeFile(wb, `employees_import_template_${new Date().toISOString().slice(0, 10)}.xlsx`);
+        } catch (error) {
+            Notification.error(this.t('module.employees.templateDownloadFailed', 'فشل تحميل القالب') + ': ' + (error?.message || error));
+        }
     },
 
     async handleSubmit(e) {
