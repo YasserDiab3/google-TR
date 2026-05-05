@@ -4186,6 +4186,9 @@ const Clinic = {
                     <button type="button" class="btn-success" id="injuries-export-excel-btn">
                         <i class="fas fa-file-excel ml-2"></i>تصدير Excel
                     </button>
+                    <button type="button" class="btn-secondary" id="injuries-import-excel-btn">
+                        <i class="fas fa-file-import ml-2"></i>استيراد Excel
+                    </button>
                     <button type="button" class="btn-primary" id="injuries-add-btn">
                         <i class="fas fa-plus ml-2"></i>إضافة جديد
                     </button>
@@ -4279,6 +4282,7 @@ const Clinic = {
         const injuryTypesSettingsBtn = panel.querySelector('#injuries-types-settings-btn');
         const injuryBodyPartsSettingsBtn = panel.querySelector('#injuries-body-parts-settings-btn');
         const addBtn = panel.querySelector('#injuries-add-btn');
+        const importBtn = panel.querySelector('#injuries-import-excel-btn');
         const exportPdfBtn = panel.querySelector('#injuries-export-pdf-btn');
         const exportExcelBtn = panel.querySelector('#injuries-export-excel-btn');
 
@@ -4366,6 +4370,7 @@ const Clinic = {
         }
 
         addBtn?.addEventListener('click', () => this.showInjuryForm());
+        importBtn?.addEventListener('click', () => this.showClinicImportModal('injuries'));
         injuryTypesSettingsBtn?.addEventListener('click', () => this.showInjuryTypesSettingsModal());
         injuryBodyPartsSettingsBtn?.addEventListener('click', () => this.showInjuryBodyPartsSettingsModal());
         resetFiltersBtn?.addEventListener('click', () => {
@@ -6846,6 +6851,10 @@ const Clinic = {
                         <i class="fas fa-plus ${iconMarginClass}"></i>
                         ${t('btn.registerVisit')}
                     </button>
+                    <button type="button" id="visits-import-excel-btn" class="btn-secondary">
+                        <i class="fas fa-file-import ${iconMarginClass}"></i>
+                        استيراد Excel
+                    </button>
                     <button type="button" id="visits-refresh-btn" class="btn-secondary">
                         <i class="fas fa-sync-alt ${iconMarginClass}"></i>
                         ${t('btn.refresh')}
@@ -7444,6 +7453,7 @@ const Clinic = {
     bindVisitsTabEvents(panel) {
         const addBtn = panel.querySelector('#visits-add-btn');
         const addNewBtn = panel.querySelector('#visits-add-new-btn');
+        const importBtn = panel.querySelector('#visits-import-excel-btn');
         const refreshBtn = panel.querySelector('#visits-refresh-btn');
         const exportExcelBtn = panel.querySelector('#visits-export-excel-btn');
         const exportPdfBtn = panel.querySelector('#visits-export-pdf-btn');
@@ -7451,6 +7461,7 @@ const Clinic = {
 
         addBtn?.addEventListener('click', () => this.showVisitForm());
         addNewBtn?.addEventListener('click', () => this.showEnhancedVisitForm());
+        importBtn?.addEventListener('click', () => this.showClinicImportModal('visits'));
         refreshBtn?.addEventListener('click', () => {
             // ✅ إعادة تحميل قسري للبيانات
             this.renderVisitsTab(true);
@@ -11130,6 +11141,309 @@ const Clinic = {
         }
     },
 
+    showClinicImportModal(kind = 'visits') {
+        const titleMap = {
+            visits: 'استيراد سجل التردد (الموظفين/المقاولين)',
+            'dispensed-medications': 'استيراد سجل الأدوية المنصرفة',
+            injuries: 'استيراد الإصابات'
+        };
+        const modal = document.createElement('div');
+        modal.className = 'modal-overlay';
+        modal.innerHTML = `
+            <div class="modal-content" style="max-width: 820px;">
+                <div class="modal-header">
+                    <h2 class="modal-title"><i class="fas fa-file-import ml-2"></i>${titleMap[kind] || 'استيراد Excel'}</h2>
+                    <button class="modal-close" onclick="this.closest('.modal-overlay').remove()"><i class="fas fa-times"></i></button>
+                </div>
+                <div class="modal-body">
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between gap-2 flex-wrap">
+                            <label class="text-sm font-semibold text-gray-700">اختر ملف Excel (.xlsx, .xls)</label>
+                            <button type="button" id="clinic-import-download-template-btn" class="btn-secondary text-xs">
+                                <i class="fas fa-download ml-2"></i>تحميل قالب
+                            </button>
+                        </div>
+                        <input type="file" id="clinic-import-file-input" accept=".xlsx,.xls" class="form-input">
+                        <div id="clinic-import-preview" class="hidden">
+                            <div class="max-h-64 overflow-auto border rounded">
+                                <table class="data-table text-xs">
+                                    <thead id="clinic-import-preview-head"></thead>
+                                    <tbody id="clinic-import-preview-body"></tbody>
+                                </table>
+                            </div>
+                            <p id="clinic-import-preview-count" class="text-sm text-gray-600 mt-2"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-secondary" onclick="this.closest('.modal-overlay').remove()">إلغاء</button>
+                    <button type="button" id="clinic-import-confirm-btn" class="btn-primary" disabled>
+                        <i class="fas fa-check ml-2"></i>تأكيد الاستيراد
+                    </button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+        this.applyModuleI18n(modal);
+
+        const fileInput = modal.querySelector('#clinic-import-file-input');
+        const confirmBtn = modal.querySelector('#clinic-import-confirm-btn');
+        const downloadTemplateBtn = modal.querySelector('#clinic-import-download-template-btn');
+        const preview = modal.querySelector('#clinic-import-preview');
+        const previewHead = modal.querySelector('#clinic-import-preview-head');
+        const previewBody = modal.querySelector('#clinic-import-preview-body');
+        const previewCount = modal.querySelector('#clinic-import-preview-count');
+        let importedRows = [];
+        let headers = [];
+
+        downloadTemplateBtn?.addEventListener('click', () => this.downloadClinicImportTemplate(kind));
+
+        fileInput?.addEventListener('change', async (e) => {
+            const file = e.target.files?.[0];
+            if (!file) return;
+            if (typeof XLSX === 'undefined') {
+                Notification.error('مكتبة Excel غير متوفرة');
+                return;
+            }
+            Loading.show();
+            try {
+                const buffer = await file.arrayBuffer();
+                const workbook = XLSX.read(buffer, { type: 'array', raw: false });
+                const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+                const data = XLSX.utils.sheet_to_json(worksheet, { header: 1, defval: '' });
+                if (!Array.isArray(data) || data.length < 2) throw new Error('الملف فارغ أو غير صالح');
+                headers = data[0].map((h) => String(h || '').trim());
+                importedRows = data.slice(1).map((row) => {
+                    const out = {};
+                    headers.forEach((h, i) => { out[h] = row[i]; });
+                    return out;
+                }).filter((r) => Object.values(r).some((v) => this._toSafeStr(v) !== ''));
+
+                previewHead.innerHTML = `<tr>${headers.map((h) => `<th>${Utils.escapeHTML(h)}</th>`).join('')}</tr>`;
+                previewBody.innerHTML = importedRows.slice(0, 5).map((r) => `<tr>${headers.map((h) => `<td>${Utils.escapeHTML(String(r[h] ?? ''))}</td>`).join('')}</tr>`).join('');
+                previewCount.textContent = `إجمالي الصفوف: ${importedRows.length}`;
+                preview.classList.remove('hidden');
+                confirmBtn.disabled = importedRows.length === 0;
+            } catch (error) {
+                Notification.error('فشل قراءة الملف: ' + (error?.message || error));
+            } finally {
+                Loading.hide();
+            }
+        });
+
+        confirmBtn?.addEventListener('click', async () => {
+            if (!Array.isArray(importedRows) || importedRows.length === 0) return;
+            Loading.show();
+            try {
+                if (kind === 'injuries') await this.importInjuriesRows(importedRows);
+                else if (kind === 'dispensed-medications') await this.importDispensedRowsAsVisits(importedRows);
+                else await this.importClinicVisitsRows(importedRows);
+                modal.remove();
+            } catch (error) {
+                Notification.error('فشل الاستيراد: ' + (error?.message || error));
+            } finally {
+                Loading.hide();
+            }
+        });
+    },
+
+    downloadClinicImportTemplate(kind = 'visits') {
+        if (typeof XLSX === 'undefined') {
+            Notification.error('مكتبة Excel غير متوفرة');
+            return;
+        }
+        const templates = {
+            visits: [
+                ['Person Type', 'Employee Code', 'Employee Number', 'Employee Name', 'Contractor Name', 'Contractor Worker', 'Position', 'Department', 'Factory', 'Location', 'Visit Date', 'Exit Date', 'Reason', 'Diagnosis', 'Treatment', 'Medications', 'Notes'],
+                ['employee', 'E-1001', 'E-1001', 'Ahmed Ali', '', '', 'Operator', 'Production', 'Factory A', 'Line 1', '2026-05-05 08:30', '2026-05-05 09:00', 'كشف', 'نزلة برد', 'راحة', 'Panadol(2), Cough Syrup(1)', ''],
+                ['contractor', '', 'C-2001', '', 'ABC Co', 'Worker One', 'Welder', 'Maintenance', 'Factory B', 'Workshop', '2026-05-05 10:00', '2026-05-05 10:20', 'إصابة بسيطة', 'جرح بسيط', 'تعقيم', 'Bandage(1)', '']
+            ],
+            'dispensed-medications': [
+                ['Dispense Date', 'Person Type', 'Employee Code', 'Patient Name', 'Department', 'Factory', 'Location', 'Medication Name', 'Quantity', 'Notes'],
+                ['2026-05-05 09:00', 'employee', 'E-3001', 'Sara Hassan', 'HSE', 'Factory A', 'Clinic', 'Paracetamol', '2', 'after meal']
+            ],
+            injuries: [
+                ['Person Type', 'Employee Code', 'Employee Name', 'Contractor Name', 'Department', 'Injury Date', 'Injury Type', 'Injury Body Part', 'Injury Location', 'Status', 'Treatment', 'Actions Taken', 'Notes'],
+                ['employee', 'E-4001', 'Mohamed Samy', '', 'Production', '2026-05-05', 'Cut', 'Hand', 'Line 2', 'قيد المتابعة', 'Dressing', 'First aid', '']
+            ]
+        };
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(templates[kind] || templates.visits), 'Template');
+        XLSX.writeFile(wb, `clinic_${kind}_import_template_${new Date().toISOString().slice(0, 10)}.xlsx`);
+    },
+
+    _toSafeStr(v) {
+        return v === null || v === undefined ? '' : String(v).trim();
+    },
+
+    _toIsoDateTime(v) {
+        const s = this._toSafeStr(v);
+        if (!s) return new Date().toISOString();
+        const d = new Date(s);
+        return isNaN(d.getTime()) ? new Date().toISOString() : d.toISOString();
+    },
+
+    async importClinicVisitsRows(rows) {
+        this.ensureData();
+        const lowerGet = (row, keys) => {
+            const map = {};
+            Object.keys(row || {}).forEach((k) => { map[String(k).toLowerCase().trim()] = row[k]; });
+            for (const k of keys) {
+                const v = map[k.toLowerCase()];
+                if (v !== undefined && this._toSafeStr(v) !== '') return v;
+            }
+            return '';
+        };
+        const visits = Array.isArray(AppState.appData.clinicVisits) ? AppState.appData.clinicVisits : [];
+        const signatures = new Set(visits.map((v) => {
+            const person = this._toSafeStr(v.personType || 'employee').toLowerCase();
+            const code = this._toSafeStr(v.employeeCode || v.employeeNumber || v.employeeName || v.contractorWorkerName).toLowerCase();
+            const date = this._toIsoDateTime(v.visitDate).slice(0, 16);
+            const reason = this._toSafeStr(v.reason).toLowerCase();
+            return `${person}|${code}|${date}|${reason}`;
+        }));
+        let added = 0;
+        let duplicates = 0;
+        rows.forEach((row) => {
+            const personRaw = this._toSafeStr(lowerGet(row, ['person type', 'personType', 'نوع الشخص']));
+            const personType = (personRaw.toLowerCase() === 'contractor' || personRaw === 'مقاول') ? 'contractor' : 'employee';
+            const employeeCode = this._toSafeStr(lowerGet(row, ['employee code', 'employee number', 'الكود الوظيفي', 'رقم الموظف']));
+            const employeeName = this._toSafeStr(lowerGet(row, ['employee name', 'name', 'اسم الموظف', 'اسم']));
+            const contractorName = this._toSafeStr(lowerGet(row, ['contractor name', 'اسم المقاول']));
+            const contractorWorker = this._toSafeStr(lowerGet(row, ['contractor worker', 'عامل المقاول']));
+            const visitDate = this._toIsoDateTime(lowerGet(row, ['visit date', 'dispense date', 'تاريخ الزيارة']));
+            const reason = this._toSafeStr(lowerGet(row, ['reason', 'سبب الزيارة']));
+            const medsText = this._toSafeStr(lowerGet(row, ['medications', 'medication name', 'الأدوية']));
+            const qty = parseInt(this._toSafeStr(lowerGet(row, ['quantity', 'الكمية'])), 10) || 0;
+            const sigCode = this._toSafeStr(employeeCode || employeeName || contractorWorker).toLowerCase();
+            if (!sigCode) return;
+            const sig = `${personType}|${sigCode}|${visitDate.slice(0, 16)}|${reason.toLowerCase()}`;
+            if (signatures.has(sig)) {
+                duplicates++;
+                return;
+            }
+            signatures.add(sig);
+            const meds = medsText
+                ? this.normalizeVisitMedications(medsText).map((m) => ({
+                    medicationName: m.medicationName || medsText,
+                    quantity: m.quantity || (qty > 0 ? qty : 1),
+                    unit: m.unit || 'وحدة',
+                    notes: this._toSafeStr(lowerGet(row, ['notes', 'ملاحظات']))
+                }))
+                : null;
+            visits.push({
+                id: Utils.generateId('CLINIC_VISIT'),
+                personType,
+                employeeCode: employeeCode || null,
+                employeeNumber: employeeCode || null,
+                employeeName: personType === 'employee' ? employeeName : null,
+                contractorName: personType === 'contractor' ? contractorName : null,
+                contractorWorkerName: personType === 'contractor' ? (contractorWorker || employeeName) : null,
+                employeePosition: this._toSafeStr(lowerGet(row, ['position', 'job', 'الوظيفة', 'المنصب'])),
+                employeeDepartment: this._toSafeStr(lowerGet(row, ['department', 'القسم', 'الإدارة'])),
+                factoryName: this._toSafeStr(lowerGet(row, ['factory', 'المصنع'])),
+                employeeLocation: this._toSafeStr(lowerGet(row, ['location', 'workplace', 'الموقع', 'مكان العمل'])),
+                workArea: this._toSafeStr(lowerGet(row, ['location', 'work area', 'الموقع', 'مكان العمل'])),
+                visitDate,
+                exitDate: this._toIsoDateTime(lowerGet(row, ['exit date', 'وقت الخروج', 'تاريخ الخروج'])),
+                reason,
+                diagnosis: this._toSafeStr(lowerGet(row, ['diagnosis', 'التشخيص'])),
+                treatment: this._toSafeStr(lowerGet(row, ['treatment', 'العلاج', 'الإجراء'])),
+                medications: meds,
+                notes: this._toSafeStr(lowerGet(row, ['notes', 'ملاحظات'])),
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
+                createdBy: AppState.currentUser?.name || AppState.currentUser?.email || 'System',
+                updatedBy: AppState.currentUser?.name || AppState.currentUser?.email || 'System'
+            });
+            added++;
+        });
+        AppState.appData.clinicVisits = visits;
+        if (window.DataManager?.save) window.DataManager.save();
+        const result = await GoogleIntegration.autoSave('ClinicVisits', visits, { silent: false });
+        if (!result?.success) throw new Error(result?.message || 'تعذر مزامنة سجل التردد مع الخادم');
+        this.renderVisitsTab(true);
+        Notification.success(`تم استيراد ${added} سجل - تم تخطي ${duplicates} سجل مكرر`);
+    },
+
+    async importDispensedRowsAsVisits(rows) {
+        await this.importClinicVisitsRows(rows);
+        if (this.state.activeTab === 'dispensed-medications') {
+            await this.renderDispensedMedicationsTab();
+        }
+    },
+
+    async importInjuriesRows(rows) {
+        this.ensureData();
+        const lowerGet = (row, keys) => {
+            const map = {};
+            Object.keys(row || {}).forEach((k) => { map[String(k).toLowerCase().trim()] = row[k]; });
+            for (const k of keys) {
+                const v = map[k.toLowerCase()];
+                if (v !== undefined && this._toSafeStr(v) !== '') return v;
+            }
+            return '';
+        };
+        const injuries = Array.isArray(AppState.appData.injuries) ? AppState.appData.injuries : [];
+        const signatures = new Set(injuries.map((i) => {
+            const person = this._toSafeStr(i.personType || 'employee').toLowerCase();
+            const code = this._toSafeStr(i.employeeCode || i.employeeName || i.contractorName).toLowerCase();
+            const dt = this._toIsoDateTime(i.injuryDate).slice(0, 10);
+            const typ = this._toSafeStr(i.injuryType).toLowerCase();
+            return `${person}|${code}|${dt}|${typ}`;
+        }));
+        let added = 0;
+        let duplicates = 0;
+        rows.forEach((row) => {
+            const personRaw = this._toSafeStr(lowerGet(row, ['person type', 'personType', 'نوع الشخص']));
+            const personType = (personRaw.toLowerCase() === 'contractor' || personRaw === 'مقاول') ? 'contractor' : 'employee';
+            const employeeCode = this._toSafeStr(lowerGet(row, ['employee code', 'employee number', 'الكود الوظيفي', 'رقم الموظف']));
+            const employeeName = this._toSafeStr(lowerGet(row, ['employee name', 'name', 'اسم المصاب', 'اسم الموظف']));
+            const contractorName = this._toSafeStr(lowerGet(row, ['contractor name', 'اسم المقاول']));
+            const injuryDate = this._toIsoDateTime(lowerGet(row, ['injury date', 'تاريخ الإصابة']));
+            const injuryType = this._toSafeStr(lowerGet(row, ['injury type', 'نوع الإصابة']));
+            const sigCode = this._toSafeStr(employeeCode || employeeName || contractorName).toLowerCase();
+            if (!sigCode || !injuryType) return;
+            const sig = `${personType}|${sigCode}|${injuryDate.slice(0, 10)}|${injuryType.toLowerCase()}`;
+            if (signatures.has(sig)) {
+                duplicates++;
+                return;
+            }
+            signatures.add(sig);
+            injuries.push({
+                id: Utils.generateId('INJURY'),
+                personType,
+                employeeCode: employeeCode || null,
+                employeeNumber: employeeCode || null,
+                employeeName: personType === 'employee' ? employeeName : null,
+                contractorName: personType === 'contractor' ? contractorName : null,
+                personName: employeeName || contractorName || '',
+                employeeDepartment: this._toSafeStr(lowerGet(row, ['department', 'القسم', 'الإدارة'])),
+                department: this._toSafeStr(lowerGet(row, ['department', 'القسم', 'الإدارة'])),
+                injuryDate,
+                injuryType,
+                injuryBodyPart: this._toSafeStr(lowerGet(row, ['injury body part', 'مكان الإصابة'])),
+                injuryLocation: this._toSafeStr(lowerGet(row, ['injury location', 'موقع الإصابة'])),
+                status: this._toSafeStr(lowerGet(row, ['status', 'الحالة'])) || 'قيد المتابعة',
+                treatment: this._toSafeStr(lowerGet(row, ['treatment', 'العلاج'])),
+                actionsTaken: this._toSafeStr(lowerGet(row, ['actions taken', 'الإجراءات المتخذة'])),
+                notes: this._toSafeStr(lowerGet(row, ['notes', 'ملاحظات'])),
+                attachments: [],
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
+                createdBy: AppState.currentUser?.name || AppState.currentUser?.email || 'System',
+                updatedBy: AppState.currentUser?.name || AppState.currentUser?.email || 'System'
+            });
+            added++;
+        });
+        AppState.appData.injuries = injuries;
+        if (window.DataManager?.save) window.DataManager.save();
+        const result = await GoogleIntegration.autoSave('Injuries', injuries, { silent: false });
+        if (!result?.success) throw new Error(result?.message || 'تعذر مزامنة الإصابات مع الخادم');
+        this.renderInjuriesTab();
+        Notification.success(`تم استيراد ${added} إصابة - تم تخطي ${duplicates} سجل مكرر`);
+    },
+
     async exportVisitsToPDF() {
         this.ensureData();
         const activeVisitType = this.state.activeVisitType || 'employees';
@@ -12880,6 +13194,9 @@ const Clinic = {
                     <h3 class="text-lg font-semibold">${t('tab.dispensedLog') || 'Dispensed Medications Log'}</h3>
                     <div class="flex gap-2">
                         <input type="text" id="dispensed-med-search" class="form-input" placeholder="بحث..." style="width: 250px;">
+                        <button type="button" class="btn-secondary" id="import-dispensed-med-btn">
+                            <i class="fas fa-file-import ml-2"></i>استيراد Excel
+                        </button>
                         <button type="button" class="btn-secondary" id="export-dispensed-med-btn">
                             <i class="fas fa-file-excel ml-2"></i>تصدير Excel
                         </button>
@@ -12941,6 +13258,10 @@ const Clinic = {
         const exportBtn = panel.querySelector('#export-dispensed-med-btn');
         if (exportBtn) {
             exportBtn.addEventListener('click', () => this.exportDispensedMedicationsToExcel(dispensedMedications));
+        }
+        const importBtn = panel.querySelector('#import-dispensed-med-btn');
+        if (importBtn) {
+            importBtn.addEventListener('click', () => this.showClinicImportModal('dispensed-medications'));
         }
         const exportPdfBtn = panel.querySelector('#export-dispensed-med-pdf-btn');
         if (exportPdfBtn) {
