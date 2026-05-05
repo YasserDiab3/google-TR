@@ -56,11 +56,30 @@ function pickDatabaseUrl(): string | null {
   return null;
 }
 
+const SHEET_ALIASES: Record<string, string> = {
+  // Legacy/module aliases normalized to existing DB tables
+  IncidentsRegistry: "Incidents",
+  safetyAlerts: "IncidentNotifications",
+  LegalInventory: "LegalDocuments",
+  EmployeePPEMatrixByCode: "PPEMatrix",
+  PTWRegistry: "PTW",
+  PTW_MAP_SITES: "PTW_MAP_COORDINATES",
+  TrainingAttendance: "Training",
+  TrainingAnalysisData: "Training",
+};
+
+function resolveSheetName(sheetName: string): string {
+  const raw = String(sheetName || "").trim();
+  if (!raw) return raw;
+  return SHEET_ALIASES[raw] || raw;
+}
+
 function qTable(sheetName: string): string {
-  if (!ALLOWED_SHEETS.has(sheetName)) {
+  const resolved = resolveSheetName(sheetName);
+  if (!ALLOWED_SHEETS.has(resolved)) {
     throw new Error(`Invalid or unsupported sheet name: ${sheetName}`);
   }
-  return '"' + sheetName.replace(/"/g, '""') + '"';
+  return '"' + resolved.replace(/"/g, '""') + '"';
 }
 
 function serializeCell(v: unknown): string | null {
@@ -74,6 +93,10 @@ function normalizePgUserRow(row: Record<string, unknown>): Record<string, unknow
   const ph = out.passwordHash ?? out.passwordhash;
   if (ph != null && out.passwordHash == null) {
     out.passwordHash = ph;
+  }
+  // keep API payload aligned with schema column names used on write path
+  if (Object.prototype.hasOwnProperty.call(out, "passwordhash")) {
+    delete out.passwordhash;
   }
   return out;
 }
@@ -99,14 +122,14 @@ async function replaceSheet(
   rows: Record<string, unknown>[],
 ): Promise<void> {
   const t = qTable(sheetName);
-  await client.query(`DELETE FROM public.${t}`);
+  await client.queryObject(`DELETE FROM public.${t}`);
   for (const row of rows) {
     const keys = Object.keys(row).filter((k) => row[k] !== undefined);
     if (keys.length === 0) continue;
     const cols = keys.map((k) => `"${k.replace(/"/g, '""')}"`).join(", ");
     const placeholders = keys.map((_, i) => `$${i + 1}`).join(", ");
     const vals = keys.map((k) => serializeCell(row[k]));
-    await client.query(
+    await client.queryObject(
       `INSERT INTO public.${t} (${cols}) VALUES (${placeholders})`,
       ...vals,
     );
@@ -125,7 +148,7 @@ async function appendRows(
     const cols = keys.map((k) => `"${k.replace(/"/g, '""')}"`).join(", ");
     const placeholders = keys.map((_, i) => `$${i + 1}`).join(", ");
     const vals = keys.map((k) => serializeCell(row[k]));
-    await client.query(
+    await client.queryObject(
       `INSERT INTO public.${t} (${cols}) VALUES (${placeholders})`,
       ...vals,
     );
@@ -138,7 +161,7 @@ async function deleteFromSheetImpl(
   id: string,
 ): Promise<void> {
   const t = qTable(sheetName);
-  await client.query(`DELETE FROM public.${t} WHERE "id" = $1`, id);
+  await client.queryObject(`DELETE FROM public.${t} WHERE "id" = $1`, id);
 }
 
 function checkHseApiKey(req: Request): Response | null {
@@ -173,7 +196,7 @@ function isSha256Hex(value: string): boolean {
 async function bumpUsersMeta(client: Client): Promise<void> {
   const ms = Date.now();
   const iso = new Date().toISOString();
-  await client.query(
+  await client.queryObject(
     `INSERT INTO public."HSE_AppMeta" ("key", "value_text", "value_num", "updated_at")
      VALUES ('users_last_updated', $1, $2, now())
      ON CONFLICT ("key") DO UPDATE SET
