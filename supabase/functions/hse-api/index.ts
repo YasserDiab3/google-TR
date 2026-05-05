@@ -38,6 +38,24 @@ function parseDatabaseUrl(url: string) {
   };
 }
 
+function pickDatabaseUrl(): string | null {
+  const candidates = [
+    (Deno.env.get("DATABASE_URL") || "").trim(),
+    (Deno.env.get("SUPABASE_DB_URL") || "").trim(),
+  ].filter(Boolean);
+  for (const c of candidates) {
+    try {
+      // validate URL early to avoid crashing the request path.
+      // eslint-disable-next-line no-new
+      new URL(c);
+      return c;
+    } catch {
+      // try next candidate
+    }
+  }
+  return null;
+}
+
 function qTable(sheetName: string): string {
   if (!ALLOWED_SHEETS.has(sheetName)) {
     throw new Error(`Invalid or unsupported sheet name: ${sheetName}`);
@@ -501,11 +519,11 @@ Deno.serve(async (req: Request) => {
     const authErr = checkHseApiKey(req);
     if (authErr) return authErr;
 
-    const dbUrl = Deno.env.get("DATABASE_URL");
+    const dbUrl = pickDatabaseUrl();
     if (!dbUrl) {
       return jsonResponse({
         success: false,
-        message: "SERVER_CONFIG: DATABASE_URL secret is not set for hse-api",
+        message: "SERVER_CONFIG: valid DATABASE_URL/SUPABASE_DB_URL secret is not set for hse-api",
       }, 500);
     }
 
