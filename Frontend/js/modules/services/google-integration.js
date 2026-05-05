@@ -783,10 +783,12 @@ const GoogleIntegration = {
                 const supabaseAnon = (typeof window !== 'undefined' && window.__HSE_SUPABASE_ANON_KEY__)
                     ? String(window.__HSE_SUPABASE_ANON_KEY__).trim()
                     : '';
+                const isSupabaseFunction = /supabase\.co\/functions\/v1\//i.test(String(scriptUrl || ''));
                 const fetchHeaders = {
-                    'Content-Type': 'text/plain;charset=utf-8'
+                    // GAS WebApp historically accepted text/plain; Supabase Edge requires JSON body parsing.
+                    'Content-Type': isSupabaseFunction ? 'application/json' : 'text/plain;charset=utf-8'
                 };
-                if (supabaseAnon && /supabase\.co\/functions\/v1\//i.test(String(scriptUrl || ''))) {
+                if (supabaseAnon && isSupabaseFunction) {
                     fetchHeaders['apikey'] = supabaseAnon;
                     // مفتاح anon القديم JWT؛ مفاتيح 2026 sb_publishable_ ليست JWT — لا تُرسل كـ Bearer
                     if (supabaseAnon.startsWith('eyJ')) {
