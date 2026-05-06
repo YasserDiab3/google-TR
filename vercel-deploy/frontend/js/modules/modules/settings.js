@@ -177,6 +177,9 @@ const Settings = {
                 }
             }
 
+        const _isSupabaseRpcUrl = (u) => /supabase\.co\/functions\/v1\//i.test(String(u || ''));
+        const usingSupabaseRpc = _isSupabaseRpcUrl(AppState.googleConfig?.appsScript?.scriptUrl) || !!AppState.useSupabaseBackend;
+
         section.innerHTML = `
             <div class="section-header">
                 <h1 class="section-title">
@@ -517,18 +520,27 @@ const Settings = {
                                     <div>
                                         <label class="flex items-center mb-4">
                                             <input type="checkbox" id="google-sheets-enabled" class="rounded border-gray-300 text-blue-600"
-                                                ${AppState.googleConfig.sheets.enabled ? 'checked' : ''}>
-                                            <span class="mr-2 text-sm text-gray-700">تفعيل مزامنة الجداول (إن يطلبها الخادم)</span>
+                                                ${AppState.googleConfig.sheets.enabled ? 'checked' : ''}
+                                                ${usingSupabaseRpc ? 'disabled' : ''}>
+                                            <span class="mr-2 text-sm text-gray-700">
+                                                ${usingSupabaseRpc ? 'مزامنة Google Sheets (وضع قديم — غير مستخدم مع Supabase)' : 'تفعيل مزامنة الجداول (إن يطلبها الخادم)'}
+                                            </span>
                                         </label>
                                     </div>
                                     <div>
                                         <label class="block text-sm font-semibold text-gray-700 mb-2">
                                             <i class="fas fa-table ml-2"></i>
-                                            معرف الجدول / المشروع (اختياري)
+                                            معرف Google Sheets (وضع قديم)
                                         </label>
                                         <input type="text" id="google-sheets-id" class="form-input"
                                             value="${AppState.googleConfig.sheets.spreadsheetId || ''}"
-                                            placeholder="إن وُجد في إعدادات الخادم">
+                                            placeholder="${usingSupabaseRpc ? 'غير مطلوب عند استخدام Supabase' : 'إن وُجد في إعدادات الخادم'}"
+                                            ${usingSupabaseRpc ? 'disabled' : ''}>
+                                        ${usingSupabaseRpc ? `
+                                            <p class="text-xs text-gray-500 mt-2">
+                                                عند استخدام Supabase (Postgres) يتم تجاهل Google Sheets ولا يلزم إدخال معرف الجدول.
+                                            </p>
+                                        ` : ``}
                                     </div>
                                     <div class="flex items-center justify-end gap-4 pt-4 border-t">
                                         <button type="button" id="test-connection-btn" class="btn-secondary">
@@ -3057,8 +3069,16 @@ const Settings = {
 
             AppState.googleConfig.appsScript.enabled = appsScriptEnabled.checked;
             AppState.googleConfig.appsScript.scriptUrl = appsScriptUrl.value.trim();
-            AppState.googleConfig.sheets.enabled = sheetsEnabled.checked;
-            AppState.googleConfig.sheets.spreadsheetId = sheetsId.value.trim();
+
+            const usingSupabaseRpc = /supabase\.co\/functions\/v1\//i.test(AppState.googleConfig.appsScript.scriptUrl) || !!AppState.useSupabaseBackend;
+            if (usingSupabaseRpc) {
+                // وضع Supabase: تجاهل Google Sheets بالكامل للحفاظ على نفس آلية العمل
+                AppState.googleConfig.sheets.enabled = false;
+                AppState.googleConfig.sheets.spreadsheetId = '';
+            } else {
+                AppState.googleConfig.sheets.enabled = sheetsEnabled.checked;
+                AppState.googleConfig.sheets.spreadsheetId = sheetsId.value.trim();
+            }
 
             // حفظ الإعدادات باستخدام window.DataManager
             let saveSuccess = false;

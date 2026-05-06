@@ -11219,6 +11219,7 @@ const Clinic = {
         let importedRows = [];
         let headers = [];
         let lastRejectedRows = [];
+        let preValidationRows = [];
 
         downloadTemplateBtn?.addEventListener('click', () => this.downloadClinicImportTemplate(kind));
 
@@ -11243,14 +11244,23 @@ const Clinic = {
                     return out;
                 }).filter((r) => Object.values(r).some((v) => this._toSafeStr(v) !== ''));
 
+                const precheck = this.validateClinicImportRows(kind, importedRows);
+                preValidationRows = precheck.indexedRows;
+                lastRejectedRows = precheck.rejectedRows;
+
                 previewHead.innerHTML = `<tr>${headers.map((h) => `<th>${Utils.escapeHTML(h)}</th>`).join('')}</tr>`;
-                previewBody.innerHTML = importedRows.slice(0, 5).map((r) => `<tr>${headers.map((h) => `<td>${Utils.escapeHTML(String(r[h] ?? ''))}</td>`).join('')}</tr>`).join('');
-                previewCount.textContent = `إجمالي الصفوف: ${importedRows.length}`;
+                previewBody.innerHTML = preValidationRows.slice(0, 8).map((r) => `<tr style="${r.isRejected ? 'background:#fff7ed;' : ''}">${headers.map((h) => `<td>${Utils.escapeHTML(String(r.data[h] ?? ''))}</td>`).join('')}</tr>`).join('');
+                previewCount.textContent = `إجمالي الصفوف: ${importedRows.length} | المقبول: ${precheck.acceptedCount} | المرفوض: ${precheck.rejectedRows.length}`;
                 preview.classList.remove('hidden');
-                rejectedPanel.classList.add('hidden');
-                rejectedBody.innerHTML = '';
-                lastRejectedRows = [];
-                confirmBtn.disabled = importedRows.length === 0;
+                rejectedBody.innerHTML = lastRejectedRows.slice(0, 100).map((r) => `
+                    <tr>
+                        <td>${Utils.escapeHTML(String(r.rowNumber || ''))}</td>
+                        <td>${Utils.escapeHTML(String(r.reason || ''))}</td>
+                        <td>${Utils.escapeHTML(String(r.key || ''))}</td>
+                    </tr>
+                `).join('');
+                rejectedPanel.classList.toggle('hidden', lastRejectedRows.length === 0);
+                confirmBtn.disabled = precheck.acceptedCount === 0;
             } catch (error) {
                 Notification.error('فشل قراءة الملف: ' + (error?.message || error));
             } finally {
@@ -11326,6 +11336,97 @@ const Clinic = {
         if (!s) return new Date().toISOString();
         const d = new Date(s);
         return isNaN(d.getTime()) ? new Date().toISOString() : d.toISOString();
+    },
+
+    validateClinicImportRows(kind, rows) {
+        const list = Array.isArray(rows) ? rows : [];
+        const indexedRows = [];
+        const rejectedRows = [];
+        const seen = new Set();
+        const lowerGet = (row, keys) => {
+            const map = {};
+            Object.keys(row || {}).forEach((k) => { map[String(k).toLowerCase().trim()] = row[k]; });
+            for (const k of keys) {
+                const v = map[k.toLowerCase()];
+                if (v !== undefined && this._toSafeStr(v) !== '') return v;
+            }
+            return '';
+        };
+
+        const existingSignatures = new Set();
+        if (kind === 'injuries') {
+            const injuries = Array.isArray(AppState.appData?.injuries) ? AppState.appData.injuries : [];
+            injuries.forEach((i) => {
+                const person = this._toSafeStr(i.personType || 'employee').toLowerCase();
+                const code = this._toSafeStr(i.employeeCode || i.employeeName || i.contractorName).toLowerCase();
+                const dt = this._toIsoDateTime(i.injuryDate).slice(0, 10);
+                const typ = this._toSafeStr(i.injuryType).toLowerCase();
+                existingSignatures.add(`${person}|${code}|${dt}|${typ}`);
+            });
+        } else {
+            const visits = Array.isArray(AppState.appData?.clinicVisits) ? AppState.appData.clinicVisits : [];
+            visits.forEach((v) => {
+                const person = this._toSafeStr(v.personType || 'employee').toLowerCase();
+                const code = this._toSafeStr(v.employeeCode || v.employeeNumber || v.employeeName || v.contractorWorkerName).toLowerCase();
+                const dt = this._toIsoDateTime(v.visitDate).slice(0, 16);
+                const reason = this._toSafeStr(v.reason).toLowerCase();
+                existingSignatures.add(`${person}|${code}|${dt}|${reason}`);
+            });
+        }
+
+        list.forEach((row, idx) => {
+            const rowNumber = idx + 2;
+            let reason = '';
+            let key = '';
+
+            if (kind === 'injuries') {
+                const personRaw = this._toSafeStr(lowerGet(row, ['person type', 'personType', 'نوع الشخص']));
+                const personType = (personRaw.toLowerCase() === 'contractor' || personRaw === 'مقاول') ? 'contractor' : 'employee';
+                const employeeCode = this._toSafeStr(lowerGet(row, ['employee code', 'employee number', 'الكود الوظيفي', 'رقم الموظف']));
+                const employeeName = this._toSafeStr(lowerGet(row, ['employee name', 'name', 'اسم المصاب', 'اسم الموظف']));
+                const contractorName = this._toSafeStr(lowerGet(row, ['contractor name', 'اسم المقاول']));
+                const injuryDate = this._toIsoDateTime(lowerGet(row, ['injury date', 'تاريخ الإصابة']));
+                const injuryType = this._toSafeStr(lowerGet(row, ['injury type', 'نوع الإصابة']));
+                const sigCode = this._toSafeStr(employeeCode || employeeName || contractorName).toLowerCase();
+                if (!sigCode || !injuryType) {
+                    reason = 'بيانات تعريف/نوع الإصابة غير مكتملة';
+                } else {
+                    key = `${personType}|${sigCode}|${injuryDate.slice(0, 10)}|${injuryType.toLowerCase()}`;
+                }
+            } else {
+                const personRaw = this._toSafeStr(lowerGet(row, ['person type', 'personType', 'نوع الشخص']));
+                const personType = (personRaw.toLowerCase() === 'contractor' || personRaw === 'مقاول') ? 'contractor' : 'employee';
+                const employeeCode = this._toSafeStr(lowerGet(row, ['employee code', 'employee number', 'الكود الوظيفي', 'رقم الموظف']));
+                const employeeName = this._toSafeStr(lowerGet(row, ['employee name', 'name', 'اسم الموظف', 'اسم']));
+                const contractorWorker = this._toSafeStr(lowerGet(row, ['contractor worker', 'عامل المقاول']));
+                const visitDate = this._toIsoDateTime(lowerGet(row, ['visit date', 'dispense date', 'تاريخ الزيارة']));
+                const visitReason = this._toSafeStr(lowerGet(row, ['reason', 'سبب الزيارة']));
+                const sigCode = this._toSafeStr(employeeCode || employeeName || contractorWorker).toLowerCase();
+                if (!sigCode) {
+                    reason = 'بيانات تعريف غير مكتملة (كود/اسم)';
+                } else {
+                    key = `${personType}|${sigCode}|${visitDate.slice(0, 16)}|${visitReason.toLowerCase()}`;
+                }
+            }
+
+            if (!reason && (existingSignatures.has(key) || seen.has(key))) {
+                reason = 'سجل مكرر';
+            }
+
+            const isRejected = !!reason;
+            indexedRows.push({ rowNumber, data: row, isRejected, reason, key });
+            if (isRejected) {
+                rejectedRows.push({ rowNumber, reason, key, data: row });
+            } else if (key) {
+                seen.add(key);
+            }
+        });
+
+        return {
+            indexedRows,
+            rejectedRows,
+            acceptedCount: indexedRows.filter((r) => !r.isRejected).length,
+        };
     },
 
     exportClinicRejectedRowsReport(rejectedRows, kind = 'import') {

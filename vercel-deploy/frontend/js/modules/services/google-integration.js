@@ -513,6 +513,47 @@ const GoogleIntegration = {
         }
     },
 
+    _shouldCountCircuitBreakerFailure(errorMessage = '') {
+        const msg = String(errorMessage || '').toLowerCase();
+        if (!msg) return false;
+        if (msg.includes('circuit breaker')) return false;
+
+        // لا نعتبر أخطاء الأعمال/التحقق فشلاً اتصالياً
+        const businessErrorMarkers = [
+            'سجل مكرر',
+            'غير مكتملة',
+            'validation',
+            'invalid',
+            'duplicate',
+            'already exists',
+            'not found',
+            'غير موجود',
+            'permission',
+            'unauthorized',
+            'forbidden',
+            'bad request',
+            'failed to save',
+            'تعذر الحفظ'
+        ];
+        if (businessErrorMarkers.some((marker) => msg.includes(marker))) {
+            return false;
+        }
+
+        // نحتسب فقط أخطاء الاتصال/الشبكة/الخادم المؤقتة
+        return this._isTransientRpcError(msg) ||
+            msg.includes('failed to fetch') ||
+            msg.includes('network') ||
+            msg.includes('timeout') ||
+            msg.includes('cors') ||
+            msg.includes('http error') ||
+            msg.includes('429') ||
+            msg.includes('502') ||
+            msg.includes('503') ||
+            msg.includes('504') ||
+            msg.includes('service unavailable') ||
+            msg.includes('gateway');
+    },
+
     /**
      * التحقق من هل هو getRequestKey
      */
@@ -569,20 +610,8 @@ const GoogleIntegration = {
             } catch (error) {
                 const errorMsg = (error?.message || error?.toString() || String(error) || '').toLowerCase();
 
-                // ✅ لا نزيد عداد الفشل في الحالات المتوقعة حتى لا يفتح Circuit Breaker بشكل خاطئ
-                // - عندما يكون Circuit Breaker نفسه هو سبب الرفض
-                // - أخطاء الإعداد/التكوين (Apps Script غير مفعل/URL غير صالح/SpreadsheetId غير مضبوط)
-                const isCircuitBreakerError = errorMsg.includes('circuit breaker');
-                const isConfigError =
-                    errorMsg.includes('google apps script غير') ||
-                    errorMsg.includes('غير مفعل') ||
-                    errorMsg.includes('url غير') ||
-                    errorMsg.includes('scripturl') ||
-                    errorMsg.includes('spreadsheet') ||
-                    errorMsg.includes('معرف google sheets');
-
-                if (!isCircuitBreakerError && !isConfigError) {
-                    // التحقق من هل هو recordFailure
+                // لا نزيد عداد الفشل إلا في أخطاء الاتصال/الخادم المؤقتة
+                if (this._shouldCountCircuitBreakerFailure(errorMsg)) {
                     this._recordFailure();
                 }
 
@@ -1227,13 +1256,22 @@ const GoogleIntegration = {
         try {
             this._checkCircuitBreaker();
         } catch (error) {
+            const isWriteAction = this._isWriteMutationAction(action);
+            // في Supabase: لا نحجب عمليات الكتابة بسبب Circuit Breaker ناتج من قراءات/أخطاء سابقة
+            // نعيد فتح المسار ونسمح بمحاولة فعلية للحفظ/الاستيراد.
+            if (isWriteAction && this._isSupabaseRpcUrl()) {
+                Utils.safeWarn(`⚠️ تجاوز Circuit Breaker مؤقتاً لعملية كتابة: ${action}`);
+                this._closeCircuitBreaker();
+                return this._addToQueue(action, data, retryCount);
+            }
+
             // التحقق من هل هو Circuit Breaker
             const localData = this.getLocalData(action, data);
-            if (localData !== null && !this._isWriteMutationAction(action)) {
+            if (localData !== null && !isWriteAction) {
                 Utils.safeLog(`⚠️ Circuit Breaker مفتوح - تم تخطي العملية: ${action}`);
                 return localData;
             }
-            if (localData !== null && this._isWriteMutationAction(action)) {
+            if (localData !== null && isWriteAction) {
                 Utils.safeWarn(`⚠️ Circuit Breaker: لن تُستخدم نسخة محلية قديمة لعملية كتابة (${action})`);
             }
             return Promise.reject(error);
@@ -1255,6 +1293,114 @@ const GoogleIntegration = {
             msg.includes('انتهت مهلة');
     },
 
+    _tableColumnsMap: {
+        ClinicVisits: [
+            'id', 'personType', 'employeeCode', 'employeeNumber', 'employeeName',
+            'employeePosition', 'employeeDepartment', 'factory', 'factoryName',
+            'employeeLocation', 'visitDate', 'exitDate', 'visitType', 'reason',
+            'diagnosis', 'treatment', 'medicationsDispensed', 'medicationsDispensedQty',
+            'createdAt', 'updatedAt', 'createdBy', 'updatedBy'
+        ],
+        Contractors: [
+            'id', 'name', 'serviceType', 'contractNumber', 'startDate', 'endDate',
+            'status', 'contactPerson', 'phone', 'email', 'createdAt', 'updatedAt'
+        ],
+        Injuries: [
+            'id', 'personType', 'employeeCode', 'employeeNumber', 'employeeName',
+            'employeeDepartment', 'injuryDate', 'injuryType', 'injuryBodyPart',
+            'injuryLocation', 'status', 'treatment', 'actionsTaken', 'attachments',
+            'createdAt', 'updatedAt', 'createdBy', 'updatedBy'
+        ],
+        PTW: [
+            'id', 'workType', 'workDescription', 'location', 'department', 'startDate',
+            'endDate', 'responsible', 'status', 'approvals', 'requiredPPE',
+            'riskAssessment', 'riskNotes', 'approvalCircuitOwnerId', 'approvalCircuitName',
+            'skipApprovalFlow', 'createdAt', 'updatedAt'
+        ],
+        FireEquipmentInspections: [
+            'id', 'assetId', 'inspectionDate', 'inspector', 'result',
+            'findings', 'actions', 'createdAt', 'updatedAt'
+        ],
+        PPE: [
+            'id', 'employeeCode', 'employeeName', 'department', 'ppeType',
+            'size', 'issueDate', 'expiryDate', 'status', 'issuedBy',
+            'createdAt', 'updatedAt'
+        ],
+        LegalDocuments: [
+            'id', 'title', 'category', 'type', 'description', 'version',
+            'issueDate', 'expiryDate', 'status', 'responsiblePerson',
+            'location', 'notes', 'attachments', 'createdAt', 'updatedAt'
+        ]
+    },
+
+    _normalizeRowsForSheet(sheetName, rows) {
+        const allowedCols = this._tableColumnsMap?.[sheetName];
+        if (!allowedCols || !Array.isArray(rows)) return rows;
+
+        const allowedSet = new Set(allowedCols);
+        return rows.map((row) => {
+            const src = row && typeof row === 'object' ? row : {};
+            const normalized = {};
+
+            if (sheetName === 'ClinicVisits') {
+                const meds = Array.isArray(src.medications)
+                    ? src.medications.map((m) => {
+                        const name = String(m?.medicationName || '').trim();
+                        const qty = Number(m?.quantity || 0) || 0;
+                        return name ? `${name}${qty > 0 ? `(${qty})` : ''}` : '';
+                    }).filter(Boolean).join(', ')
+                    : String(src.medicationsDispensed || '').trim();
+                const medsQty = Array.isArray(src.medications)
+                    ? src.medications.reduce((sum, m) => sum + (Number(m?.quantity || 0) || 0), 0)
+                    : (Number(src.medicationsDispensedQty || 0) || 0);
+                const isContractor = String(src.personType || '').toLowerCase() === 'contractor';
+
+                normalized.factory = src.factory || src.factoryName || '';
+                normalized.factoryName = src.factoryName || src.factory || '';
+                normalized.employeeLocation = src.employeeLocation || src.workArea || '';
+                normalized.medicationsDispensed = meds || '';
+                normalized.medicationsDispensedQty = String(medsQty || '');
+
+                if (isContractor && !src.employeeName) {
+                    normalized.employeeName = src.contractorWorkerName || src.contractorName || src.externalName || '';
+                }
+            } else if (sheetName === 'FireEquipmentInspections') {
+                if (!src.inspectionDate && src.checkDate) {
+                    normalized.inspectionDate = src.checkDate;
+                }
+                if (!src.findings && src.remarks) {
+                    normalized.findings = src.remarks;
+                }
+                if (!src.result && src.status) {
+                    normalized.result = src.status;
+                }
+            }
+
+            Object.keys(src).forEach((k) => {
+                if (allowedSet.has(k)) normalized[k] = src[k];
+            });
+            Object.keys(normalized).forEach((k) => {
+                if (!allowedSet.has(k)) delete normalized[k];
+            });
+
+            return normalized;
+        });
+    },
+
+    _normalizeRequestPayloadForSheet(action, data) {
+        if (!data || typeof data !== 'object') return data;
+        if (action !== 'saveToSheet' && action !== 'appendToSheet') return data;
+        if (!data.sheetName) return data;
+
+        const normalized = { ...data };
+        if (Array.isArray(normalized.data)) {
+            normalized.data = this._normalizeRowsForSheet(normalized.sheetName, normalized.data);
+        } else if (normalized.data && typeof normalized.data === 'object') {
+            normalized.data = this._normalizeRowsForSheet(normalized.sheetName, [normalized.data])[0] || {};
+        }
+        return normalized;
+    },
+
     /**
      * دوال ربط ومعالجة Google Apps Script (wrapper حول sendToAppsScript)
      * التعامل مع البيانات والعمليات المرتبطة بالنماذج، قواعد البيانات،
@@ -1267,7 +1413,8 @@ const GoogleIntegration = {
      * - دعم حفظ البيانات والمزامنة التلقائية
      */
     async sendRequest(requestData) {
-        const { action, data } = requestData;
+        const action = requestData?.action;
+        const data = this._normalizeRequestPayloadForSheet(action, requestData?.data);
         if (!action) {
             throw new Error('يجب إدخال action في الطلب');
         }

@@ -82,6 +82,27 @@ function qTable(sheetName: string): string {
   return '"' + resolved.replace(/"/g, '""') + '"';
 }
 
+const tableColumnsCache = new Map<string, Set<string>>();
+
+async function getTableColumns(client: Client, sheetName: string): Promise<Set<string>> {
+  const resolved = resolveSheetName(sheetName);
+  const cacheKey = resolved.toLowerCase();
+  const cached = tableColumnsCache.get(cacheKey);
+  if (cached) return cached;
+
+  const res = await client.queryObject<{ column_name: string }>(
+    `SELECT column_name
+     FROM information_schema.columns
+     WHERE table_schema = 'public' AND table_name = $1`,
+    [resolved],
+  );
+  const cols = new Set(
+    (res.rows || []).map((r) => String(r.column_name || "").trim()).filter(Boolean),
+  );
+  tableColumnsCache.set(cacheKey, cols);
+  return cols;
+}
+
 function serializeCell(v: unknown): string | null {
   if (v === null || v === undefined) return null;
   if (typeof v === "object") return JSON.stringify(v);
@@ -122,9 +143,12 @@ async function replaceSheet(
   rows: Record<string, unknown>[],
 ): Promise<void> {
   const t = qTable(sheetName);
+  const tableCols = await getTableColumns(client, sheetName);
   await client.queryObject(`DELETE FROM public.${t}`);
   for (const row of rows) {
-    const keys = Object.keys(row).filter((k) => row[k] !== undefined);
+    const keys = Object.keys(row).filter((k) =>
+      row[k] !== undefined && tableCols.has(String(k))
+    );
     if (keys.length === 0) continue;
     const cols = keys.map((k) => `"${k.replace(/"/g, '""')}"`).join(", ");
     const placeholders = keys.map((_, i) => `$${i + 1}`).join(", ");
@@ -142,8 +166,11 @@ async function appendRows(
   rows: Record<string, unknown>[],
 ): Promise<void> {
   const t = qTable(sheetName);
+  const tableCols = await getTableColumns(client, sheetName);
   for (const row of rows) {
-    const keys = Object.keys(row).filter((k) => row[k] !== undefined);
+    const keys = Object.keys(row).filter((k) =>
+      row[k] !== undefined && tableCols.has(String(k))
+    );
     if (keys.length === 0) continue;
     const cols = keys.map((k) => `"${k.replace(/"/g, '""')}"`).join(", ");
     const placeholders = keys.map((_, i) => `$${i + 1}`).join(", ");
@@ -605,6 +632,21 @@ Deno.serve(async (req: Request) => {
         }
         const rows = await readSheet(client, sheetName);
         return jsonResponse({ success: true, data: rows });
+      }
+
+      case "getAllEmployees": {
+        const rows = await readSheet(client, "Employees");
+        const includeInactive = Boolean(payload?.filters?.includeInactive);
+        const filtered = includeInactive
+          ? rows
+          : rows.filter((r) => {
+            const status = String(r.status ?? "").trim().toLowerCase();
+            const resignationDate = String(r.resignationDate ?? "").trim();
+            if (resignationDate) return false;
+            if (status === "inactive" || status === "غير نشط") return false;
+            return true;
+          });
+        return jsonResponse({ success: true, data: filtered });
       }
 
       case "batchReadSheets": {
