@@ -1323,6 +1323,24 @@ const PTW = {
     },
 
     /**
+     * دمج سجل PTWRegistry من الخادم مع صفوف محلية لم تُرفَع بعد (فشل مزامنة، مهلة، إلخ)
+     */
+    mergeLocalRegistryWithServerData(serverRows) {
+        const normalizedServer = this.normalizeRegistryCollection(Array.isArray(serverRows) ? serverRows : []);
+        const localRows = Array.isArray(this.registryData) ? [...this.registryData] : [];
+        const seenReg = new Set(normalizedServer.map(r => String(r.id || '').trim()).filter(Boolean));
+        const seenPermit = new Set(normalizedServer.map(r => String(r.permitId || '').trim()).filter(Boolean));
+        const extras = localRows.filter(r => {
+            const rid = String(r.id || '').trim();
+            const pid = String(r.permitId || '').trim();
+            if (rid && seenReg.has(rid)) return false;
+            if (pid && seenPermit.has(pid)) return false;
+            return !!(rid || pid);
+        });
+        return this.normalizeRegistryCollection([...normalizedServer, ...extras]);
+    },
+
+    /**
      * تحميل بيانات PTW من Backend
      */
     async loadPTWFromBackend() {
@@ -1344,8 +1362,17 @@ const PTW = {
             });
 
             if (result && result.success && Array.isArray(result.data)) {
-                // تحديث البيانات المحلية بما في Backend
-                AppState.appData.ptw = result.data;
+                const serverList = result.data;
+                const prevLocal = Array.isArray(AppState.appData.ptw) ? AppState.appData.ptw : [];
+                const serverIds = new Set(serverList.map(p => String(p?.id || '').trim()).filter(Boolean));
+                const merged = [...serverList];
+                prevLocal.forEach(p => {
+                    const id = String(p?.id || '').trim();
+                    if (!id || serverIds.has(id)) return;
+                    merged.push(p);
+                    serverIds.add(id);
+                });
+                AppState.appData.ptw = merged;
 
                 // حفظ محلياً
                 if (typeof window.DataManager !== 'undefined' && window.DataManager.save) {
@@ -1390,8 +1417,16 @@ const PTW = {
                 });
 
                 if (result && result.success && Array.isArray(result.data)) {
-                    // إذا كانت البيانات فارغة في Backend، تنظيف البيانات المحلية
+                    // لا تمسح السجل المحلي إذا كان الخادم يعيد [] بينما لا يزال هناك سجلات محلية
+                    // (تصاريح يدوية حُفظت محلياً وفشلت المزامنة بمهلة GAS مثلاً)
                     if (result.data.length === 0) {
+                        const localCount = Array.isArray(this.registryData) ? this.registryData.length : 0;
+                        if (localCount > 0) {
+                            Utils.safeWarn(
+                                '⚠️ الخادم أعاد سجل تصاريح فارغاً بينما توجد بيانات محلية — تم الإبقاء على السجل المحلي إلى أن تنجح المزامنة.'
+                            );
+                            return false;
+                        }
                         this.registryData = [];
                         if (!AppState.appData) AppState.appData = {};
                         AppState.appData.ptwRegistry = [];
@@ -1401,14 +1436,13 @@ const PTW = {
                         }
                         return true;
                     }
-                    
-                    // إذا كانت هناك بيانات في Backend، استخدامها
-                    this.registryData = this.normalizeRegistryCollection(result.data);
+
+                    this.registryData = this.mergeLocalRegistryWithServerData(result.data);
                     if (!AppState.appData) AppState.appData = {};
                     AppState.appData.ptwRegistry = [...this.registryData];
                     localStorage.setItem('hse_ptw_registry', Utils.safeStringify(this.registryData));
                     if (AppState.debugMode) {
-                        Utils.safeLog(`✅ تم تحميل ${this.registryData.length} سجل من Backend`);
+                        Utils.safeLog(`✅ تم تحميل ${this.registryData.length} سجل من Backend (مع الدمج مع المحلي غير المزامن)`);
                     }
                     return true;
                 }

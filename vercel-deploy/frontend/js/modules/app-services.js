@@ -15,7 +15,7 @@
  * - services/user-activity-log.js - User activity logging
  * - services/cloud-storage-integration.js - Cloud storage (OneDrive, Google Drive, SharePoint)
  * - services/workflow.js - Workflow engine
- * - services/google-integration.js - Google Apps Script and Sheets integration
+ * - services/cloud-integration.js - Cloud backend RPC (Supabase Edge / hse-api; Sheets compatibility)
  */
 
 // All services are already loaded via script tags and exposed to window
@@ -31,7 +31,7 @@ if (typeof window !== 'undefined') {
         console.error('❌ DataManager not loaded! Make sure services/data-manager.js is loaded before app-services.js');
     }
     if (!window.GoogleIntegration) {
-        console.error('❌ GoogleIntegration not loaded! Make sure services/google-integration.js is loaded before app-services.js');
+        console.error('❌ GoogleIntegration not loaded! Make sure services/cloud-integration.js is loaded before app-services.js');
     }
     
     // Add syncSpecificSheets helper function if it doesn't exist

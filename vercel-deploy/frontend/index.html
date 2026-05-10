@@ -6010,7 +6010,7 @@
                                 (allText.includes("cors") &&
                                     allText.includes("header")))
                         ) {
-                            return; // Suppress - handled by google-integration.js with user-friendly messages
+                            return; // Suppress - handled by cloud-integration.js with user-friendly messages
                         }
 
                         // Suppress Tailwind CDN CORS errors - CDN not used in production
@@ -6461,7 +6461,7 @@
                                 message.includes("ERR_FAILED"))
                         ) {
                             // Don't prevent default, but suppress console noise
-                            // The actual error is handled in google-integration.js with user-friendly messages
+                            // The actual error is handled in cloud-integration.js with user-friendly messages
                             e.preventDefault();
                             e.stopPropagation();
                             e.stopImmediatePropagation();
@@ -7137,7 +7137,7 @@
                                 errorText.includes("cors") ||
                                 errorText.includes("cross-origin"))
                         ) {
-                            return; // Suppress - handled by google-integration.js
+                            return; // Suppress - handled by cloud-integration.js
                         }
 
                         // Suppress 503 errors from CDN and external resources
@@ -12710,7 +12710,7 @@
             defer
         ></script>
         <script src="js/modules/services/workflow.js" defer></script>
-        <script src="js/modules/services/google-integration.js" defer></script>
+        <script src="js/modules/services/cloud-integration.js" defer></script>
         <script src="js/modules/services/smart-cache.js" defer></script>
         <script src="js/modules/services/connection-monitor.js" defer></script>
         <script src="js/modules/services/ai-assistant.js" defer></script>
@@ -12732,6 +12732,8 @@
         <!-- CRITICAL: Auth is defined here and must be loaded before login-init-fixed.js -->
         <!-- تم تقسيم الملف لتحسين الأداء -->
         <!-- تحميل Auth و Dashboard من ملفات منفصلة أولاً -->
+        <script src="js/modules/services/supabase-password-auth.js" defer></script>
+        <script src="js/modules/services/auth-complete-login-flow.js" defer></script>
         <script src="js/modules/auth.js?v=3" defer></script>
         <script src="js/modules/dashboard.js" defer></script>
         

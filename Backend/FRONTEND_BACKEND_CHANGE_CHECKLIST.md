@@ -42,7 +42,7 @@
 ### Frontend (State + Sync)
 - **AppState**: أضف مفتاح/هيكل جديد في `Frontend/js/modules/app-utils.js` (ضمن `AppState.appData` defaults).
 - **GoogleIntegration sync**:
-  - أضف الشيت إلى قائمة القراءة/المزامنة في `Frontend/js/modules/services/google-integration.js` (مثل `baseSheets`/`sheetMapping`/أي خرائط صلاحيات).
+  - أضف الشيت إلى قائمة القراءة/المزامنة في `Frontend/js/modules/services/cloud-integration.js` (مثل `baseSheets`/`sheetMapping`/أي خرائط صلاحيات).
 - **DataManager mapping**:
   - إن كان الشيت مرتبط بحقل قابل للتخفيف/التجزئة، حدّث الخرائط في `Frontend/js/modules/services/data-manager.js` (مثل `fieldToSheetMap` أو ما يعادلها).
 
@@ -52,7 +52,7 @@
 - التزم بصيغة الاستجابة الحالية (نجاح/خطأ) حتى لا تكسر `GoogleIntegration`.
 
 ### Frontend
-- استدعاء عبر `GoogleIntegration.sendRequest/sendToAppsScript` من `Frontend/js/modules/services/google-integration.js`.
+- استدعاء عبر `GoogleIntegration.sendRequest/sendToAppsScript` من `Frontend/js/modules/services/cloud-integration.js`.
 - تأكد من تمرير `spreadsheetId` وبيانات الجلسة/CSRF حسب النمط الموجود.
 
 ## E) تعديل Mapping للتزامن

@@ -7,6 +7,6 @@ schemas = ["public"]
 max_rows = 1000
 
 [functions.hse-api]
-# للإنتاج: فضّل verify_jwt = true مع إرسال مفتاح anon JWT من الواجهة (انظر google-integration.js).
+# للإنتاج: فضّل verify_jwt = true مع إرسال مفتاح anon JWT من الواجهة (انظر cloud-integration.js).
 # false يبقي الدالة قابلة للاستدعاء بمفتاح anon فقط في الرأس — عزّز بـ سر HSE_API_KEY على الدالة.
 verify_jwt = false

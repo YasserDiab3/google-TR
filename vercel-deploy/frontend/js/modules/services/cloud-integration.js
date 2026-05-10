@@ -1,6 +1,7 @@
 /**
- * طبقة الاتصال بالخادم الخلفي (RPC)
- * تدعم نقطة Supabase Edge / hse-api وأي نشر متوافق؛ يبقى الاسم GoogleIntegration لتوافق الوحدات القديمة.
+ * cloud-integration.js — طبقة الاتصال بالخادم الخلفي (RPC / السحابة)
+ * تدعم نقطة Supabase Edge / hse-api وأي نشر متوافق.
+ * يُصدَّر على window كـ GoogleIntegration و BackendRpc لتوافق الوحدات التي تعتمد الاسم التاريخي.
  */
 
 const GoogleIntegration = {
@@ -799,8 +800,15 @@ const GoogleIntegration = {
                 };
                 if (supabaseAnon && isSupabaseFunction) {
                     fetchHeaders['apikey'] = supabaseAnon;
-                    // مفتاح anon القديم JWT؛ مفاتيح 2026 sb_publishable_ ليست JWT — لا تُرسل كـ Bearer
-                    if (supabaseAnon.startsWith('eyJ')) {
+                    let userJwt = '';
+                    try {
+                        if (typeof HseSupabasePasswordAuth !== 'undefined' && typeof HseSupabasePasswordAuth.getAccessToken === 'function') {
+                            userJwt = String(HseSupabasePasswordAuth.getAccessToken() || '').trim();
+                        }
+                    } catch (eJwt) { /* ignore */ }
+                    if (userJwt && userJwt.startsWith('eyJ')) {
+                        fetchHeaders['Authorization'] = 'Bearer ' + userJwt;
+                    } else if (supabaseAnon.startsWith('eyJ')) {
                         fetchHeaders['Authorization'] = 'Bearer ' + supabaseAnon;
                     }
                 }
@@ -3640,7 +3648,7 @@ const GoogleIntegration = {
     }
 };
 
-// تصدير للواجهة — الاسم التاريخي GoogleIntegration؛ BackendRpc للوحدات الجديدة
+// تصدير للواجهة — GoogleIntegration (اسم تاريخي) و BackendRpc؛ مصدر الملف: cloud-integration.js
 if (typeof window !== 'undefined') {
     window.GoogleIntegration = GoogleIntegration;
     window.BackendRpc = GoogleIntegration;

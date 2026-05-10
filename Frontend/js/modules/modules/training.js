@@ -521,7 +521,7 @@ const Training = {
 
         // طابور GoogleIntegration ينفّذ طلبات متتالية: 5 طلبات كانت تُراكم ~60–80 ثانية.
         // 1) تفضيل getTrainingModuleBundle (طلب شبكة واحد من الخادم).
-        // 2) إصلاح تصنيف «ثقيل» لـ getAll* في google-integration + __timeoutMs للطلبات الاحتياطية.
+        // 2) إصلاح تصنيف «ثقيل» لـ getAll* في cloud-integration + __timeoutMs للطلبات الاحتياطية.
         const bundleTimeoutMs = 25000;
         const fallbackTimeoutMs = 12000;
         const timeoutMessage = 'انتهت مهلة الاتصال بالخادم\n\nتحقق من الاتصال وإعدادات Google Apps Script.';
