@@ -633,6 +633,8 @@ const PTW = {
                 data,
                 // Supabase/Postgres: saveToSheet بدون upsert يستبدل الجدول بالكامل — صف واحد يمحو باقي PTW/PTWRegistry
                 ...(!appendMode ? { upsert: true } : {}),
+                // مهلة افتراضية لـ saveToSheet في cloud-integration = 40s؛ GAS/Edge غالباً يتأخران عند التصاريح اليدوية (صفّان متتابعان)
+                __timeoutMs: 120000,
             };
 
             const spreadsheetId = AppState.googleConfig?.sheets?.spreadsheetId?.trim();
