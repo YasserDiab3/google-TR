@@ -125,59 +125,6 @@ const GoogleIntegration = {
         return data;
     },
 
-    /**
-     * التحقق من المزامنة في التقدم باستخدام Google Sheets
-     * التحقق من المزامنة في التقدم باستخدام Google Sheets
-     */
-    async autoSave(sheetName, data) {
-        if (!this._isBackendRpcConfigured()) {
-            // لا يوجد Google Apps Script - يتم تخزينه في التقدم
-            if (typeof DataManager !== 'undefined' && DataManager.addToPendingSync) {
-                DataManager.addToPendingSync(sheetName, data);
-            }
-            return;
-        }
-
-        try {
-            const useSupabase = typeof Utils !== 'undefined' && typeof Utils.isSupabaseBackend === 'function' && Utils.isSupabaseBackend();
-            const spreadsheetId = AppState.googleConfig.sheets?.spreadsheetId;
-            if (!useSupabase && (!spreadsheetId || spreadsheetId.trim() === '' || spreadsheetId === 'YOUR_SPREADSHEET_ID_HERE')) {
-                // لا يوجد spreadsheetId - يتم تخزينه في التقدم
-                Utils.safeWarn(`فشل تحميل الملف إلى Google Sheets - يتم تخزينه في التقدم ${sheetName}`);
-                if (typeof DataManager !== 'undefined' && DataManager.addToPendingSync) {
-                    DataManager.addToPendingSync(sheetName, data);
-                }
-                return;
-            }
-
-            const preparedData = this.prepareSheetPayload(sheetName, data);
-
-            // يتم التحقق من هل هو spreadsheetId
-            await this.sendToAppsScript('saveToSheet', {
-                sheetName,
-                data: preparedData,
-                spreadsheetId: useSupabase ? '' : spreadsheetId.trim()
-            });
-
-            // يتم حذف الملف من التقدم
-            if (typeof DataManager !== 'undefined' && DataManager.removeFromPendingSync) {
-                DataManager.removeFromPendingSync(sheetName);
-            }
-
-            // مسح الـ cache للـ sheet المحدث
-            this.clearCache(sheetName);
-
-            Utils.safeLog(`تم تحميل الملف إلى Google Sheets ${sheetName}`);
-        } catch (error) {
-            // فشل تحميل الملف إلى Google Sheets
-            Utils.safeWarn(`فشل تحميل الملف إلى Google Sheets ${sheetName}:`, error.message);
-
-            if (typeof DataManager !== 'undefined' && DataManager.addToPendingSync) {
-                DataManager.addToPendingSync(sheetName, data);
-                Utils.safeLog(`فشل تحميل الملف إلى Google Sheets ${sheetName}`);
-            }
-        }
-    },
 
     /**
      * التحقق من المزامنة في التقدم باستخدام Google Sheets
@@ -1647,7 +1594,7 @@ const GoogleIntegration = {
      */
     async fetchData(action, data = {}) {
         try {
-            const result = await this.sendToAppsScript(action, data);
+            const result = await this.sendRequest({ action, data });
             return result;
         } catch (error) {
             // تجاهل أخطاء Circuit Breaker و Google Apps Script غير المفعل
@@ -1694,8 +1641,10 @@ const GoogleIntegration = {
                 throw new Error('معاملات غير كافية. يجب توفير base64Data, fileName, و mimeType');
             }
 
+            const isSupabase = typeof Utils !== 'undefined' && typeof Utils.isSupabaseBackend === 'function' && Utils.isSupabaseBackend();
+
             if (typeof Loading !== 'undefined' && Loading.show) {
-                Loading.show('جاري رفع الملف إلى Google Drive...');
+                Loading.show(isSupabase ? 'جاري رفع الملف إلى Supabase Storage...' : 'جاري رفع الملف إلى Google Drive...');
             }
 
             const result = await this.sendToAppsScript('uploadFileToDrive', {
@@ -1718,14 +1667,14 @@ const GoogleIntegration = {
                     fileName: result.fileName
                 };
             } else {
-                throw new Error(result?.message || 'فشل رفع الملف إلى Google Drive');
+                throw new Error(result?.message || (isSupabase ? 'فشل رفع الملف إلى Supabase Storage' : 'فشل رفع الملف إلى Google Drive'));
             }
         } catch (error) {
             if (typeof Loading !== 'undefined' && Loading.hide) {
                 Loading.hide();
             }
             if (typeof Utils !== 'undefined' && Utils.safeError) {
-                Utils.safeError('خطأ في رفع الملف إلى Google Drive:', error);
+                Utils.safeError('خطأ في رفع الملف:', error);
             }
             throw error;
         }
@@ -1798,8 +1747,9 @@ const GoogleIntegration = {
                     continue;
                 }
 
-                // إذا كان المرفق يحتوي على Base64، ارفعه إلى Google Drive
+                // إذا كان المرفق يحتوي على Base64، ارفعه إلى التخزين
                 if (attachment.data || attachment.base64Data) {
+                    const isSupabase = typeof Utils !== 'undefined' && typeof Utils.isSupabaseBackend === 'function' && Utils.isSupabaseBackend();
                     try {
                         const uploadResult = await this.uploadFileToDrive(
                             attachment.data || attachment.base64Data,
@@ -1822,13 +1772,13 @@ const GoogleIntegration = {
                         } else {
                             // في حالة الفشل، نحتفظ بالمرفق بصيغة Base64
                             if (typeof Utils !== 'undefined' && Utils.safeWarn) {
-                                Utils.safeWarn('فشل رفع المرفق إلى Google Drive:', attachment.name);
+                                Utils.safeWarn(isSupabase ? 'فشل رفع المرفق إلى Supabase Storage:' : 'فشل رفع المرفق إلى Google Drive:', attachment.name);
                             }
                             processedAttachments.push(attachment);
                         }
                     } catch (uploadError) {
                         if (typeof Utils !== 'undefined' && Utils.safeWarn) {
-                            Utils.safeWarn('خطأ في رفع المرفق إلى Google Drive:', uploadError);
+                            Utils.safeWarn(isSupabase ? 'خطأ في رفع المرفق إلى Supabase Storage:' : 'خطأ في رفع المرفق إلى Google Drive:', uploadError);
                         }
                         // في حالة الخطأ، نحتفظ بالمرفق بصيغة Base64
                         processedAttachments.push(attachment);
@@ -2525,7 +2475,10 @@ const GoogleIntegration = {
                 'Users': AppState.appData.users || [],
                 'Incidents': AppState.appData.incidents || [],
                 'NearMiss': AppState.appData.nearmiss || [],
+                'IncidentsRegistry': AppState.appData.incidentsRegistry || [],
+                'SafetyAlerts': AppState.appData.safetyAlerts || [],
                 'PTW': AppState.appData.ptw || [],
+                'PTWRegistry': AppState.appData.ptwRegistry || [],
                 'Training': AppState.appData.training || [],
                 'EmployeeTrainingMatrix': AppState.appData.employeeTrainingMatrix || [],
                 'TrainingAttendance': AppState.appData.trainingAttendance || [],
@@ -2560,11 +2513,13 @@ const GoogleIntegration = {
                 'SOPJHA': AppState.appData.sopJHA || [],
                 'RiskAssessments': AppState.appData.riskAssessments || [],
                 'LegalDocuments': AppState.appData.legalDocuments || [],
+                'LegalInventory': AppState.appData.legalInventory || [],
                 'HSEAudits': AppState.appData.hseAudits || [],
                 'HSENonConformities': AppState.appData.hseNonConformities || [],
                 'HSECorrectiveActions': AppState.appData.hseCorrectiveActions || [],
                 'HSEObjectives': AppState.appData.hseObjectives || [],
                 'HSERiskAssessments': AppState.appData.hseRiskAssessments || [],
+                'TrainingAnalysisData': AppState.appData.trainingAnalysisData || [],
                 'EnvironmentalAspects': AppState.appData.environmentalAspects || [],
                 'EnvironmentalMonitoring': AppState.appData.environmentalMonitoring || [],
                 'Sustainability': AppState.appData.sustainability || [],
@@ -2774,6 +2729,8 @@ const GoogleIntegration = {
                 'ApprovedContractors',      // ✅ إضافة المقاولين المعتمدين
                 'Incidents',
                 'NearMiss',
+                'IncidentsRegistry',
+                'SafetyAlerts',
                 'PTW',
                 'PTWRegistry',
                 'Training',
@@ -2855,6 +2812,8 @@ const GoogleIntegration = {
                 'Users': 'users',
                 'Incidents': 'incidents',
                 'NearMiss': 'nearmiss',
+                'IncidentsRegistry': 'incidentsRegistry',
+                'SafetyAlerts': 'safetyAlerts',
                 'PTW': 'ptw',
                 'PTWRegistry': 'ptwRegistry',
                 'Training': 'training',
@@ -2892,11 +2851,13 @@ const GoogleIntegration = {
                 'SOPJHA': 'sopJHA',
                 'RiskAssessments': 'riskAssessments',
                 'LegalDocuments': 'legalDocuments',
+                'LegalInventory': 'legalInventory',
                 'HSEAudits': 'hseAudits',
                 'HSENonConformities': 'hseNonConformities',
                 'HSECorrectiveActions': 'hseCorrectiveActions',
                 'HSEObjectives': 'hseObjectives',
                 'HSERiskAssessments': 'hseRiskAssessments',
+                'TrainingAnalysisData': 'trainingAnalysisData',
                 'EnvironmentalAspects': 'environmentalAspects',
                 'EnvironmentalMonitoring': 'environmentalMonitoring',
                 'Sustainability': 'sustainability',
@@ -2926,10 +2887,10 @@ const GoogleIntegration = {
             const moduleSheetsMap = {
                 'dashboard': [],
                 'users': ['Users'],
-                'incidents': ['Incidents'],
+                'incidents': ['Incidents', 'IncidentsRegistry', 'SafetyAlerts'],
                 'nearmiss': ['NearMiss'],
                 'ptw': ['PTW', 'PTWRegistry'],
-                'training': ['Training'],
+                'training': ['Training', 'TrainingAttendance', 'TrainingAnalysisData'],
                 'clinic': ['ClinicVisits', 'Medications', 'SickLeave', 'Injuries', 'ClinicInventory'],
                 'fire-equipment': ['FireEquipment', 'FireEquipmentAssets', 'FireEquipmentInspections'],
                 'periodic-inspections': ['PeriodicInspectionCategories', 'PeriodicInspectionRecords', 'PeriodicInspectionSchedules', 'PeriodicInspectionChecklists', 'DailySafetyCheckList'],
@@ -2943,7 +2904,7 @@ const GoogleIntegration = {
                 'iso': ['ISODocuments', 'ISOProcedures', 'ISOForms', 'HSEAudits'],
                 'sop-jha': ['SOPJHA'],
                 'risk-assessment': ['RiskAssessments', 'HSERiskAssessments'],
-                'legal-documents': ['LegalDocuments'],
+                'legal-documents': ['LegalDocuments', 'LegalInventory'],
                 'sustainability': ['Sustainability', 'EnvironmentalAspects', 'EnvironmentalMonitoring', 'CarbonFootprint', 'WasteManagement', 'EnergyEfficiency', 'WaterManagement', 'RecyclingPrograms'],
                 'emergency': ['EmergencyAlerts', 'EmergencyPlans', 'EmergencyPlansUpdates'],
                 'safety-budget': ['SafetyBudgets', 'SafetyBudgetTransactions', 'SafetyBudgetPurchaseOrders'],
@@ -3499,7 +3460,8 @@ const GoogleIntegration = {
         const {
             retryCount = 3,
             silent = true,
-            useQueue = false
+            useQueue = false,
+            upsert = true
         } = options;
 
         if (!this._isBackendRpcConfigured()) {
@@ -3537,6 +3499,7 @@ const GoogleIntegration = {
                         data: {
                             sheetName: sheetName,
                             data: data,
+                            upsert: upsert,
                             ...(spreadsheetId ? { spreadsheetId } : {})
                         }
                     });
