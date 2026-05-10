@@ -7,7 +7,9 @@
  *
  * saveToSheet: full table replace (DELETE ALL then INSERT). Use appendToSheet for incremental rows.
  */
-import { Client } from "https://deno.land/x/postgres@v0.17.0/mod.ts";
+import { Client, Pool } from "https://deno.land/x/postgres@v0.17.0/mod.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { decode } from "https://deno.land/std@0.177.0/encoding/base64.ts";
 import { ALLOWED_SHEETS } from "./allowed_sheets.gen.ts";
 
 const corsHeaders: Record<string, string> = {
@@ -58,14 +60,13 @@ function pickDatabaseUrl(): string | null {
 
 const SHEET_ALIASES: Record<string, string> = {
   // Legacy/module aliases normalized to existing DB tables
-  IncidentsRegistry: "Incidents",
-  safetyAlerts: "IncidentNotifications",
-  LegalInventory: "LegalDocuments",
+  safetyAlerts: "SafetyAlerts",
+  LegalInventory: "LegalInventory",
   EmployeePPEMatrixByCode: "PPEMatrix",
-  PTWRegistry: "PTW",
-  PTW_MAP_SITES: "PTW_MAP_COORDINATES",
-  TrainingAttendance: "Training",
-  TrainingAnalysisData: "Training",
+  PTWRegistry: "PTWRegistry",
+  PTW_MAP_COORDINATES: "PTW_MAP_SITES",
+  TrainingAttendance: "TrainingAttendance",
+  TrainingAnalysisData: "TrainingAnalysisData",
 };
 
 function resolveSheetName(sheetName: string): string {
@@ -122,17 +123,31 @@ async function replaceSheet(
   rows: Record<string, unknown>[],
 ): Promise<void> {
   const t = qTable(sheetName);
-  await client.queryObject(`DELETE FROM public.${t}`);
-  for (const row of rows) {
-    const keys = Object.keys(row).filter((k) => row[k] !== undefined);
-    if (keys.length === 0) continue;
-    const cols = keys.map((k) => `"${k.replace(/"/g, '""')}"`).join(", ");
-    const placeholders = keys.map((_, i) => `$${i + 1}`).join(", ");
-    const vals = keys.map((k) => serializeCell(row[k]));
-    await client.queryObject(
-      `INSERT INTO public.${t} (${cols}) VALUES (${placeholders})`,
-      vals,
-    );
+  const transaction = client.createTransaction(`replace_${sheetName}`);
+  try {
+    await transaction.begin();
+    await transaction.queryObject(`DELETE FROM public.${t}`);
+
+    // Process in smaller batches to avoid connection timeouts
+    const batchSize = 50;
+    for (let i = 0; i < rows.length; i += batchSize) {
+      const batch = rows.slice(i, i + batchSize);
+      for (const row of batch) {
+        const keys = Object.keys(row).filter((k) => row[k] !== undefined);
+        if (keys.length === 0) continue;
+        const cols = keys.map((k) => `"${k.replace(/"/g, '""')}"`).join(", ");
+        const placeholders = keys.map((_, i) => `$${i + 1}`).join(", ");
+        const vals = keys.map((k) => serializeCell(row[k]));
+        await transaction.queryObject(
+          `INSERT INTO public.${t} (${cols}) VALUES (${placeholders})`,
+          vals,
+        );
+      }
+    }
+    await transaction.commit();
+  } catch (e) {
+    await transaction.rollback();
+    throw e;
   }
 }
 
@@ -142,16 +157,28 @@ async function appendRows(
   rows: Record<string, unknown>[],
 ): Promise<void> {
   const t = qTable(sheetName);
-  for (const row of rows) {
-    const keys = Object.keys(row).filter((k) => row[k] !== undefined);
-    if (keys.length === 0) continue;
-    const cols = keys.map((k) => `"${k.replace(/"/g, '""')}"`).join(", ");
-    const placeholders = keys.map((_, i) => `$${i + 1}`).join(", ");
-    const vals = keys.map((k) => serializeCell(row[k]));
-    await client.queryObject(
-      `INSERT INTO public.${t} (${cols}) VALUES (${placeholders})`,
-      vals,
-    );
+  const transaction = client.createTransaction(`append_${sheetName}`);
+  try {
+    await transaction.begin();
+    const batchSize = 50;
+    for (let i = 0; i < rows.length; i += batchSize) {
+      const batch = rows.slice(i, i + batchSize);
+      for (const row of batch) {
+        const keys = Object.keys(row).filter((k) => row[k] !== undefined);
+        if (keys.length === 0) continue;
+        const cols = keys.map((k) => `"${k.replace(/"/g, '""')}"`).join(", ");
+        const placeholders = keys.map((_, i) => `$${i + 1}`).join(", ");
+        const vals = keys.map((k) => serializeCell(row[k]));
+        await transaction.queryObject(
+          `INSERT INTO public.${t} (${cols}) VALUES (${placeholders})`,
+          vals,
+        );
+      }
+    }
+    await transaction.commit();
+  } catch (e) {
+    await transaction.rollback();
+    throw e;
   }
 }
 
@@ -162,6 +189,60 @@ async function deleteFromSheetImpl(
 ): Promise<void> {
   const t = qTable(sheetName);
   await client.queryObject(`DELETE FROM public.${t} WHERE "id" = $1`, [id]);
+}
+
+async function upsertRows(
+  client: Client,
+  sheetName: string,
+  rows: Record<string, unknown>[],
+): Promise<void> {
+  const t = qTable(sheetName);
+  const transaction = client.createTransaction(`upsert_${sheetName}`);
+  try {
+    await transaction.begin();
+    const batchSize = 50;
+    for (let i = 0; i < rows.length; i += batchSize) {
+      const batch = rows.slice(i, i + batchSize);
+      for (const row of batch) {
+        const keys = Object.keys(row).filter((k) => row[k] !== undefined);
+        if (keys.length === 0) continue;
+
+        const idKey = keys.find(k => k.toLowerCase() === 'id');
+        if (!idKey) {
+          const cols = keys.map((k) => `"${k.replace(/"/g, '""')}"`).join(", ");
+          const placeholders = keys.map((_, i) => `$${i + 1}`).join(", ");
+          const vals = keys.map((k) => serializeCell(row[k]));
+          await transaction.queryObject(
+            `INSERT INTO public.${t} (${cols}) VALUES (${placeholders})`,
+            vals,
+          );
+          continue;
+        }
+
+        const cols = keys.map((k) => `"${k.replace(/"/g, '""')}"`).join(", ");
+        const placeholders = keys.map((_, i) => `$${i + 1}`).join(", ");
+        const vals = keys.map((k) => serializeCell(row[k]));
+
+        const updateSet = keys
+          .filter(k => k !== idKey)
+          .map((k) => `"${k.replace(/"/g, '""')}" = EXCLUDED."${k.replace(/"/g, '""')}"`)
+          .join(", ");
+
+        let query = `INSERT INTO public.${t} (${cols}) VALUES (${placeholders})`;
+        if (updateSet) {
+          query += ` ON CONFLICT ("${idKey}") DO UPDATE SET ${updateSet}`;
+        } else {
+          query += ` ON CONFLICT ("${idKey}") DO NOTHING`;
+        }
+
+        await transaction.queryObject(query, vals);
+      }
+    }
+    await transaction.commit();
+  } catch (e) {
+    await transaction.rollback();
+    throw e;
+  }
 }
 
 function checkHseApiKey(req: Request): Response | null {
@@ -528,6 +609,9 @@ async function prepareUserRow(
   return processed;
 }
 
+const dbUrl = pickDatabaseUrl();
+const pool = dbUrl ? new Pool(dbUrl, 10, true) : null;
+
 Deno.serve(async (req: Request) => {
   try {
     if (req.method === "OPTIONS") {
@@ -541,8 +625,7 @@ Deno.serve(async (req: Request) => {
     const authErr = checkHseApiKey(req);
     if (authErr) return authErr;
 
-    const dbUrl = pickDatabaseUrl();
-    if (!dbUrl) {
+    if (!pool) {
       return jsonResponse({
         success: false,
         message: "SERVER_CONFIG: valid DATABASE_URL/SUPABASE_DB_URL secret is not set for hse-api",
@@ -565,8 +648,7 @@ Deno.serve(async (req: Request) => {
 
     let client: Client | undefined;
     try {
-      client = new Client(parseDatabaseUrl(dbUrl));
-      await client.connect();
+      client = await pool.connect();
 
     switch (action) {
       case "testConnection":
@@ -624,19 +706,27 @@ Deno.serve(async (req: Request) => {
             maxBatchSize,
           });
         }
+
         const batchResults: Record<string, unknown> = {};
         const failedSheets: { sheetName: string; error: string }[] = [];
-        for (const name of sheetNames) {
+
+        // Use parallel processing for faster loading
+        await Promise.all(sheetNames.map(async (name) => {
+          let subClient;
           try {
-            batchResults[name] = await readSheet(client, name);
+            subClient = await pool.connect();
+            batchResults[name] = await readSheet(subClient, name);
           } catch (e) {
             failedSheets.push({
               sheetName: name,
               error: e instanceof Error ? e.message : String(e),
             });
             batchResults[name] = null;
+          } finally {
+            if (subClient) await subClient.release();
           }
-        }
+        }));
+
         return jsonResponse({
           success: true,
           data: batchResults,
@@ -649,13 +739,21 @@ Deno.serve(async (req: Request) => {
       case "saveToSheet": {
         const sheetName = String(payload.sheetName || "");
         const rows = payload.data as Record<string, unknown>[] | undefined;
+        const useUpsert = payload.upsert === true || payload.upsert === "true";
+
         if (!sheetName) {
           return jsonResponse({ success: false, message: "sheetName required" });
         }
         if (!Array.isArray(rows)) {
           return jsonResponse({ success: false, message: "data must be an array" });
         }
-        await replaceSheet(client, sheetName, rows);
+
+        if (useUpsert) {
+          await upsertRows(client, sheetName, rows);
+        } else {
+          await replaceSheet(client, sheetName, rows);
+        }
+
         if (sheetName === "Users") await bumpUsersMeta(client);
         return jsonResponse({
           success: true,
@@ -764,7 +862,9 @@ Deno.serve(async (req: Request) => {
           users.map(async (u) => {
             if (String(u.id) !== userId) return u;
             found = true;
-            const merged = { ...u, ...rawUpdate, id: u.id };
+            // Ensure permissions are preserved correctly
+            const permissions = rawUpdate.permissions || u.permissions;
+            const merged = { ...u, ...rawUpdate, permissions, id: u.id };
             if (
               typeof merged.password === "string" &&
               merged.password !== "***" &&
@@ -845,14 +945,63 @@ Deno.serve(async (req: Request) => {
           message: "no-op on PostgreSQL (headers managed by migrations)",
         });
 
-      case "uploadFileToDrive":
-        return jsonResponse({
-          success: false,
-          message:
-            "رفع الملفات عبر Google Drive غير مدعوم على Postgres. استخدم Supabase Storage وحفظ الرابط في الجدول.",
-          code: "USE_SUPABASE_STORAGE",
-          action,
-        });
+      case "uploadFileToDrive": {
+        const supabaseUrl = Deno.env.get("SUPABASE_URL") ?? "";
+        const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY") ?? "";
+
+        if (!supabaseUrl || !supabaseAnonKey) {
+          return jsonResponse({
+            success: false,
+            message: "Supabase storage configuration missing (SUPABASE_URL/SUPABASE_ANON_KEY)",
+          }, 500);
+        }
+
+        const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+        const base64Data = String(payload.base64Data || "");
+        const fileName = String(payload.fileName || `upload_${Date.now()}`);
+        const mimeType = String(payload.mimeType || "application/octet-stream");
+        const moduleName = String(payload.moduleName || "General").toLowerCase();
+
+        if (!base64Data) {
+          return jsonResponse({ success: false, message: "No data provided" });
+        }
+
+        try {
+          // data:image/jpeg;base64,....
+          const pureBase64 = base64Data.split(",")[1] || base64Data;
+          const binaryData = decode(pureBase64);
+
+          const bucketName = "hse-attachments";
+          const filePath = `${moduleName}/${fileName}`;
+
+          const { data: uploadData, error: uploadError } = await supabase.storage
+            .from(bucketName)
+            .upload(filePath, binaryData, {
+              contentType: mimeType,
+              upsert: true,
+            });
+
+          if (uploadError) throw uploadError;
+
+          const { data: { publicUrl } } = supabase.storage
+            .from(bucketName)
+            .getPublicUrl(filePath);
+
+          return jsonResponse({
+            success: true,
+            fileId: uploadData.path,
+            directLink: publicUrl,
+            shareableLink: publicUrl,
+            fileName: fileName,
+          });
+        } catch (err) {
+          return jsonResponse({
+            success: false,
+            message: `Storage error: ${err instanceof Error ? err.message : String(err)}`,
+          }, 500);
+        }
+      }
 
       case "processAIQuestion": {
         const apiKey = (Deno.env.get("OPENAI_API_KEY") || "").trim();
@@ -907,6 +1056,545 @@ Deno.serve(async (req: Request) => {
           message: text,
           data: { answer: text },
         });
+      }
+
+      // --- Legacy/Module Specific Action Mappings ---
+
+      case "addOrUpdatePPEStockItem": {
+        // Normalize itemId to id for DB compatibility
+        const stockData = { ...payload } as Record<string, any>;
+        if (stockData.itemId) {
+          stockData.id = stockData.itemId;
+          delete stockData.itemId;
+        }
+        await saveToSheetImpl(client, "PPE_Stock", [stockData], true);
+        return jsonResponse({ success: true, message: "تم حفظ الصنف بنجاح" });
+      }
+
+      case "addPPETransaction": {
+        const row = { ...payload } as Record<string, any>;
+        if (!row.id) row.id = crypto.randomUUID();
+        await appendRows(client, "PPE_Transactions", [row]);
+        return jsonResponse({ success: true, message: "تم تسجيل العملية بنجاح" });
+      }
+
+      case "deletePPE": {
+        const id = String(payload.ppeId || payload.id || "");
+        await deleteFromSheetImpl(client, "PPE", id);
+        return jsonResponse({ success: true, message: "تم حذف السجل بنجاح" });
+      }
+
+      case "deletePPEStockItem": {
+        const id = String(payload.itemId || payload.id || "");
+        await deleteFromSheetImpl(client, "PPE_Stock", id);
+        return jsonResponse({ success: true, message: "تم حذف الصنف بنجاح" });
+      }
+
+      case "deleteClinicVisit": {
+        const id = String(payload.visitId || payload.id || "");
+        await deleteFromSheetImpl(client, "ClinicVisits", id);
+        return jsonResponse({ success: true, message: "تم حذف الزيارة بنجاح" });
+      }
+
+      case "deleteMedication": {
+        const id = String(payload.medicationId || payload.id || "");
+        await deleteFromSheetImpl(client, "Medications", id);
+        return jsonResponse({ success: true, message: "تم حذف الدواء بنجاح" });
+      }
+
+      case "deleteObservation": {
+        const id = String(payload.observationId || payload.id || "");
+        await deleteFromSheetImpl(client, "DailyObservations", id);
+        return jsonResponse({ success: true, message: "تم حذف الملاحظة بنجاح" });
+      }
+
+      case "deleteSafetyTeamMember":
+      case "deleteSafetyTeamTask":
+      case "deleteNearMiss":
+      case "deleteSafetyAlert":
+      case "deleteAppEmergencyNumber":
+      case "deleteBackup":
+      case "deleteAnalysis": {
+        const tableMap: Record<string, string> = {
+          deleteSafetyTeamMember: "SafetyTeamMembers",
+          deleteSafetyTeamTask: "SafetyTeamTasks",
+          deleteNearMiss: "NearMiss",
+          deleteSafetyAlert: "SafetyAlerts",
+          deleteAppEmergencyNumber: "AppEmergencyNumbers",
+          deleteBackup: "BackupLog",
+          deleteAnalysis: "TrainingAnalysisData",
+          deleteFireEquipmentApprovalRequest: "FireEquipment",
+          deleteIssuingAuthority: "IssuingAuthorities",
+          deleteContractorIssuingAuthority: "IssuingAuthorities",
+          deleteSafetyTeamMember: "SafetyTeamMembers",
+          deleteSafetyTeamTask: "SafetyTeamTasks",
+          deleteAppEmergencyNumber: "AppEmergencyNumbers",
+        };
+        const table = tableMap[action];
+        const id = String(payload.id || "");
+        await deleteFromSheetImpl(client, table, id);
+        return jsonResponse({ success: true, message: "تم الحذف بنجاح" });
+      }
+
+      case "deleteFireEquipment": {
+        const id = String(
+          payload.fireEquipmentId || payload.assetId || payload.id || "",
+        );
+        await deleteFromSheetImpl(client, "FireEquipment", id);
+        return jsonResponse({ success: true, message: "تم حذف المعدة بنجاح" });
+      }
+
+      case "deleteIncident": {
+        const id = String(payload.incidentId || payload.id || "");
+        await deleteFromSheetImpl(client, "Incidents", id);
+        return jsonResponse({ success: true, message: "تم حذف الحادث بنجاح" });
+      }
+
+      case "deleteSafetyAlert": {
+        const id = String(payload.alertId || payload.id || "");
+        await deleteFromSheetImpl(client, "SafetyAlerts", id);
+        return jsonResponse({ success: true, message: "تم حذف التنبيه بنجاح" });
+      }
+
+      case "deleteNearMiss": {
+        const id = String(payload.nearMissId || payload.id || "");
+        await deleteFromSheetImpl(client, "NearMiss", id);
+        return jsonResponse({ success: true, message: "تم حذف السجل بنجاح" });
+      }
+
+      case "deleteTraining": {
+        const id = String(payload.trainingId || payload.id || "");
+        await deleteFromSheetImpl(client, "Training", id);
+        return jsonResponse({ success: true, message: "تم حذف التدريب بنجاح" });
+      }
+
+      case "deleteAllObservations": {
+        await replaceSheet(client, "DailyObservations", []);
+        return jsonResponse({
+          success: true,
+          message: "تم حذف جميع الملاحظات بنجاح",
+        });
+      }
+
+      case "deleteFireEquipmentApprovalRequest": {
+        const id = String(payload.requestId || payload.id || "");
+        await deleteFromSheetImpl(client, "ContractorApprovalRequests", id);
+        return jsonResponse({ success: true, message: "تم حذف الطلب بنجاح" });
+      }
+
+      case "deleteSafetyTeamMember": {
+        const id = String(payload.memberId || payload.id || "");
+        await deleteFromSheetImpl(client, "SafetyTeamMembers", id);
+        return jsonResponse({ success: true, message: "تم حذف العضو بنجاح" });
+      }
+
+      case "deleteSafetyTeamTask": {
+        const id = String(payload.taskId || payload.id || "");
+        await deleteFromSheetImpl(client, "SafetyTeamTasks", id);
+        return jsonResponse({ success: true, message: "تم حذف المهمة بنجاح" });
+      }
+
+      case "deleteCustomKPI": {
+        const id = String(payload.kpiId || payload.id || "");
+        await deleteFromSheetImpl(client, "SafetyTeamKPIs", id);
+        return jsonResponse({ success: true, message: "تم حذف المؤشر بنجاح" });
+      }
+
+      case "deleteSafetyTeamAttendance": {
+        const id = String(payload.attendanceId || payload.id || "");
+        await deleteFromSheetImpl(client, "SafetyTeamAttendance", id);
+        return jsonResponse({ success: true, message: "تم حذف سجل التحضير بنجاح" });
+      }
+
+      case "deleteSafetyTeamLeave": {
+        const id = String(payload.leaveId || payload.id || "");
+        await deleteFromSheetImpl(client, "SafetyTeamLeaves", id);
+        return jsonResponse({ success: true, message: "تم حذف سجل الإجازة بنجاح" });
+      }
+
+      case "deactivateEmployee": {
+        const id = String(payload.employeeId || payload.id || "");
+        if (!id) return jsonResponse({ success: false, message: "employeeId required" });
+        const rows = await readSheet(client, "Employees");
+        const next = rows.map((r) => {
+          if (String(r.id) === id) {
+            return {
+              ...r,
+              isActive: "غير نشط",
+              status: "Deactivated",
+              updatedAt: new Date().toISOString(),
+            };
+          }
+          return r;
+        });
+        await replaceSheet(client, "Employees", next);
+        return jsonResponse({
+          success: true,
+          message: "تم إلغاء تفعيل الموظف بنجاح",
+        });
+      }
+
+      case "addEnvironmentalAspect":
+      case "addHSEAudit":
+      case "addHSECorrectiveAction":
+      case "addHSENonConformity":
+      case "addHSEObjective":
+      case "addSafetyTeamAttendance":
+      case "addSafetyTeamKPI":
+      case "addSafetyTeamLeave":
+      case "addSafetyTeamMember":
+      case "addSafetyTeamTask":
+      case "addClinicVisit":
+      case "addInjury":
+      case "addMedication":
+      case "addTraining":
+      case "addDocumentCode":
+      case "addDocumentVersion":
+      case "addFireEquipmentInspection":
+      case "addSafetyAlert": {
+        const sheetMap: Record<string, string> = {
+          addEnvironmentalAspect: "EnvironmentalAspects",
+          addHSEAudit: "HSEAudits",
+          addHSECorrectiveAction: "HSECorrectiveActions",
+          addHSENonConformity: "HSENonConformities",
+          addHSEObjective: "HSEObjectives",
+          addSafetyTeamAttendance: "SafetyTeamAttendance",
+          addSafetyTeamKPI: "SafetyTeamKPIs",
+          addSafetyTeamLeave: "SafetyTeamLeaves",
+          addSafetyTeamMember: "SafetyTeamMembers",
+          addSafetyTeamTask: "SafetyTeamTasks",
+          addClinicVisit: "ClinicVisits",
+          addInjury: "Injuries",
+          addMedication: "Medications",
+          addTraining: "Training",
+          addDocumentCode: "DocumentCodes",
+          addDocumentVersion: "DocumentVersions",
+          addFireEquipmentInspection: "FireEquipmentInspections",
+          addSafetyAlert: "SafetyAlerts",
+          addClinicVisitDeletionRequest: "ClinicVisits", // usually marked as deleted or in a separate table, mapping to same for now
+          addMedicationDeletionRequest: "Medications",
+          addContractorApprovalRequest: "ContractorApprovalRequests",
+          addContractorDeletionRequest: "ContractorDeletionRequests",
+          addFireEquipmentApprovalRequest: "FireEquipment",
+          addIncidentNotification: "IncidentNotifications",
+          addPeriodicInspection: "PeriodicInspectionRecords",
+          addSupplyRequest: "ClinicInventory",
+          addChangeRequest: "CarbonFootprint", // Placeholder or mapping to a change management table if exists
+          addNotification: "Notifications",
+          addObservationComment: "DailyObservations",
+          addObservationUpdate: "DailyObservations",
+          addActionComment: "ActionTrackingRegister",
+          addActionUpdate: "ActionTrackingRegister",
+          addIssue: "HSENonConformities",
+        };
+        const table = sheetMap[action];
+        const row = { ...payload } as Record<string, any>;
+        if (!row.id) row.id = crypto.randomUUID();
+        await appendRows(client, table, [row]);
+        return jsonResponse({ success: true, message: "تمت الإضافة بنجاح" });
+      }
+
+      case "deleteApprovedContractor":
+      case "deleteContractor": {
+        const table =
+          action === "deleteApprovedContractor"
+            ? "ApprovedContractors"
+            : "Contractors";
+        const id = String(payload.id || payload.contractorId || "");
+        await deleteFromSheetImpl(client, table, id);
+        return jsonResponse({ success: true, message: "تم الحذف بنجاح" });
+      }
+
+      case "updateApprovedContractor": {
+        const id = String(payload.approvedContractorId || payload.id || "");
+        const data = (payload.updateData || payload) as Record<string, any>;
+        if (id && !data.id) data.id = id;
+        await saveToSheetImpl(client, "ApprovedContractors", [data], true);
+        return jsonResponse({ success: true, message: "تم التحديث بنجاح" });
+      }
+
+      case "deleteActionTracking": {
+        const id = String(payload.actionId || payload.id || "");
+        await deleteFromSheetImpl(client, "ActionTrackingRegister", id);
+        return jsonResponse({ success: true, message: "تم حذف الإجراء بنجاح" });
+      }
+
+      case "addActionTracking": {
+        const row = { ...payload } as Record<string, any>;
+        if (!row.id) row.id = crypto.randomUUID();
+        await appendRows(client, "ActionTrackingRegister", [row]);
+        return jsonResponse({ success: true, message: "تمت إضافة الإجراء بنجاح" });
+      }
+
+      case "updateActionTracking": {
+        const id = String(payload.actionId || payload.id || "");
+        const data = (payload.updateData || payload) as Record<string, any>;
+        if (id && !data.id) data.id = id;
+        await saveToSheetImpl(client, "ActionTrackingRegister", [data], true);
+        return jsonResponse({ success: true, message: "تم تحديث الإجراء بنجاح" });
+      }
+
+      case "deletePTW": {
+        const id = String(payload.permitId || payload.id || "");
+        await deleteFromSheetImpl(client, "PTW", id);
+        return jsonResponse({ success: true, message: "تم حذف التصريح بنجاح" });
+      }
+
+      case "deletePTWRegistryEntry": {
+        const id = String(payload.entryId || payload.id || "");
+        await deleteFromSheetImpl(client, "PTWRegistry", id);
+        return jsonResponse({ success: true, message: "تم حذف السجل بنجاح" });
+      }
+
+      case "deleteSafetyBudgetTransaction": {
+        const id = String(payload.transactionId || payload.id || "");
+        await deleteFromSheetImpl(client, "SafetyBudgetTransactions", id);
+        return jsonResponse({ success: true, message: "تم حذف الحركة بنجاح" });
+      }
+
+      case "deleteViolationFromSheet": {
+        const id = String(payload.id || "");
+        await deleteFromSheetImpl(client, "Violations", id);
+        return jsonResponse({ success: true, message: "تم حذف المخالفة بنجاح" });
+      }
+
+      case "deleteDocumentCode": {
+        const id = String(payload.id || "");
+        await deleteFromSheetImpl(client, "DocumentCodes", id);
+        return jsonResponse({ success: true, message: "تم حذف الكود بنجاح" });
+      }
+
+      case "deleteHSEMonitoringPlan": {
+        const id = String(payload.planId || payload.id || "");
+        await deleteFromSheetImpl(client, "SafetyPerformanceKPIs", id);
+        return jsonResponse({ success: true, message: "تم حذف النشاط بنجاح" });
+      }
+
+      case "deleteKPIAnnualPlan": {
+        const id = String(payload.planId || payload.id || "");
+        await deleteFromSheetImpl(client, "SafetyPerformanceKPIs", id);
+        return jsonResponse({ success: true, message: "تم حذف المؤشر بنجاح" });
+      }
+
+      case "deleteEmployee": {
+        const id = String(payload.employeeId || payload.id || "");
+        await deleteFromSheetImpl(client, "Employees", id);
+        return jsonResponse({ success: true, message: "تم حذف الموظف بنجاح" });
+      }
+
+      case "deleteSOPJHA": {
+        const id = String(payload.sopJhaId || payload.id || "");
+        await deleteFromSheetImpl(client, "SOPJHA", id);
+        return jsonResponse({ success: true, message: "تم الحذف بنجاح" });
+      }
+
+      case "deleteAllEmployees": {
+        await replaceSheet(client, "Employees", []);
+        return jsonResponse({
+          success: true,
+          message: "تم حذف جميع الموظفين بنجاح",
+        });
+      }
+
+      case "addUserActivityLog": {
+        const row = { ...payload } as Record<string, any>;
+        if (!row.id) row.id = crypto.randomUUID();
+        await appendRows(client, "UserActivityLog", [row]);
+        return jsonResponse({ success: true });
+      }
+
+      case "getAllUserActivityLogs": {
+        const rows = await readSheet(client, "UserActivityLog");
+        return jsonResponse({ success: true, data: rows });
+      }
+
+      case "getUserTasksByUserId": {
+        const uid = String(payload.userId || payload.id || "");
+        const rows = await readSheet(client, "UserTasks");
+        const filtered = rows.filter(r => String(r.userId) === uid || String(r.assignedTo) === uid);
+        return jsonResponse({ success: true, data: filtered });
+      }
+
+      case "getAllClinicVisits": {
+        const rows = await readSheet(client, "ClinicVisits");
+        return jsonResponse({ success: true, data: rows });
+      }
+
+      case "getAllPPE": {
+        const rows = await readSheet(client, "PPE");
+        return jsonResponse({ success: true, data: rows });
+      }
+
+      case "getAllPPEStockItems": {
+        const rows = await readSheet(client, "PPE_Stock");
+        return jsonResponse({ success: true, data: rows });
+      }
+
+      case "getAllPPETransactions": {
+        const rows = await readSheet(client, "PPE_Transactions");
+        return jsonResponse({ success: true, data: rows });
+      }
+
+      case "getPPEItemsList": {
+        const rows = await readSheet(client, "PPE_Stock");
+        return jsonResponse({ success: true, data: rows });
+      }
+
+      case "getPPEMatrix": {
+        const rows = await readSheet(client, "PPEMatrix");
+        return jsonResponse({ success: true, data: rows });
+      }
+
+      case "getAllTrainings": {
+        const rows = await readSheet(client, "Training");
+        return jsonResponse({ success: true, data: rows });
+      }
+
+      case "getEmployeeTrainingMatrix": {
+        const rows = await readSheet(client, "EmployeeTrainingMatrix");
+        return jsonResponse({ success: true, data: rows });
+      }
+
+      case "getDailyUserSessionActivityReport": {
+        const rows = await readSheet(client, "UserActivityLog");
+        return jsonResponse({ success: true, data: rows });
+      }
+
+      case "getSmartRecommendations": {
+        // Mocking smart recommendations for now
+        return jsonResponse({
+          success: true,
+          data: [
+            { id: 1, text: "تأكد من تحديث مصفوفة التدريب للموظفين الجدد." },
+            { id: 2, text: "مراجعة تصاريح العمل منتهية الصلاحية." }
+          ]
+        });
+      }
+
+      case "addIncident": {
+        const row = { ...payload } as Record<string, any>;
+        if (!row.id) row.id = crypto.randomUUID();
+        await appendRows(client, "Incidents", [row]);
+        return jsonResponse({ success: true, message: "تم تسجيل الحادث بنجاح" });
+      }
+
+      case "getAllIncidents": {
+        const rows = await readSheet(client, "Incidents");
+        return jsonResponse({ success: true, data: rows });
+      }
+
+      case "addSickLeave": {
+        const row = { ...payload } as Record<string, any>;
+        if (!row.id) row.id = crypto.randomUUID();
+        await appendRows(client, "SickLeave", [row]);
+        return jsonResponse({ success: true, message: "تم تسجيل الإجازة بنجاح" });
+      }
+
+      case "getAllNearMisses": {
+        const rows = await readSheet(client, "NearMiss");
+        return jsonResponse({ success: true, data: rows });
+      }
+
+      case "getAllObservations": {
+        const rows = await readSheet(client, "DailyObservations");
+        return jsonResponse({ success: true, data: rows });
+      }
+
+      case "getAllPTWs": {
+        const rows = await readSheet(client, "PTW");
+        return jsonResponse({ success: true, data: rows });
+      }
+
+      case "getAllPeriodicInspectionRecords": {
+        const rows = await readSheet(client, "PeriodicInspectionRecords");
+        return jsonResponse({ success: true, data: rows });
+      }
+
+      case "getAllTrainingAttendance": {
+        const rows = await readSheet(client, "TrainingAttendance");
+        return jsonResponse({ success: true, data: rows });
+      }
+
+      case "getAllContractorTrainings": {
+        const rows = await readSheet(client, "ContractorTrainings");
+        return jsonResponse({ success: true, data: rows });
+      }
+
+      case "getActionTrackingSettings": {
+        const rows = await readSheet(client, "ActionTrackingSettings");
+        return jsonResponse({ success: true, data: rows[0] || {} });
+      }
+
+      case "getActionTrackingKPIs": {
+        // Simple logic for KPIs
+        const rows = await readSheet(client, "ActionTrackingRegister");
+        const total = rows.length;
+        const closed = rows.filter(r => r.status === "Closed" || r.status === "تم الإغلاق").length;
+        return jsonResponse({
+          success: true,
+          data: { total, closed, open: total - closed }
+        });
+      }
+
+      case "getSafetyTeamMembers": {
+        const rows = await readSheet(client, "SafetyTeamMembers");
+        return jsonResponse({ success: true, data: rows });
+      }
+
+      case "getSafetyTeamMember": {
+        const id = String(payload.id || "");
+        const rows = await readSheet(client, "SafetyTeamMembers");
+        const row = rows.find(r => String(r.id) === id);
+        return jsonResponse({ success: true, data: row || null });
+      }
+
+      case "getSafetyTeamKPIs": {
+        const rows = await readSheet(client, "SafetyTeamKPIs");
+        return jsonResponse({ success: true, data: rows });
+      }
+
+      case "getSafetyTeamAttendance": {
+        const rows = await readSheet(client, "SafetyTeamAttendance");
+        return jsonResponse({ success: true, data: rows });
+      }
+
+      case "getSafetyTeamLeaves": {
+        const rows = await readSheet(client, "SafetyTeamLeaves");
+        return jsonResponse({ success: true, data: rows });
+      }
+
+      case "getJobDescription": {
+        const rows = await readSheet(client, "SafetyJobDescriptions");
+        return jsonResponse({ success: true, data: rows });
+      }
+
+      case "getOrganizationalStructure": {
+        const rows = await readSheet(client, "SafetyOrganizationalStructure");
+        return jsonResponse({ success: true, data: rows });
+      }
+
+      case "getNextChangeRequestNumber": {
+        // This usually increments a counter
+        return jsonResponse({ success: true, nextNumber: `CR-${Date.now().toString().slice(-6)}` });
+      }
+
+      case "deleteTraining": {
+        const id = String(payload.trainingId || payload.id || "");
+        await deleteFromSheetImpl(client, "Training", id);
+        return jsonResponse({ success: true, message: "تم حذف التدريب بنجاح" });
+      }
+
+      case "logAIQuestion": {
+        const row = { ...payload } as Record<string, any>;
+        if (!row.id) row.id = crypto.randomUUID();
+        await appendRows(client, "UserAILog", [row]);
+        return jsonResponse({ success: true });
+      }
+
+      case "exportDailyObservationsPptReport":
+      case "getDailyObservationsPptTemplateId":
+      case "setDailyObservationsPptTemplateId": {
+        return jsonResponse({ success: true, message: "Mocked PPT action" });
       }
 
       default:

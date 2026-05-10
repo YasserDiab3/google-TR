@@ -3603,16 +3603,16 @@ const Sustainability = {
                 createdAt: new Date().toISOString(),
                 updatedAt: new Date().toISOString()
             }));
-            await GoogleIntegration.autoSave('WasteManagement_RegularWasteTypes', wasteTypesData);
+            await GoogleIntegration.autoSave('WasteManagement_RegularWasteTypes', wasteTypesData, { upsert: false });
 
             // حفظ سجلات المخلفات العادية
-            await GoogleIntegration.autoSave('WasteManagement_RegularWasteRecords', wasteData.regularWasteRecords || []);
+            await GoogleIntegration.autoSave('WasteManagement_RegularWasteRecords', wasteData.regularWasteRecords || [], { upsert: false });
 
             // حفظ عمليات بيع المخلفات العادية
-            await GoogleIntegration.autoSave('WasteManagement_RegularWasteSales', wasteData.regularWasteSales || []);
+            await GoogleIntegration.autoSave('WasteManagement_RegularWasteSales', wasteData.regularWasteSales || [], { upsert: false });
 
             // حفظ سجلات المخلفات الخطرة
-            await GoogleIntegration.autoSave('WasteManagement_HazardousWasteRecords', wasteData.hazardousWasteRecords || []);
+            await GoogleIntegration.autoSave('WasteManagement_HazardousWasteRecords', wasteData.hazardousWasteRecords || [], { upsert: false });
 
             return { success: true };
         } catch (error) {
@@ -3632,14 +3632,14 @@ const Sustainability = {
         };
 
         try {
-            // حفظ سجلات المياه
-            await GoogleIntegration.autoSave('WaterManagement_Records', resourceData.water || []);
+            // حفظ سجلات المياه (upsert: false لضمان انعكاس الحذف من القائمة)
+            await GoogleIntegration.autoSave('WaterManagement_Records', resourceData.water || [], { upsert: false });
 
             // حفظ سجلات الغاز
-            await GoogleIntegration.autoSave('GasManagement_Records', resourceData.gas || []);
+            await GoogleIntegration.autoSave('GasManagement_Records', resourceData.gas || [], { upsert: false });
 
             // حفظ سجلات الكهرباء
-            await GoogleIntegration.autoSave('ElectricityManagement_Records', resourceData.electricity || []);
+            await GoogleIntegration.autoSave('ElectricityManagement_Records', resourceData.electricity || [], { upsert: false });
 
             return { success: true };
         } catch (error) {

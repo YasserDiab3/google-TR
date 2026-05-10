@@ -3,7 +3,7 @@ CREATE SCHEMA IF NOT EXISTS public;
 SET search_path TO public;
 
 CREATE TABLE IF NOT EXISTS public."AIAssistantSettings" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "userId" text,
   "settings" jsonb,
   "preferences" jsonb,
@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS public."AIAssistantSettings" (
 );
 
 CREATE TABLE IF NOT EXISTS public."ActionTrackingRegister" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "serialNumber" text,
   "issueDate" text,
   "typeOfIssue" text,
@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS public."ActionTrackingRegister" (
 );
 
 CREATE TABLE IF NOT EXISTS public."ActionTrackingSettings" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "typeOfIssueList" text,
   "classificationList" text,
   "rootCauseList" text,
@@ -60,7 +60,7 @@ CREATE TABLE IF NOT EXISTS public."ActionTrackingSettings" (
 );
 
 CREATE TABLE IF NOT EXISTS public."AnnualTrainingPlans" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "year" text,
   "plans" text,
   "status" text,
@@ -69,7 +69,7 @@ CREATE TABLE IF NOT EXISTS public."AnnualTrainingPlans" (
 );
 
 CREATE TABLE IF NOT EXISTS public."AppEmergencyNumbers" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "label" text,
   "phone" text,
   "sortOrder" text,
@@ -79,7 +79,7 @@ CREATE TABLE IF NOT EXISTS public."AppEmergencyNumbers" (
 );
 
 CREATE TABLE IF NOT EXISTS public."ApprovedContractors" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "code" text,
   "isoCode" text,
   "companyName" text,
@@ -99,7 +99,7 @@ CREATE TABLE IF NOT EXISTS public."ApprovedContractors" (
 );
 
 CREATE TABLE IF NOT EXISTS public."AuditLog" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "userId" text,
   "userName" text,
   "action" text,
@@ -112,7 +112,7 @@ CREATE TABLE IF NOT EXISTS public."AuditLog" (
 );
 
 CREATE TABLE IF NOT EXISTS public."BackupLog" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "backupType" text,
   "backupName" text,
   "fileId" text,
@@ -138,7 +138,7 @@ CREATE TABLE IF NOT EXISTS public."BackupLog" (
 );
 
 CREATE TABLE IF NOT EXISTS public."BackupSettings" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "autoBackupEnabled" text,
   "backupTimes" text,
   "maxBackupFiles" text,
@@ -152,7 +152,7 @@ CREATE TABLE IF NOT EXISTS public."BackupSettings" (
 );
 
 CREATE TABLE IF NOT EXISTS public."BehaviorMonitoring" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "isoCode" text,
   "employeeId" text,
   "employeeCode" text,
@@ -178,7 +178,7 @@ CREATE TABLE IF NOT EXISTS public."BehaviorMonitoring" (
 );
 
 CREATE TABLE IF NOT EXISTS public."Blacklist_Register" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "serialNumber" text,
   "factory" text,
   "factoryId" text,
@@ -199,7 +199,7 @@ CREATE TABLE IF NOT EXISTS public."Blacklist_Register" (
 );
 
 CREATE TABLE IF NOT EXISTS public."Budget" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "category" text,
   "description" text,
   "amount" text,
@@ -210,7 +210,7 @@ CREATE TABLE IF NOT EXISTS public."Budget" (
 );
 
 CREATE TABLE IF NOT EXISTS public."CarbonFootprint" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "date" text,
   "source" text,
   "co2Equivalent" text,
@@ -220,7 +220,7 @@ CREATE TABLE IF NOT EXISTS public."CarbonFootprint" (
 );
 
 CREATE TABLE IF NOT EXISTS public."ChemicalSafety" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "isoCode" text,
   "chemicalName" text,
   "trainer" text,
@@ -232,7 +232,7 @@ CREATE TABLE IF NOT EXISTS public."ChemicalSafety" (
 );
 
 CREATE TABLE IF NOT EXISTS public."Chemical_Register" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "serialNumber" text,
   "rmName" text,
   "physicalShape" text,
@@ -256,7 +256,7 @@ CREATE TABLE IF NOT EXISTS public."Chemical_Register" (
 );
 
 CREATE TABLE IF NOT EXISTS public."ClinicContractorInjuries" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "personType" text,
   "contractorName" text,
   "personName" text,
@@ -282,7 +282,7 @@ CREATE TABLE IF NOT EXISTS public."ClinicContractorInjuries" (
 );
 
 CREATE TABLE IF NOT EXISTS public."ClinicInventory" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "medicationName" text,
   "quantity" text,
   "expiryDate" text,
@@ -294,7 +294,7 @@ CREATE TABLE IF NOT EXISTS public."ClinicInventory" (
 );
 
 CREATE TABLE IF NOT EXISTS public."ClinicVisits" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "personType" text,
   "employeeCode" text,
   "employeeNumber" text,
@@ -319,7 +319,7 @@ CREATE TABLE IF NOT EXISTS public."ClinicVisits" (
 );
 
 CREATE TABLE IF NOT EXISTS public."ContractorApprovalRequests" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "requestType" text,
   "companyName" text,
   "serviceType" text,
@@ -349,7 +349,7 @@ CREATE TABLE IF NOT EXISTS public."ContractorApprovalRequests" (
 );
 
 CREATE TABLE IF NOT EXISTS public."ContractorDeletionRequests" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "requestType" text,
   "entityId" text,
   "reason" text,
@@ -367,7 +367,7 @@ CREATE TABLE IF NOT EXISTS public."ContractorDeletionRequests" (
 );
 
 CREATE TABLE IF NOT EXISTS public."ContractorEvaluations" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "contractorId" text,
   "contractorName" text,
   "evaluationDate" text,
@@ -391,7 +391,7 @@ CREATE TABLE IF NOT EXISTS public."ContractorEvaluations" (
 );
 
 CREATE TABLE IF NOT EXISTS public."ContractorTrainings" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "contractorId" text,
   "contractorName" text,
   "trainingName" text,
@@ -416,7 +416,7 @@ CREATE TABLE IF NOT EXISTS public."ContractorTrainings" (
 );
 
 CREATE TABLE IF NOT EXISTS public."Contractors" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "name" text,
   "serviceType" text,
   "contractNumber" text,
@@ -431,7 +431,7 @@ CREATE TABLE IF NOT EXISTS public."Contractors" (
 );
 
 CREATE TABLE IF NOT EXISTS public."DailyObservations" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "isoCode" text,
   "siteId" text,
   "siteName" text,
@@ -476,7 +476,7 @@ CREATE TABLE IF NOT EXISTS public."DailyObservations" (
 );
 
 CREATE TABLE IF NOT EXISTS public."DailySafetyCheckList" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "reportNumber" text,
   "siteId" text,
   "siteName" text,
@@ -507,7 +507,7 @@ CREATE TABLE IF NOT EXISTS public."DailySafetyCheckList" (
 );
 
 CREATE TABLE IF NOT EXISTS public."DocumentCodes" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "code" text,
   "documentName" text,
   "documentType" text,
@@ -520,7 +520,7 @@ CREATE TABLE IF NOT EXISTS public."DocumentCodes" (
 );
 
 CREATE TABLE IF NOT EXISTS public."DocumentVersions" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "documentCodeId" text,
   "documentCode" text,
   "versionNumber" text,
@@ -535,7 +535,7 @@ CREATE TABLE IF NOT EXISTS public."DocumentVersions" (
 );
 
 CREATE TABLE IF NOT EXISTS public."ElectricityManagement_Records" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "serialNumber" text,
   "date" text,
   "monthYear" text,
@@ -555,7 +555,7 @@ CREATE TABLE IF NOT EXISTS public."ElectricityManagement_Records" (
 );
 
 CREATE TABLE IF NOT EXISTS public."EmergencyAlerts" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "title" text,
   "message" text,
   "type" text,
@@ -571,7 +571,7 @@ CREATE TABLE IF NOT EXISTS public."EmergencyAlerts" (
 );
 
 CREATE TABLE IF NOT EXISTS public."EmergencyPlans" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "name" text,
   "type" text,
   "description" text,
@@ -587,7 +587,7 @@ CREATE TABLE IF NOT EXISTS public."EmergencyPlans" (
 );
 
 CREATE TABLE IF NOT EXISTS public."EmergencyPlansUpdates" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "sectionKey" text,
   "sectionNameAr" text,
   "sectionNameEn" text,
@@ -608,7 +608,7 @@ CREATE TABLE IF NOT EXISTS public."EmergencyPlansUpdates" (
 );
 
 CREATE TABLE IF NOT EXISTS public."EmployeeTrainingMatrix" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "employeeId" text,
   "employeeCode" text,
   "employeeName" text,
@@ -647,7 +647,7 @@ CREATE TABLE IF NOT EXISTS public."Employees" (
 );
 
 CREATE TABLE IF NOT EXISTS public."EnergyEfficiency" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "date" text,
   "department" text,
   "energyConsumption" text,
@@ -658,7 +658,7 @@ CREATE TABLE IF NOT EXISTS public."EnergyEfficiency" (
 );
 
 CREATE TABLE IF NOT EXISTS public."EnvironmentalAspects" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "name" text,
   "description" text,
   "impact" text,
@@ -667,7 +667,7 @@ CREATE TABLE IF NOT EXISTS public."EnvironmentalAspects" (
 );
 
 CREATE TABLE IF NOT EXISTS public."EnvironmentalMonitoring" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "aspect" text,
   "date" text,
   "value" text,
@@ -678,7 +678,7 @@ CREATE TABLE IF NOT EXISTS public."EnvironmentalMonitoring" (
 );
 
 CREATE TABLE IF NOT EXISTS public."ExternalWorkforceMonthly" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "year" text,
   "contractorId" text,
   "contractorCode" text,
@@ -702,7 +702,7 @@ CREATE TABLE IF NOT EXISTS public."ExternalWorkforceMonthly" (
 );
 
 CREATE TABLE IF NOT EXISTS public."FireEquipment" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "equipmentNumber" text,
   "equipmentType" text,
   "location" text,
@@ -715,7 +715,7 @@ CREATE TABLE IF NOT EXISTS public."FireEquipment" (
 );
 
 CREATE TABLE IF NOT EXISTS public."FireEquipmentAssets" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "factory" text,
   "factoryId" text,
   "location" text,
@@ -747,7 +747,7 @@ CREATE TABLE IF NOT EXISTS public."FireEquipmentAssets" (
 );
 
 CREATE TABLE IF NOT EXISTS public."FireEquipmentInspections" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "assetId" text,
   "assetNumber" text,
   "inspectionDate" text,
@@ -761,7 +761,7 @@ CREATE TABLE IF NOT EXISTS public."FireEquipmentInspections" (
 );
 
 CREATE TABLE IF NOT EXISTS public."Form_Departments" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "name" text,
   "description" text,
   "isActive" text,
@@ -773,7 +773,7 @@ CREATE TABLE IF NOT EXISTS public."Form_Departments" (
 );
 
 CREATE TABLE IF NOT EXISTS public."Form_Places" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "siteId" text,
   "siteName" text,
   "name" text,
@@ -787,7 +787,7 @@ CREATE TABLE IF NOT EXISTS public."Form_Places" (
 );
 
 CREATE TABLE IF NOT EXISTS public."Form_SafetyTeam" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "name" text,
   "position" text,
   "phone" text,
@@ -801,7 +801,7 @@ CREATE TABLE IF NOT EXISTS public."Form_SafetyTeam" (
 );
 
 CREATE TABLE IF NOT EXISTS public."Form_Settings_DB" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "sites" text,
   "departments" text,
   "safetyTeam" text,
@@ -810,7 +810,7 @@ CREATE TABLE IF NOT EXISTS public."Form_Settings_DB" (
 );
 
 CREATE TABLE IF NOT EXISTS public."Form_Sites" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "name" text,
   "description" text,
   "isActive" text,
@@ -822,7 +822,7 @@ CREATE TABLE IF NOT EXISTS public."Form_Sites" (
 );
 
 CREATE TABLE IF NOT EXISTS public."GasManagement_Records" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "serialNumber" text,
   "date" text,
   "monthYear" text,
@@ -842,7 +842,7 @@ CREATE TABLE IF NOT EXISTS public."GasManagement_Records" (
 );
 
 CREATE TABLE IF NOT EXISTS public."HSEAudits" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "type" text,
   "date" text,
   "auditor" text,
@@ -853,7 +853,7 @@ CREATE TABLE IF NOT EXISTS public."HSEAudits" (
 );
 
 CREATE TABLE IF NOT EXISTS public."HSECorrectiveActions" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "description" text,
   "responsible" text,
   "dueDate" text,
@@ -863,7 +863,7 @@ CREATE TABLE IF NOT EXISTS public."HSECorrectiveActions" (
 );
 
 CREATE TABLE IF NOT EXISTS public."HSENonConformities" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "date" text,
   "description" text,
   "status" text,
@@ -872,7 +872,7 @@ CREATE TABLE IF NOT EXISTS public."HSENonConformities" (
 );
 
 CREATE TABLE IF NOT EXISTS public."HSEObjectives" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "name" text,
   "description" text,
   "dueDate" text,
@@ -883,7 +883,7 @@ CREATE TABLE IF NOT EXISTS public."HSEObjectives" (
 );
 
 CREATE TABLE IF NOT EXISTS public."HSERiskAssessments" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "activity" text,
   "location" text,
   "date" text,
@@ -894,7 +894,7 @@ CREATE TABLE IF NOT EXISTS public."HSERiskAssessments" (
 );
 
 CREATE TABLE IF NOT EXISTS public."ISODocuments" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "isoCode" text,
   "name" text,
   "type" text,
@@ -905,7 +905,7 @@ CREATE TABLE IF NOT EXISTS public."ISODocuments" (
 );
 
 CREATE TABLE IF NOT EXISTS public."ISOForms" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "isoCode" text,
   "name" text,
   "type" text,
@@ -914,7 +914,7 @@ CREATE TABLE IF NOT EXISTS public."ISOForms" (
 );
 
 CREATE TABLE IF NOT EXISTS public."ISOProcedures" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "isoCode" text,
   "name" text,
   "department" text,
@@ -924,7 +924,7 @@ CREATE TABLE IF NOT EXISTS public."ISOProcedures" (
 );
 
 CREATE TABLE IF NOT EXISTS public."IncidentNotifications" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "notificationNumber" text,
   "date" text,
   "location" text,
@@ -953,7 +953,7 @@ CREATE TABLE IF NOT EXISTS public."IncidentNotifications" (
 );
 
 CREATE TABLE IF NOT EXISTS public."Incidents" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "isoCode" text,
   "title" text,
   "description" text,
@@ -1006,7 +1006,7 @@ CREATE TABLE IF NOT EXISTS public."Incidents" (
 );
 
 CREATE TABLE IF NOT EXISTS public."Injuries" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "personType" text,
   "employeeCode" text,
   "employeeNumber" text,
@@ -1034,7 +1034,7 @@ CREATE TABLE IF NOT EXISTS public."Injuries" (
 );
 
 CREATE TABLE IF NOT EXISTS public."KPIs" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "name" text,
   "target" text,
   "actual" text,
@@ -1045,7 +1045,7 @@ CREATE TABLE IF NOT EXISTS public."KPIs" (
 );
 
 CREATE TABLE IF NOT EXISTS public."LegalDocuments" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "isoCode" text,
   "documentName" text,
   "documentType" text,
@@ -1063,7 +1063,7 @@ CREATE TABLE IF NOT EXISTS public."LegalDocuments" (
 );
 
 CREATE TABLE IF NOT EXISTS public."Medications" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "name" text,
   "type" text,
   "usage" text,
@@ -1083,7 +1083,7 @@ CREATE TABLE IF NOT EXISTS public."Medications" (
 );
 
 CREATE TABLE IF NOT EXISTS public."ModuleManagement" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "moduleId" text,
   "enabled" text,
   "version" text,
@@ -1095,7 +1095,7 @@ CREATE TABLE IF NOT EXISTS public."ModuleManagement" (
 );
 
 CREATE TABLE IF NOT EXISTS public."NearMiss" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "type" text,
   "date" text,
   "observerName" text,
@@ -1113,7 +1113,7 @@ CREATE TABLE IF NOT EXISTS public."NearMiss" (
 );
 
 CREATE TABLE IF NOT EXISTS public."Notifications" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "userId" text,
   "type" text,
   "priority" text,
@@ -1137,7 +1137,7 @@ CREATE TABLE IF NOT EXISTS public."Notifications" (
 );
 
 CREATE TABLE IF NOT EXISTS public."ObservationSites" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "name" text,
   "location" text,
   "description" text,
@@ -1147,7 +1147,7 @@ CREATE TABLE IF NOT EXISTS public."ObservationSites" (
 );
 
 CREATE TABLE IF NOT EXISTS public."PPE" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "receiptNumber" text,
   "employeeName" text,
   "employeeCode" text,
@@ -1165,7 +1165,7 @@ CREATE TABLE IF NOT EXISTS public."PPE" (
 );
 
 CREATE TABLE IF NOT EXISTS public."PPEMatrix" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "employeeId" text,
   "employeeCode" text,
   "employeeName" text,
@@ -1193,7 +1193,7 @@ CREATE TABLE IF NOT EXISTS public."PPE_Stock" (
 );
 
 CREATE TABLE IF NOT EXISTS public."PPE_Transactions" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "itemId" text,
   "date" text,
   "action" text,
@@ -1205,7 +1205,7 @@ CREATE TABLE IF NOT EXISTS public."PPE_Transactions" (
 );
 
 CREATE TABLE IF NOT EXISTS public."PTW" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "workType" text,
   "workDescription" text,
   "location" text,
@@ -1234,7 +1234,7 @@ CREATE TABLE IF NOT EXISTS public."PTW_DEFAULT_COORDINATES" (
 );
 
 CREATE TABLE IF NOT EXISTS public."PTW_MAP_COORDINATES" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "name" text,
   "latitude" text,
   "longitude" text,
@@ -1246,7 +1246,7 @@ CREATE TABLE IF NOT EXISTS public."PTW_MAP_COORDINATES" (
 );
 
 CREATE TABLE IF NOT EXISTS public."PeriodicInspectionCategories" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "name" text,
   "description" text,
   "frequency" text,
@@ -1256,7 +1256,7 @@ CREATE TABLE IF NOT EXISTS public."PeriodicInspectionCategories" (
 );
 
 CREATE TABLE IF NOT EXISTS public."PeriodicInspectionChecklists" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "categoryId" text,
   "categoryName" text,
   "items" jsonb,
@@ -1265,7 +1265,7 @@ CREATE TABLE IF NOT EXISTS public."PeriodicInspectionChecklists" (
 );
 
 CREATE TABLE IF NOT EXISTS public."PeriodicInspectionRecords" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "scheduleId" text,
   "categoryId" text,
   "categoryName" text,
@@ -1281,7 +1281,7 @@ CREATE TABLE IF NOT EXISTS public."PeriodicInspectionRecords" (
 );
 
 CREATE TABLE IF NOT EXISTS public."PeriodicInspectionSchedules" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "categoryId" text,
   "categoryName" text,
   "location" text,
@@ -1294,7 +1294,7 @@ CREATE TABLE IF NOT EXISTS public."PeriodicInspectionSchedules" (
 );
 
 CREATE TABLE IF NOT EXISTS public."PeriodicInspections" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "inspectionType" text,
   "location" text,
   "date" text,
@@ -1307,7 +1307,7 @@ CREATE TABLE IF NOT EXISTS public."PeriodicInspections" (
 );
 
 CREATE TABLE IF NOT EXISTS public."RecyclingPrograms" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "programName" text,
   "materialType" text,
   "recyclingRate" text,
@@ -1318,7 +1318,7 @@ CREATE TABLE IF NOT EXISTS public."RecyclingPrograms" (
 );
 
 CREATE TABLE IF NOT EXISTS public."RiskAssessments" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "isoCode" text,
   "activity" text,
   "location" text,
@@ -1331,7 +1331,7 @@ CREATE TABLE IF NOT EXISTS public."RiskAssessments" (
 );
 
 CREATE TABLE IF NOT EXISTS public."SOPJHA" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "isoCode" text,
   "type" text,
   "title" text,
@@ -1347,7 +1347,7 @@ CREATE TABLE IF NOT EXISTS public."SOPJHA" (
 );
 
 CREATE TABLE IF NOT EXISTS public."SafetyBudget" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "category" text,
   "description" text,
   "amount" text,
@@ -1359,7 +1359,7 @@ CREATE TABLE IF NOT EXISTS public."SafetyBudget" (
 );
 
 CREATE TABLE IF NOT EXISTS public."SafetyBudgetPurchaseOrders" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "prNo" text,
   "prDate" text,
   "itemCodeNo" text,
@@ -1376,7 +1376,7 @@ CREATE TABLE IF NOT EXISTS public."SafetyBudgetPurchaseOrders" (
 );
 
 CREATE TABLE IF NOT EXISTS public."SafetyBudgetTransactions" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "budgetId" text,
   "category" text,
   "description" text,
@@ -1390,7 +1390,7 @@ CREATE TABLE IF NOT EXISTS public."SafetyBudgetTransactions" (
 );
 
 CREATE TABLE IF NOT EXISTS public."SafetyBudgets" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "year" text,
   "budgetAmount" text,
   "allocatedAmount" text,
@@ -1402,7 +1402,7 @@ CREATE TABLE IF NOT EXISTS public."SafetyBudgets" (
 );
 
 CREATE TABLE IF NOT EXISTS public."SafetyHealthManagementSettings" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "leaveTypes" text,
   "attendanceStatuses" text,
   "kpiTargets" text,
@@ -1412,7 +1412,7 @@ CREATE TABLE IF NOT EXISTS public."SafetyHealthManagementSettings" (
 );
 
 CREATE TABLE IF NOT EXISTS public."SafetyJobDescriptions" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "memberId" text,
   "employeeId" text,
   "jobTitle" text,
@@ -1426,7 +1426,7 @@ CREATE TABLE IF NOT EXISTS public."SafetyJobDescriptions" (
 );
 
 CREATE TABLE IF NOT EXISTS public."SafetyOrganizationalStructure" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "position" text,
   "positionLevel" text,
   "memberId" text,
@@ -1439,7 +1439,7 @@ CREATE TABLE IF NOT EXISTS public."SafetyOrganizationalStructure" (
 );
 
 CREATE TABLE IF NOT EXISTS public."SafetyPerformanceKPIs" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "recordType" text,
   "year" text,
   "month" text,
@@ -1457,7 +1457,7 @@ CREATE TABLE IF NOT EXISTS public."SafetyPerformanceKPIs" (
 );
 
 CREATE TABLE IF NOT EXISTS public."SafetyTeamAttendance" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "memberId" text,
   "date" text,
   "checkIn" text,
@@ -1470,7 +1470,7 @@ CREATE TABLE IF NOT EXISTS public."SafetyTeamAttendance" (
 );
 
 CREATE TABLE IF NOT EXISTS public."SafetyTeamKPIs" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "memberId" text,
   "period" text,
   "inspectionsCount" text,
@@ -1494,7 +1494,7 @@ CREATE TABLE IF NOT EXISTS public."SafetyTeamKPIs" (
 );
 
 CREATE TABLE IF NOT EXISTS public."SafetyTeamLeaves" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "memberId" text,
   "leaveType" text,
   "startDate" text,
@@ -1509,7 +1509,7 @@ CREATE TABLE IF NOT EXISTS public."SafetyTeamLeaves" (
 );
 
 CREATE TABLE IF NOT EXISTS public."SafetyTeamMembers" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "name" text,
   "jobTitle" text,
   "department" text,
@@ -1527,7 +1527,7 @@ CREATE TABLE IF NOT EXISTS public."SafetyTeamMembers" (
 );
 
 CREATE TABLE IF NOT EXISTS public."SafetyTeamPerformanceReports" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "memberId" text,
   "period" text,
   "startDate" text,
@@ -1539,7 +1539,7 @@ CREATE TABLE IF NOT EXISTS public."SafetyTeamPerformanceReports" (
 );
 
 CREATE TABLE IF NOT EXISTS public."SafetyTeamTasks" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "memberId" text,
   "taskTitle" text,
   "taskDescription" text,
@@ -1555,7 +1555,7 @@ CREATE TABLE IF NOT EXISTS public."SafetyTeamTasks" (
 );
 
 CREATE TABLE IF NOT EXISTS public."SickLeave" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "personType" text,
   "employeeCode" text,
   "employeeNumber" text,
@@ -1578,7 +1578,7 @@ CREATE TABLE IF NOT EXISTS public."SickLeave" (
 );
 
 CREATE TABLE IF NOT EXISTS public."Sustainability" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "name" text,
   "description" text,
   "startDate" text,
@@ -1588,7 +1588,7 @@ CREATE TABLE IF NOT EXISTS public."Sustainability" (
 );
 
 CREATE TABLE IF NOT EXISTS public."Training" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "name" text,
   "trainer" text,
   "trainingType" text,
@@ -1609,7 +1609,7 @@ CREATE TABLE IF NOT EXISTS public."Training" (
 );
 
 CREATE TABLE IF NOT EXISTS public."UserAILog" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "userId" text,
   "userName" text,
   "query" text,
@@ -1620,7 +1620,7 @@ CREATE TABLE IF NOT EXISTS public."UserAILog" (
 );
 
 CREATE TABLE IF NOT EXISTS public."UserActivityLog" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "userId" text,
   "username" text,
   "userEmail" text,
@@ -1637,7 +1637,7 @@ CREATE TABLE IF NOT EXISTS public."UserActivityLog" (
 );
 
 CREATE TABLE IF NOT EXISTS public."UserInstructions" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "type" text,
   "title" text,
   "description" text,
@@ -1652,7 +1652,7 @@ CREATE TABLE IF NOT EXISTS public."UserInstructions" (
 );
 
 CREATE TABLE IF NOT EXISTS public."UserTasks" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "title" text,
   "taskTitle" text,
   "description" text,
@@ -1671,7 +1671,7 @@ CREATE TABLE IF NOT EXISTS public."UserTasks" (
 );
 
 CREATE TABLE IF NOT EXISTS public."Users" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "name" text,
   "email" text,
   "password" text,
@@ -1693,7 +1693,7 @@ CREATE TABLE IF NOT EXISTS public."Users" (
 );
 
 CREATE TABLE IF NOT EXISTS public."ViolationTypes" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "name" text,
   "description" text,
   "fineAmount" text,
@@ -1706,14 +1706,14 @@ CREATE TABLE IF NOT EXISTS public."ViolationTypes" (
 );
 
 CREATE TABLE IF NOT EXISTS public."Violation_Types_DB" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "violationTypes" text,
   "updatedAt" text,
   "updatedBy" text
 );
 
 CREATE TABLE IF NOT EXISTS public."Violations" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "isoCode" text,
   "personType" text,
   "employeeId" text,
@@ -1746,7 +1746,7 @@ CREATE TABLE IF NOT EXISTS public."Violations" (
 );
 
 CREATE TABLE IF NOT EXISTS public."WasteManagement" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "date" text,
   "wasteType" text,
   "quantity" text,
@@ -1756,7 +1756,7 @@ CREATE TABLE IF NOT EXISTS public."WasteManagement" (
 );
 
 CREATE TABLE IF NOT EXISTS public."WasteManagement_HazardousWasteRecords" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "serialNumber" text,
   "date" text,
   "location" text,
@@ -1777,7 +1777,7 @@ CREATE TABLE IF NOT EXISTS public."WasteManagement_HazardousWasteRecords" (
 );
 
 CREATE TABLE IF NOT EXISTS public."WasteManagement_RegularWasteRecords" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "serialNumber" text,
   "date" text,
   "location" text,
@@ -1794,7 +1794,7 @@ CREATE TABLE IF NOT EXISTS public."WasteManagement_RegularWasteRecords" (
 );
 
 CREATE TABLE IF NOT EXISTS public."WasteManagement_RegularWasteSales" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "transactionNumber" text,
   "date" text,
   "location" text,
@@ -1813,14 +1813,14 @@ CREATE TABLE IF NOT EXISTS public."WasteManagement_RegularWasteSales" (
 );
 
 CREATE TABLE IF NOT EXISTS public."WasteManagement_RegularWasteTypes" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "name" text,
   "createdAt" text,
   "updatedAt" text
 );
 
 CREATE TABLE IF NOT EXISTS public."WaterManagement" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "date" text,
   "usageType" text,
   "quantity" text,
@@ -1830,7 +1830,7 @@ CREATE TABLE IF NOT EXISTS public."WaterManagement" (
 );
 
 CREATE TABLE IF NOT EXISTS public."WaterManagement_Records" (
-  "id" text,
+  "id" text PRIMARY KEY,
   "serialNumber" text,
   "date" text,
   "monthYear" text,

@@ -503,7 +503,7 @@ const PPE = {
                                     <td>${Utils.escapeHTML(item.supplier || '')}</td>
                                     <td>
                                         <div class="flex items-center gap-2">
-                                            <button onclick="PPE.editStockItem('${item.itemId}')" class="btn-icon btn-icon-warning" title="${ut(t('module.common.edit', 'تعديل'))}">
+                                            <button onclick="PPE.showStockItemForm('${item.itemId}')" class="btn-icon btn-icon-warning" title="${ut(t('module.common.edit', 'تعديل'))}">
                                                 <i class="fas fa-edit"></i>
                                             </button>
                                             <button onclick="PPE.deleteStockItem('${item.itemId}')" class="btn-icon btn-icon-danger" title="${ut(t('module.ppe.btn.deleteItem', 'حذف'))}">
@@ -3061,8 +3061,14 @@ const PPE = {
                     const result = await Promise.race([loadPromise, timeoutPromise]);
                     
                     if (result && result.success) {
-                        const stockItems = Array.isArray(result.data) ? result.data : [];
+                        let stockItems = Array.isArray(result.data) ? result.data : [];
                         
+                        // ✅ توحيد المعرفات (id و itemId) للتوافق مع قاعدة البيانات والواجهة
+                        stockItems = stockItems.map(item => {
+                            const id = item.id || item.itemId;
+                            return { ...item, id: id, itemId: id };
+                        });
+
                         // ✅ حفظ البيانات في AppState للاستخدام لاحقاً
                         if (!AppState.appData.ppeStock) {
                             AppState.appData.ppeStock = [];
@@ -3239,7 +3245,8 @@ const PPE = {
                 }
 
                 const stockData = {
-                    itemId: stockItem?.itemId || Utils.generateId('STOCK'),
+                    id: stockItem?.id || stockItem?.itemId || Utils.generateId('STOCK'),
+                    itemId: stockItem?.id || stockItem?.itemId || Utils.generateId('STOCK'),
                     itemCode: itemCode,
                     itemName: itemNameEl.value.trim(),
                     category: categoryEl.value.trim(),

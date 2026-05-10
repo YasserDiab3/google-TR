@@ -8,7 +8,7 @@ const MapCoordinatesManager = {
     // مفتاح التخزين في localStorage
     STORAGE_KEY: 'ptw_map_coordinates',
     // مفتاح التخزين في Google Sheets
-    SHEETS_KEY: 'PTW_MAP_COORDINATES',
+    SHEETS_KEY: 'PTW_MAP_SITES',
     // مفتاح الإحداثيات الافتراضية
     DEFAULT_COORDS_KEY: 'ptw_default_coordinates',
 

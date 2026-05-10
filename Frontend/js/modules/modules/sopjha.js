@@ -589,9 +589,12 @@ const SOPJHA = {
                 Utils.safeWarn('⚠️ DataManager غير متاح - لم يتم حفظ البيانات');
             }
             
-            // حفظ في Google Sheets
-            if (typeof GoogleIntegration !== 'undefined' && GoogleIntegration.autoSave) {
-                await GoogleIntegration.autoSave('SOPJHA', AppState.appData.sopJHA);
+            // حذف من السحابة
+            if (AppState.googleConfig?.appsScript?.enabled) {
+                await GoogleIntegration.sendRequest({
+                    action: 'deleteFromSheet',
+                    data: { sheetName: 'SOPJHA', id: id }
+                }).catch(err => Utils.safeWarn('⚠️ فشل حذف التعليمات من السحابة:', err));
             }
             
             Loading.hide();

@@ -300,16 +300,17 @@
                         
                         // جلب قائمة الأوراق (نسخة من الكود الأصلي)
                         const baseSheets = [
-                            'Users', 'Incidents', 'NearMiss', 'PTW', 'Training',
+                            'Users', 'Incidents', 'IncidentsRegistry', 'SafetyAlerts', 'NearMiss', 'PTW', 'PTWRegistry', 'Training',
+                            'TrainingAttendance', 'TrainingAnalysisData',
                             'ClinicVisits', 'Medications', 'SickLeave', 'Injuries', 'ClinicInventory',
                             'FireEquipment', 'FireEquipmentAssets', 'FireEquipmentInspections',
                             'PeriodicInspectionCategories', 'PeriodicInspectionRecords', 'PeriodicInspectionSchedules', 'PeriodicInspectionChecklists',
                             'PPE', 'ViolationTypes', 'Violations',
-                            'Contractors', 'ApprovedContractors', 'ContractorEvaluations',
+                            'Contractors', 'ApprovedContractors', 'ContractorEvaluations', 'LegalInventory',
                             'ContractorApprovalRequests', 'ContractorDeletionRequests',
                             'Employees', 'ExternalWorkforceMonthly', 'BehaviorMonitoring', 'ChemicalSafety', 'DailyObservations',
                             'ISODocuments', 'ISOProcedures', 'ISOForms', 'SOPJHA', 'RiskAssessments',
-                            'LegalDocuments', 'HSEAudits', 'HSENonConformities', 'HSECorrectiveActions',
+                            'LegalDocuments', 'LegalInventory', 'HSEAudits', 'HSENonConformities', 'HSECorrectiveActions',
                             'HSEObjectives', 'HSERiskAssessments', 'EnvironmentalAspects', 'EnvironmentalMonitoring',
                             'Sustainability', 'CarbonFootprint', 'WasteManagement', 'EnergyEfficiency',
                             'WaterManagement', 'RecyclingPrograms', 'EmergencyAlerts', 'EmergencyPlans', 'EmergencyPlansUpdates',
@@ -330,8 +331,11 @@
                             }
                         }
                         const sheetMapping = {
-                            'Users': 'users', 'Incidents': 'incidents', 'NearMiss': 'nearmiss',
-                            'PTW': 'ptw', 'Training': 'training', 'ClinicVisits': 'clinicVisits',
+                            'Users': 'users', 'Incidents': 'incidents', 'IncidentsRegistry': 'incidentsRegistry',
+                            'SafetyAlerts': 'safetyAlerts', 'NearMiss': 'nearmiss',
+                            'PTW': 'ptw', 'PTWRegistry': 'ptwRegistry', 'Training': 'training',
+                            'TrainingAttendance': 'trainingAttendance', 'TrainingAnalysisData': 'trainingAnalysisData',
+                            'ClinicVisits': 'clinicVisits',
                             'Medications': 'medications', 'SickLeave': 'sickLeave', 'Injuries': 'injuries',
                             'ClinicInventory': 'clinicInventory', 'FireEquipment': 'fireEquipment',
                             'FireEquipmentAssets': 'fireEquipmentAssets', 'FireEquipmentInspections': 'fireEquipmentInspections',
@@ -373,8 +377,11 @@
                         if (AppState.currentUser && AppState.currentUser.role !== 'admin' && typeof Permissions !== 'undefined') {
                             const accessibleModules = Permissions.getAccessibleModules(true);
                             const moduleSheetsMap = {
-                                'users': ['Users'], 'incidents': ['Incidents'], 'nearmiss': ['NearMiss'],
-                                'ptw': ['PTW'], 'training': ['Training'],
+                                'users': ['Users'],
+                                'incidents': ['Incidents', 'IncidentsRegistry', 'SafetyAlerts'],
+                                'nearmiss': ['NearMiss'],
+                                'ptw': ['PTW', 'PTWRegistry'],
+                                'training': ['Training', 'TrainingAttendance', 'TrainingAnalysisData'],
                                 'clinic': ['ClinicVisits', 'Medications', 'SickLeave', 'Injuries', 'ClinicInventory'],
                                 'fire-equipment': ['FireEquipment', 'FireEquipmentAssets', 'FireEquipmentInspections'],
                                 'periodic-inspections': ['PeriodicInspectionCategories', 'PeriodicInspectionRecords', 'PeriodicInspectionSchedules', 'PeriodicInspectionChecklists'],
@@ -384,7 +391,7 @@
                                 'chemical-safety': ['ChemicalSafety'], 'daily-observations': ['DailyObservations'],
                                 'iso': ['ISODocuments', 'ISOProcedures', 'ISOForms', 'HSEAudits'],
                                 'sop-jha': ['SOPJHA'], 'risk-assessment': ['RiskAssessments', 'HSERiskAssessments'],
-                                'legal-documents': ['LegalDocuments'],
+                                'legal-documents': ['LegalDocuments', 'LegalInventory'],
                                 'sustainability': ['Sustainability', 'EnvironmentalAspects', 'EnvironmentalMonitoring', 'CarbonFootprint', 'WasteManagement', 'EnergyEfficiency', 'WaterManagement', 'RecyclingPrograms'],
                                 'emergency': ['EmergencyAlerts', 'EmergencyPlans', 'EmergencyPlansUpdates'],
                                 'safety-budget': ['SafetyBudgets', 'SafetyBudgetTransactions'],
