@@ -210,11 +210,18 @@ const DataManager = {
                 item.retryCount = (item.retryCount || 0) + 1;
                 
                 // محاولة المزامنة
-                await GoogleIntegration.sendToAppsScript('saveToSheet', {
+                const rowData = item.data;
+                const normalizedData = Array.isArray(rowData) ? rowData : (rowData != null ? [rowData] : []);
+                const pendingPayload = {
                     sheetName: item.sheetName,
-                    data: item.data,
-                    spreadsheetId: spreadsheetId
-                });
+                    data: normalizedData,
+                    spreadsheetId: spreadsheetId,
+                };
+                // Postgres/SaaS: حفظ صف واحد بدون upsert يمسح الجدول — مطابق لسلوك الدمج في PTW
+                if (item.sheetName === 'PTW' || item.sheetName === 'PTWRegistry') {
+                    pendingPayload.upsert = true;
+                }
+                await GoogleIntegration.sendToAppsScript('saveToSheet', pendingPayload);
                 
                 // نجحت المزامنة - إزالة من قائمة الانتظار
                 this.removeFromPendingSync(item.sheetName);

@@ -267,61 +267,6 @@ const Training = {
         ];
     },
 
-    async ensureChartJSLoaded() {
-        if (typeof Chart !== 'undefined') return true;
-
-        const existingScript = document.querySelector('script[src*="chart.js"], script[src*="chartjs"]');
-        if (existingScript) {
-            return new Promise((resolve) => {
-                const checkInterval = setInterval(() => {
-                    if (typeof Chart !== 'undefined') {
-                        clearInterval(checkInterval);
-                        resolve(true);
-                    }
-                }, 100);
-                setTimeout(() => {
-                    clearInterval(checkInterval);
-                    resolve(typeof Chart !== 'undefined');
-                }, 5000);
-            });
-        }
-
-        return new Promise((resolve) => {
-            const script = document.createElement('script');
-            script.type = 'text/javascript';
-            script.async = true;
-            script.src = 'https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js';
-            script.crossOrigin = 'anonymous';
-
-            let done = false;
-            const finish = (ok) => {
-                if (done) return;
-                done = true;
-                resolve(!!ok);
-            };
-
-            script.onload = () => setTimeout(() => finish(typeof Chart !== 'undefined'), 400);
-            script.onerror = () => {
-                const fallback = document.createElement('script');
-                fallback.type = 'text/javascript';
-                fallback.async = true;
-                fallback.src = 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js';
-                fallback.crossOrigin = 'anonymous';
-                fallback.onload = () => setTimeout(() => finish(typeof Chart !== 'undefined'), 400);
-                fallback.onerror = () => finish(false);
-                document.head.appendChild(fallback);
-            };
-
-            setTimeout(() => finish(typeof Chart !== 'undefined'), 8000);
-
-            try {
-                document.head.appendChild(script);
-            } catch (e) {
-                finish(false);
-            }
-        });
-    },
-
     async load() {
         // مستمع تغيير اللغة: لا يعيد تحميل الموديول كاملاً ولا يطلب الشبكة؛
         // يطبق i18n على القسم ويبطل الكاش ثم يعيد رسم التبويب النشط فقط.

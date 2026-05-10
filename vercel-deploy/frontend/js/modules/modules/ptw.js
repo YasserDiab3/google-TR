@@ -623,11 +623,16 @@ const PTW = {
         }
 
         const sendSheetRecord = async (sheetName, record, appendMode = false) => {
+            const prepared = (typeof GoogleIntegration.prepareSheetPayload === 'function')
+                ? GoogleIntegration.prepareSheetPayload(sheetName, record)
+                : record;
+            const data = Array.isArray(prepared) ? prepared : [prepared];
+
             const payload = {
                 sheetName,
-                data: (typeof GoogleIntegration.prepareSheetPayload === 'function')
-                    ? GoogleIntegration.prepareSheetPayload(sheetName, record)
-                    : record
+                data,
+                // Supabase/Postgres: saveToSheet بدون upsert يستبدل الجدول بالكامل — صف واحد يمحو باقي PTW/PTWRegistry
+                ...(!appendMode ? { upsert: true } : {}),
             };
 
             const spreadsheetId = AppState.googleConfig?.sheets?.spreadsheetId?.trim();

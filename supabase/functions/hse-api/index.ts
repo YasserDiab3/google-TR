@@ -75,11 +75,24 @@ function resolveSheetName(sheetName: string): string {
   return SHEET_ALIASES[raw] || raw;
 }
 
+/** Accept legacy/config sheet ids, alias sources, and alias targets (e.g. PTW_MAP_COORDINATES → PTW_MAP_SITES). */
+function isAllowedSheetRequest(sheetName: string): boolean {
+  const raw = String(sheetName || "").trim();
+  if (!raw) return false;
+  if (ALLOWED_SHEETS.has(raw)) return true;
+  const resolved = resolveSheetName(raw);
+  if (ALLOWED_SHEETS.has(resolved)) return true;
+  for (const name of ALLOWED_SHEETS) {
+    if (resolveSheetName(name) === resolved) return true;
+  }
+  return false;
+}
+
 function qTable(sheetName: string): string {
-  const resolved = resolveSheetName(sheetName);
-  if (!ALLOWED_SHEETS.has(resolved)) {
+  if (!isAllowedSheetRequest(sheetName)) {
     throw new Error(`Invalid or unsupported sheet name: ${sheetName}`);
   }
+  const resolved = resolveSheetName(sheetName);
   return '"' + resolved.replace(/"/g, '""') + '"';
 }
 
@@ -117,6 +130,17 @@ async function readSheet(
   return rows;
 }
 
+/** If begin() throws, rollback() throws "transaction has not been started" — swallow that so the real error surfaces. */
+async function safeRollbackTransaction(
+  transaction: { rollback: () => Promise<unknown> },
+): Promise<void> {
+  try {
+    await transaction.rollback();
+  } catch {
+    /* ignore */
+  }
+}
+
 async function replaceSheet(
   client: Client,
   sheetName: string,
@@ -146,7 +170,7 @@ async function replaceSheet(
     }
     await transaction.commit();
   } catch (e) {
-    await transaction.rollback();
+    await safeRollbackTransaction(transaction);
     throw e;
   }
 }
@@ -177,7 +201,7 @@ async function appendRows(
     }
     await transaction.commit();
   } catch (e) {
-    await transaction.rollback();
+    await safeRollbackTransaction(transaction);
     throw e;
   }
 }
@@ -240,8 +264,21 @@ async function upsertRows(
     }
     await transaction.commit();
   } catch (e) {
-    await transaction.rollback();
+    await safeRollbackTransaction(transaction);
     throw e;
+  }
+}
+
+async function saveToSheetImpl(
+  client: Client,
+  sheetName: string,
+  rows: Record<string, unknown>[],
+  useUpsert: boolean,
+): Promise<void> {
+  if (useUpsert) {
+    await upsertRows(client, sheetName, rows);
+  } else {
+    await replaceSheet(client, sheetName, rows);
   }
 }
 
@@ -738,14 +775,21 @@ Deno.serve(async (req: Request) => {
 
       case "saveToSheet": {
         const sheetName = String(payload.sheetName || "");
-        const rows = payload.data as Record<string, unknown>[] | undefined;
+        let rowsRaw: unknown = payload.data;
         const useUpsert = payload.upsert === true || payload.upsert === "true";
 
         if (!sheetName) {
           return jsonResponse({ success: false, message: "sheetName required" });
         }
+        if (rowsRaw != null && typeof rowsRaw === "object" && !Array.isArray(rowsRaw)) {
+          rowsRaw = [rowsRaw as Record<string, unknown>];
+        }
+        const rows = rowsRaw as Record<string, unknown>[] | undefined;
         if (!Array.isArray(rows)) {
-          return jsonResponse({ success: false, message: "data must be an array" });
+          return jsonResponse({
+            success: false,
+            message: "data must be an array or a single row object",
+          });
         }
 
         if (useUpsert) {
