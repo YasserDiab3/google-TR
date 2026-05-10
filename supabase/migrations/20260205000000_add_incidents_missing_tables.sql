@@ -121,8 +121,10 @@ INSERT INTO storage.buckets (id, name, public)
 VALUES ('hse-attachments', 'hse-attachments', true)
 ON CONFLICT (id) DO NOTHING;
 
--- Allow public access to read files
+-- Allow public access to read files (idempotent: policies may already exist on hosted projects)
+DROP POLICY IF EXISTS "Public Access" ON storage.objects;
 CREATE POLICY "Public Access" ON storage.objects FOR SELECT USING (bucket_id = 'hse-attachments');
 
 -- Allow authenticated users to upload files
+DROP POLICY IF EXISTS "Allow Upload" ON storage.objects;
 CREATE POLICY "Allow Upload" ON storage.objects FOR INSERT WITH CHECK (bucket_id = 'hse-attachments');

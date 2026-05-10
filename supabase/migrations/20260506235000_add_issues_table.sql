@@ -1,0 +1,20 @@
+CREATE TABLE IF NOT EXISTS public."Issues" (
+  "id" text,
+  "title" text,
+  "description" text,
+  "module" text,
+  "recordId" text,
+  "pageUrl" text,
+  "userAgent" text,
+  "reportedBy" text,
+  "createdBy" text,
+  "priority" text,
+  "category" text,
+  "status" text,
+  "context" text,
+  "resolution" text,
+  "assignedTo" text,
+  "attachments" text,
+  "createdAt" text,
+  "updatedAt" text
+);
