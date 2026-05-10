@@ -152,7 +152,13 @@ const NearMiss = {
                             </h1>
                             <p class="section-subtitle">توثيق الملاحظات الطارئة وتعزيز معايير السلامة</p>
                         </div>
-                        <div class="flex gap-2">
+                        <div class="flex gap-2 flex-wrap">
+                            ${typeof Settings !== 'undefined' && Settings.isCurrentUserAdmin && Settings.isCurrentUserAdmin()
+                                ? `<button type="button" id="nearmiss-bulk-import-btn" class="btn-secondary" title="معالج استيراد Excel في الإعدادات">
+                                    <i class="fas fa-file-import ml-2"></i>
+                                    استيراد Excel
+                                </button>`
+                                : ''}
                             <button id="add-nearmiss-btn" class="btn-primary">
                                 <i class="fas fa-plus ml-2"></i>
                                 تسجيل ملاحظة جديدة
@@ -390,6 +396,13 @@ const NearMiss = {
         const addBtn = document.getElementById('add-nearmiss-btn');
         if (addBtn) {
             addBtn.addEventListener('click', () => this.showForm());
+        }
+
+        const bulkNearMissBtn = document.getElementById('nearmiss-bulk-import-btn');
+        if (bulkNearMissBtn && typeof SheetBulkImport !== 'undefined') {
+            bulkNearMissBtn.addEventListener('click', () =>
+                SheetBulkImport.open({ focusSheet: 'NearMiss' }),
+            );
         }
 
         const searchInput = document.getElementById('nearmiss-filter-search');

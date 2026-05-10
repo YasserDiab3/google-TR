@@ -8860,6 +8860,62 @@ const DailyObservations = {
         }
     },
 
+    /**
+     * تنزيل ملف Excel قالب للاستيراد (عناوين الأعمدة + صف مثال يُمكن حذفه أو تعديله).
+     * العناوين متوافقة مع دالة mapImportedObservationRow وتصدير Excel الحالي.
+     */
+    async downloadDailyObservationsImportTemplate() {
+        if (typeof XLSX === 'undefined') {
+            try {
+                await this.ensureSheetJS();
+            } catch (error) {
+                return;
+            }
+        }
+        try {
+            const headers = [
+                'رقم الملاحظة',
+                'اسم الموقع',
+                'المكان داخل الموقع',
+                'نوع الملاحظة',
+                'التاريخ والوقت',
+                'الوردية',
+                'تفاصيل الملاحظة',
+                'الإجراء التصحيحي / الوقائي',
+                'المسؤول عن التنفيذ',
+                'معدل الخطورة',
+                'اسم صاحب الملاحظة',
+                'التاريخ المتوقع للتنفيذ',
+                'الحالة',
+                'رابط'
+            ];
+            const exampleRow = [
+                '',
+                'مثال: اسم الموقع كما في إعدادات النظام',
+                'مثال: ورشة الصيانة',
+                'مثال: سلامة عامة',
+                '2026-05-11 08:30',
+                'صباحي',
+                'وصف مختصر للملاحظة',
+                'الإجراء التصحيحي أو الوقائي المطلوب',
+                'القسم أو الشخص المسؤول',
+                'متوسط',
+                'اسم صاحب الملاحظة',
+                '2026-05-20',
+                'مفتوح',
+                'https:// (اختياري: رابط مرفق أو صورة)'
+            ];
+            const worksheet = XLSX.utils.aoa_to_sheet([headers, exampleRow]);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, 'DailyObservations');
+            XLSX.writeFile(workbook, 'قالب_استيراد_الملاحظات_اليومية.xlsx');
+            Notification?.success?.('تم تنزيل ملف القالب. يمكنك حذف صف المثال أو استبداله ببياناتك.');
+        } catch (error) {
+            Utils.safeError('فشل إنشاء قالب استيراد الملاحظات اليومية:', error);
+            Notification?.error?.('تعذر إنشاء القالب: ' + (error.message || error));
+        }
+    },
+
     async showImportExcelModal() {
         if (!this.canDailyObservationsFullAdminUi()) {
             if (typeof Notification !== 'undefined' && Notification.error) {
@@ -8897,6 +8953,13 @@ const DailyObservations = {
                             <li>رقم الملاحظة (اختياري)</li>
                         </ul>
                         <p class="text-xs text-blue-700 mt-3">إذا تم العثور على أسماء مواقع/أماكن مطابقة لإعدادات النظام فسيتم ربطها تلقائياً، وإلا سيتم حفظ الأسماء كما هي.</p>
+                        <div class="mt-4 flex flex-wrap items-center gap-3 border-t border-blue-200 pt-3">
+                            <button type="button" id="daily-obs-download-import-template-btn" class="btn-secondary text-sm">
+                                <i class="fas fa-file-download ml-2"></i>
+                                تحميل قالب Excel
+                            </button>
+                            <span class="text-xs text-blue-800">ملف يحتوي صف العناوين وصف مثالاً — احذف الصف الثاني أو استبدله ببياناتك قبل الاستيراد.</span>
+                        </div>
                     </div>
                     <div>
                         <label for="observation-excel-file-input" class="block text-sm font-semibold text-gray-700 mb-2">
@@ -8925,6 +8988,16 @@ const DailyObservations = {
             </div>
         `;
         document.body.appendChild(modal);
+
+        const templateBtn = modal.querySelector('#daily-obs-download-import-template-btn');
+        templateBtn?.addEventListener('click', async () => {
+            try {
+                await this.downloadDailyObservationsImportTemplate();
+            } catch (e) {
+                Utils.safeError('فشل تنزيل القالب:', e);
+                Notification?.error?.('تعذر تنزيل القالب.');
+            }
+        });
 
         const fileInput = modal.querySelector('#observation-excel-file-input');
         const confirmBtn = modal.querySelector('#observation-import-confirm-btn');

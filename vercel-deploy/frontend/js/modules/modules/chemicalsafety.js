@@ -247,10 +247,18 @@ const ChemicalSafety = {
                             </h1>
                             <p class="section-subtitle">إدارة سجل المواد الكيميائية والمواد الخام</p>
                         </div>
-                        <button id="add-chemical-btn" class="btn-primary">
-                            <i class="fas fa-plus ml-2"></i>
-                            إضافة مادة جديدة
-                        </button>
+                        <div class="flex flex-wrap gap-2">
+                            ${typeof Settings !== 'undefined' && Settings.isCurrentUserAdmin && Settings.isCurrentUserAdmin()
+                                ? `<button type="button" id="chemical-safety-bulk-import-btn" class="btn-secondary" title="معالج استيراد Excel في الإعدادات">
+                                    <i class="fas fa-file-import ml-2"></i>
+                                    استيراد Excel
+                                </button>`
+                                : ''}
+                            <button id="add-chemical-btn" class="btn-primary">
+                                <i class="fas fa-plus ml-2"></i>
+                                إضافة مادة جديدة
+                            </button>
+                        </div>
                     </div>
                 </div>
                 <div id="chemical-content" class="mt-6">
@@ -739,6 +747,15 @@ const ChemicalSafety = {
         this._setupTimeoutId = setTimeout(() => {
             const addBtn = document.getElementById('add-chemical-btn');
             if (addBtn && !signal.aborted) addBtn.addEventListener('click', () => this.showForm(), { signal });
+
+            const bulkChemBtn = document.getElementById('chemical-safety-bulk-import-btn');
+            if (bulkChemBtn && !signal.aborted && typeof SheetBulkImport !== 'undefined') {
+                bulkChemBtn.addEventListener(
+                    'click',
+                    () => SheetBulkImport.open({ focusSheet: 'ChemicalSafety' }),
+                    { signal },
+                );
+            }
 
             const searchFilter = document.getElementById('search-filter');
             const deptFilter = document.getElementById('department-filter');

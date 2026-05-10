@@ -770,7 +770,13 @@ const Incidents = {
                             </h1>
                             <p class="section-subtitle">تسجيل ومتابعة حوادث السلامة المهنية</p>
                         </div>
-                        <div class="flex items-center gap-2">
+                        <div class="flex items-center gap-2 flex-wrap">
+                            ${typeof Settings !== 'undefined' && Settings.isCurrentUserAdmin && Settings.isCurrentUserAdmin()
+                                ? `<button type="button" id="incidents-bulk-import-btn" class="btn-secondary" title="معالج استيراد Excel في الإعدادات">
+                                    <i class="fas fa-file-import ml-2"></i>
+                                    استيراد Excel
+                                </button>`
+                                : ''}
                             <button id="add-incident-notification-btn" class="btn-secondary">
                                 <i class="fas fa-bell ml-2"></i>
                                 إخطار عن حادث
@@ -5325,6 +5331,13 @@ const Incidents = {
             }
             if (addEmptyBtn) addEmptyBtn.addEventListener('click', () => this.showForm());
             if (addNotificationBtn) addNotificationBtn.addEventListener('click', () => this.showNotificationForm());
+
+            const bulkImportBtn = document.getElementById('incidents-bulk-import-btn');
+            if (bulkImportBtn && typeof SheetBulkImport !== 'undefined') {
+                bulkImportBtn.addEventListener('click', () =>
+                    SheetBulkImport.open({ focusSheet: 'Incidents' }),
+                );
+            }
 
             // تطبيق الصلاحيات
             this.applyPermissions();

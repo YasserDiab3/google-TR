@@ -1,5 +1,5 @@
 {
-  "migrationFile": "D:\\App\\2027\\supabase\\migrations\\20260203140000_hse_sheet_tables.sql",
+  "migrationFile": "D:\\App\\google-TR\\google-TR\\supabase\\migrations\\20260203140000_hse_sheet_tables.sql",
   "requiredSheetCount": 111,
   "parsedHeaderSheets": 123,
   "missingHeadersForRequiredSheets": []

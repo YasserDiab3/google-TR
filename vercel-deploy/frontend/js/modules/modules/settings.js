@@ -241,6 +241,10 @@ const Settings = {
                         <i class="fas fa-history ml-2"></i>
                         ${I18n.t('settings.tabs.logs')}
                     </button>
+                    <button class="tab-btn" data-tab="bulk-import-excel" ${!isAdmin ? 'style="display:none;"' : ''}>
+                        <i class="fas fa-file-import ml-2"></i>
+                        استيراد Excel / Sheets
+                    </button>
                 </div>
             </div>
 
@@ -1087,11 +1091,26 @@ const Settings = {
                 </div>
                 ` : '<div class="settings-group mt-6"><p class="text-gray-600">هذا القسم متاح للمديرين فقط</p></div>'}
             </div>
+
+            <!-- Tab Content: استيراد شامل Excel / Google Sheets -->
+            <div class="tab-content" id="tab-bulk-import-excel">
+                ${isAdmin && typeof SheetBulkImport !== 'undefined'
+                    ? SheetBulkImport.renderPanelHtml()
+                    : '<div class="settings-group mt-6"><p class="text-gray-600">هذا القسم متاح للمديرين فقط</p></div>'}
+            </div>
         `;
         this.setupEventListeners();
         // تأخير بسيط لضمان تحميل DOM قبل تهيئة التبويبات
         setTimeout(() => {
             this.setupTabsNavigation();
+            if (isAdmin && typeof SheetBulkImport !== 'undefined') {
+                try {
+                    SheetBulkImport.bindDom();
+                    SheetBulkImport.handlePendingDeepLink();
+                } catch (bulkErr) {
+                    Utils.safeError('تهيئة استيراد Excel:', bulkErr);
+                }
+            }
             const permList = document.getElementById('users-permissions-list');
             if (permList && typeof Utils.hydrateDriveProxyImages === 'function') {
                 Utils.hydrateDriveProxyImages(permList, {

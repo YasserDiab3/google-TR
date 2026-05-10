@@ -150,8 +150,34 @@ function main() {
     "utf8",
   );
 
+  const headersJsonPath = path.join(
+    ROOT,
+    "Frontend",
+    "js",
+    "modules",
+    "data",
+    "sheet-headers.generated.json",
+  );
+  fs.mkdirSync(path.dirname(headersJsonPath), { recursive: true });
+  fs.writeFileSync(
+    headersJsonPath,
+    JSON.stringify(
+      {
+        generatedAt: new Date().toISOString(),
+        migrationFile: path.relative(ROOT, outPath),
+        allowedSheets: required.sort(),
+        headersMap,
+        missingHeadersForRequiredSheets: missingHeaders,
+      },
+      null,
+      2,
+    ),
+    "utf8",
+  );
+
   console.log("Wrote", outPath);
   console.log("Wrote", allowTs);
+  console.log("Wrote", headersJsonPath);
   if (missingHeaders.length)
     console.warn("Missing headers for:", missingHeaders.join(", "));
 }

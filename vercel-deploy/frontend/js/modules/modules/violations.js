@@ -171,10 +171,18 @@ const Violations = {
                         </h1>
                         <p class="section-subtitle" style="color: rgba(255,255,255,0.9); font-size: 1rem; margin: 0;">تسجيل ومتابعة مخالفات الموظفين والمقاولين</p>
                     </div>
-                    <button id="add-violation-btn" class="btn-primary" style="background: white; color: #dc2626; border: none; padding: 12px 24px; border-radius: 12px; font-weight: 600; box-shadow: 0 4px 12px rgba(0,0,0,0.15); transition: all 0.3s ease;">
-                        <i class="fas fa-plus ml-2"></i>
-                        تسجيل مخالفة جديدة
-                    </button>
+                    <div class="flex flex-wrap gap-2 items-center justify-center">
+                        ${typeof Settings !== 'undefined' && Settings.isCurrentUserAdmin && Settings.isCurrentUserAdmin()
+                            ? `<button type="button" id="violations-bulk-import-btn" class="btn-secondary" style="background: rgba(255,255,255,0.95); color: #991b1b; border: none; padding: 10px 18px; border-radius: 12px; font-weight: 600;">
+                                <i class="fas fa-file-import ml-2"></i>
+                                استيراد Excel
+                            </button>`
+                            : ''}
+                        <button id="add-violation-btn" class="btn-primary" style="background: white; color: #dc2626; border: none; padding: 12px 24px; border-radius: 12px; font-weight: 600; box-shadow: 0 4px 12px rgba(0,0,0,0.15); transition: all 0.3s ease;">
+                            <i class="fas fa-plus ml-2"></i>
+                            تسجيل مخالفة جديدة
+                        </button>
+                    </div>
                 </div>
             </div>
             <div class="mt-6">
@@ -651,6 +659,12 @@ const Violations = {
         setTimeout(() => {
             const addBtn = document.getElementById('add-violation-btn');
             if (addBtn) addBtn.addEventListener('click', () => this.showViolationForm());
+            const bulkViolBtn = document.getElementById('violations-bulk-import-btn');
+            if (bulkViolBtn && typeof SheetBulkImport !== 'undefined') {
+                bulkViolBtn.addEventListener('click', () =>
+                    SheetBulkImport.open({ focusSheet: 'Violations' }),
+                );
+            }
             this.bindFilters();
         }, 100);
     },
